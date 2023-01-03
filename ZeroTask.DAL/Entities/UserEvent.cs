@@ -1,17 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace ZeroTask.Models
+namespace ZeroTask.DAL.Entities
 {
-    public class EventViewModel
+    public class UserEvent
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;
         public string Category { get; set; } = null!;
         public string Place { get; set; } = null!;
-        [BindProperty, DataType(DataType.Date)]
+        [DataType(DataType.Date)]
         public DateTime Date { get; set; }
-        [BindProperty, DataType(DataType.Time)]
+        [DataType(DataType.Time)]
         public DateTime Time { get; set; }
         public string Description { get; set; } = null!;
         public string AdditionalInfo { get; set; } = null!;

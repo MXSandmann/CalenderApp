@@ -1,7 +1,8 @@
-﻿@{
+﻿@using ZeroTask.PL.Models;
+@{
     ViewData["Title"] = "Eventing";
 }
-@model List<EventViewModel>
+@model List<UserEventViewModel>
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
@@ -70,7 +71,7 @@
                     <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
                     <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                 </div>
-                
+
             </td>
         </tr>
     }

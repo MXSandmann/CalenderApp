@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ZeroTask.Models;
+using ZeroTask.DAL.Entities;
 
-namespace ZeroTask.Data
+namespace ZeroTask.DAL.Context
 {
     public class DataContext : DbContext
     {
@@ -10,7 +10,7 @@ namespace ZeroTask.Data
 
         }
 
-        public DbSet<EventViewModel> EventViewModels { get; set; }
+        public DbSet<UserEvent> UserEvents { get; set; }
 
     }
 }
