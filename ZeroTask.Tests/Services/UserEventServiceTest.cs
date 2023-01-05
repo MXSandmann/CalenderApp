@@ -2,6 +2,7 @@
 using Shouldly;
 using ZeroTask.BLL.Services;
 using ZeroTask.BLL.Services.Contracts;
+using ZeroTask.DAL.Entities;
 using ZeroTask.DAL.Repositories.Contracts;
 
 namespace ZeroTask.Tests.Services
@@ -31,6 +32,53 @@ namespace ZeroTask.Tests.Services
 
             // Assert
             results.ShouldBeNull();
+        }
+
+        [Fact]
+        public async Task GetAll_ShouldReturnEvents_WhenExists()
+        {
+            // Arrange
+            _repoMock.Setup(x => x.GetAll())
+                .ReturnsAsync(TestData.GetUserEvents());
+
+            // Act
+            var results = await _sut.GetUserEvents();
+
+            // Assert
+            results.ShouldNotBeNull();
+            results.Count().ShouldBe(2);           
+            results.ToList().ForEach(x => x.ShouldBeOfType<UserEvent>());
+        }
+
+        [Fact]
+        public async Task GetById_ShouldReturnNull_WhenNotFound()
+        {
+            // Arrange
+            _repoMock.Setup(x => x.GetById(It.IsAny<int>()))
+                .ReturnsAsync(() => null!);
+
+            // Act
+            var result = await _sut.GetUserEventById(new Random().Next());
+
+            // Assert
+            result.ShouldBeNull();
+        }
+
+        [Fact]
+        public async Task GetById_ShouldReturnEvent_WhenFound()
+        {
+            // Arrange
+            _repoMock.Setup(x => x.GetById(1))
+                .ReturnsAsync(TestData.GetUserEvents().ToList()[0]);
+            _repoMock.Setup(x => x.GetById(2))
+                .ReturnsAsync(TestData.GetUserEvents().ToList()[1]);
+
+            // Act
+            var result = await _sut.GetUserEventById(new Random().Next(1, 3));
+
+            // Assert
+            result.ShouldNotBeNull();
+            result.ShouldBeOfType<UserEvent>();
         }
     }
 }

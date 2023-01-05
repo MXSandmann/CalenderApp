@@ -28,18 +28,19 @@ public class HomeController : Controller
     }
 
     [HttpPost]
-    public IActionResult Create(UserEventViewModel newModel)
+    public async Task<IActionResult> Create(UserEventViewModel newModel)
     {
         if (!ModelState.IsValid)
         {
-            var errors = ModelState.Select(x => x.Value?.Errors)
-                .Where(x => x?.Count > 0)
-                .SelectMany(x => x!.Select(y => y.ErrorMessage))
-                .ToList();
-            return BadRequest(string.Join('\n', errors));
+            //var errors = ModelState.Select(x => x.Value?.Errors)
+            //    .Where(x => x?.Count > 0)
+            //    .SelectMany(x => x!.Select(y => y.ErrorMessage))
+            //    .ToList();
+            //return BadRequest(string.Join('\n', errors));
+            return BadRequest(ModelState);
         }
 
-        _service.AddNewUserEvent(newModel.ToUserEvent());
+        await _service.AddNewUserEvent(newModel.ToUserEvent());
         return RedirectToAction(nameof(Index));
     }
 
