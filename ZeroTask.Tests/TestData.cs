@@ -1,4 +1,5 @@
 ﻿using ZeroTask.DAL.Entities;
+using ZeroTask.PL.Models;
 
 namespace ZeroTask.Tests
 {
@@ -32,6 +33,22 @@ namespace ZeroTask.Tests
                     AdditionalInfo = "addinfo2",
                     ImageUrl = "testurl2"
                 }
+            };
+        }
+
+        internal static UserEventViewModel GetUserEventViewModel()
+        {
+            return new UserEventViewModel
+            {
+                Id = 3,
+                Name = "testname3",
+                Category = "testcategory3",
+                Place = "testplace3",
+                Date = DateTime.Today,
+                Time = DateTime.Now,
+                Description = "testdescr3",
+                AdditionalInfo = "addinfo3",
+                ImageUrl = "testurl3"
             };
         }
     }
