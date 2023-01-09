@@ -32,11 +32,6 @@ public class HomeController : Controller
     {
         if (!ModelState.IsValid)
         {
-            //var errors = ModelState.Select(x => x.Value?.Errors)
-            //    .Where(x => x?.Count > 0)
-            //    .SelectMany(x => x!.Select(y => y.ErrorMessage))
-            //    .ToList();
-            //return BadRequest(string.Join('\n', errors));
             return BadRequest(ModelState);
         }
 
