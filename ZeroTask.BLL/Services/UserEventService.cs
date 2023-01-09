@@ -13,9 +13,10 @@ namespace ZeroTask.BLL.Services
             _repository = repository;
         }
 
-        public async Task AddNewUserEvent(UserEvent userEvent)
+        public async Task<UserEvent> AddNewUserEvent(UserEvent userEvent)
         {
             await _repository.Add(userEvent);
+            return userEvent;
         }
 
         public async Task<UserEvent?> GetUserEventById(Guid id)
@@ -39,10 +40,10 @@ namespace ZeroTask.BLL.Services
             await _repository.Remove(userEventToDelete);
         }
 
-        public async Task UpdateUserEvent(UserEvent userEvent)
+        public async Task<UserEvent> UpdateUserEvent(UserEvent userEvent)
         {
-
             await _repository.Update(userEvent);
+            return userEvent;
         }                     
     }
 }
