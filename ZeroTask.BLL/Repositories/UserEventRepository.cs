@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ZeroTask.DAL.Context;
-using ZeroTask.DAL.Repositories.Contracts;
 using ZeroTask.DAL.Entities;
+using ZeroTask.BLL.Repositories.Contracts;
 
-namespace ZeroTask.DAL.Repositories
+namespace ZeroTask.BLL.Repositories
 {
     public class UserEventRepository : IUserEventRepository
     {
@@ -18,7 +18,7 @@ namespace ZeroTask.DAL.Repositories
             return await _context.UserEvents.ToListAsync();
         }
 
-        public async Task<UserEvent?> GetById(int id)
+        public async Task<UserEvent?> GetById(Guid id)
         {
             return await _context.UserEvents.FindAsync(id);
         }

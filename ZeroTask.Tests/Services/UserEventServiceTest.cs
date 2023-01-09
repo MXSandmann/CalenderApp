@@ -3,7 +3,7 @@ using Shouldly;
 using ZeroTask.BLL.Services;
 using ZeroTask.BLL.Services.Contracts;
 using ZeroTask.DAL.Entities;
-using ZeroTask.DAL.Repositories.Contracts;
+using ZeroTask.BLL.Repositories.Contracts;
 
 namespace ZeroTask.Tests.Services
 {
@@ -54,11 +54,11 @@ namespace ZeroTask.Tests.Services
         public async Task GetById_ShouldReturnNull_WhenNotFound()
         {
             // Arrange
-            _repoMock.Setup(x => x.GetById(It.IsAny<int>()))
+            _repoMock.Setup(x => x.GetById(It.IsAny<Guid>()))
                 .ReturnsAsync(() => null!);
 
             // Act
-            var result = await _sut.GetUserEventById(new Random().Next());
+            var result = await _sut.GetUserEventById(Guid.NewGuid());
 
             // Assert
             result.ShouldBeNull();
@@ -68,13 +68,16 @@ namespace ZeroTask.Tests.Services
         public async Task GetById_ShouldReturnEvent_WhenFound()
         {
             // Arrange
-            _repoMock.Setup(x => x.GetById(1))
+            var testGuid1 = Guid.NewGuid();
+            var testGuid2 = Guid.NewGuid();
+            _repoMock.Setup(x => x.GetById(testGuid1))
                 .ReturnsAsync(TestData.GetUserEvents().ToList()[0]);
-            _repoMock.Setup(x => x.GetById(2))
+            _repoMock.Setup(x => x.GetById(testGuid2))
                 .ReturnsAsync(TestData.GetUserEvents().ToList()[1]);
 
-            // Act
-            var result = await _sut.GetUserEventById(new Random().Next(1, 3));
+            // Act            
+            var testGuid = (new Random().Next(1, 3) % 2 == 0) ? testGuid1 : testGuid2;
+            var result = await _sut.GetUserEventById(testGuid);
 
             // Assert
             result.ShouldNotBeNull();

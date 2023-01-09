@@ -1,12 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Moq;
-using NuGet.Frameworks;
 using Shouldly;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ZeroTask.BLL.Services.Contracts;
 using ZeroTask.DAL.Entities;
 using ZeroTask.PL.Controllers;
@@ -81,11 +75,11 @@ namespace ZeroTask.Tests.Controllers
         {
             // Arrange
             var userEvent = TestData.GetUserEvents().First();
-            _serviceMock.Setup(x => x.GetUserEventById(It.IsAny<int>()))
+            _serviceMock.Setup(x => x.GetUserEventById(It.IsAny<Guid>()))
                 .ReturnsAsync(userEvent);
 
             // Act
-            var result = await _sut.Edit(1);
+            var result = await _sut.Edit(Guid.NewGuid());
 
             // Assert            
             var requestResult = Assert.IsType<ViewResult>(result);

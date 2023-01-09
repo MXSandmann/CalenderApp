@@ -39,8 +39,8 @@ public class HomeController : Controller
         return RedirectToAction(nameof(Index));
     }
 
-    [HttpGet("[action]/{id:int}")]
-    public async Task<IActionResult> Edit(int id)
+    [HttpGet("[action]/{id:guid}")]
+    public async Task<IActionResult> Edit(Guid id)
     {
         var eventToUpdate = await _service.GetUserEventById(id);
         if (eventToUpdate == null)
@@ -48,15 +48,15 @@ public class HomeController : Controller
         return View("Create", UserEventViewModel.ToUserEventViewModel(eventToUpdate));
     }
 
-    [HttpPost("[action]/{id:int?}")]
+    [HttpPost("[action]/{id:guid?}")]
     public async Task<IActionResult> Edit(UserEventViewModel model)
     {
         await _service.UpdateUserEvent(model.ToUserEvent());
         return RedirectToAction(nameof(Index));
     }
 
-    [HttpGet("[action]/{id:int}")]
-    public async Task<IActionResult> Delete(int id)
+    [HttpGet("[action]/{id:guid}")]
+    public async Task<IActionResult> Delete(Guid id)
     {
         await _service.RemoveUserEvent(id);
         return RedirectToAction(nameof(Index));

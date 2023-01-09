@@ -1,6 +1,6 @@
 ﻿using ZeroTask.BLL.Services.Contracts;
-using ZeroTask.DAL.Repositories.Contracts;
 using ZeroTask.DAL.Entities;
+using ZeroTask.BLL.Repositories.Contracts;
 
 namespace ZeroTask.BLL.Services
 {
@@ -18,7 +18,7 @@ namespace ZeroTask.BLL.Services
             await _repository.Add(userEvent);
         }
 
-        public async Task<UserEvent?> GetUserEventById(int id)
+        public async Task<UserEvent?> GetUserEventById(Guid id)
         {
             var userEventFound = await _repository.GetById(id);
             if (userEventFound == null)
@@ -31,7 +31,7 @@ namespace ZeroTask.BLL.Services
             return await _repository.GetAll();
         }
 
-        public async Task RemoveUserEvent(int id)
+        public async Task RemoveUserEvent(Guid id)
         {
             var userEventToDelete = await _repository.GetById(id);
             if (userEventToDelete == null)

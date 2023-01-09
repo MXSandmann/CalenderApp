@@ -11,7 +11,7 @@ namespace ZeroTask.Tests
             {
                 new UserEvent
                 {
-                    Id = 1,
+                    Id = Guid.NewGuid(),
                     Name = "testname1",
                     Category = "testcategory1",
                     Place = "testplace1",
@@ -23,7 +23,7 @@ namespace ZeroTask.Tests
                 },
                 new UserEvent
                 {
-                    Id = 2,
+                    Id = Guid.NewGuid(),
                     Name = "testname2",
                     Category = "testcategory2",
                     Place = "testplace2",
@@ -40,7 +40,7 @@ namespace ZeroTask.Tests
         {
             return new UserEventViewModel
             {
-                Id = 3,
+                Id = Guid.NewGuid(),
                 Name = "testname3",
                 Category = "testcategory3",
                 Place = "testplace3",

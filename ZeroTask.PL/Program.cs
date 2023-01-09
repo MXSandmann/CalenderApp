@@ -1,10 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using ZeroTask.DAL.Context;
-using ZeroTask.DAL.Repositories;
-using ZeroTask.DAL.Repositories.Contracts;
 using ZeroTask.DAL.Entities;
 using ZeroTask.BLL.Services;
 using ZeroTask.BLL.Services.Contracts;
+using ZeroTask.BLL.Repositories;
+using ZeroTask.BLL.Repositories.Contracts;
 
 var builder = WebApplication.CreateBuilder(args);
 
