@@ -18,9 +18,11 @@ namespace ZeroTask.BLL.Repositories
             return await _context.UserEvents.ToListAsync();
         }
 
-        public async Task<UserEvent?> GetById(Guid id)
+        public async Task<UserEvent> GetById(Guid id)
         {
-            return await _context.UserEvents.FindAsync(id);
+            var userEvent = await _context.UserEvents.FindAsync(id);
+            ArgumentNullException.ThrowIfNull(userEvent);
+            return userEvent;
         }
 
         public async Task Add(UserEvent userEvent)

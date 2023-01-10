@@ -19,11 +19,10 @@ namespace ZeroTask.BLL.Services
             return userEvent;
         }
 
-        public async Task<UserEvent?> GetUserEventById(Guid id)
+        public async Task<UserEvent> GetUserEventById(Guid id)
         {
-            var userEventFound = await _repository.GetById(id);
-            if (userEventFound == null)
-                return null;
+            var userEventFound = await _repository.GetById(id);            
+            ArgumentNullException.ThrowIfNull(userEventFound);
             return userEventFound;
         }
 
@@ -35,8 +34,7 @@ namespace ZeroTask.BLL.Services
         public async Task RemoveUserEvent(Guid id)
         {
             var userEventToDelete = await _repository.GetById(id);
-            if (userEventToDelete == null)
-                return;
+            ArgumentNullException.ThrowIfNull(userEventToDelete);
             await _repository.Remove(userEventToDelete);
         }
 

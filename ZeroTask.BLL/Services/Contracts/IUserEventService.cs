@@ -8,6 +8,6 @@ namespace ZeroTask.BLL.Services.Contracts
         Task RemoveUserEvent(Guid id);
         Task<UserEvent> UpdateUserEvent(UserEvent userEvent);
         Task<IEnumerable<UserEvent>> GetUserEvents();
-        Task<UserEvent?> GetUserEventById(Guid id);
+        Task<UserEvent> GetUserEventById(Guid id);
     }
 }
