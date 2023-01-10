@@ -1,16 +1,16 @@
 using Microsoft.EntityFrameworkCore;
-using ZeroTask.DAL.Context;
 using ZeroTask.DAL.Entities;
 using ZeroTask.BLL.Services;
 using ZeroTask.BLL.Services.Contracts;
 using ZeroTask.BLL.Repositories;
 using ZeroTask.BLL.Repositories.Contracts;
+using ZeroTask.DAL.DataContext;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddDbContext<DataContext>(options => options.UseInMemoryDatabase("MyDB"));
+builder.Services.AddDbContext<UserEventDataContext>(opt => opt.UseNpgsql(builder.Configuration.GetConnectionString("Postgresql")));
 builder.Services.AddScoped<IUserEventRepository, UserEventRepository>();
 builder.Services.AddScoped<IUserEventService, UserEventService>();
 
@@ -42,18 +42,20 @@ app.Run();
 static void PrepData(IApplicationBuilder app)
 {
     using var serviceScope = app.ApplicationServices.CreateScope();
-    Seed(serviceScope.ServiceProvider.GetService<DataContext>()!);
+    Seed(serviceScope.ServiceProvider.GetService<UserEventDataContext>()!);
 }
 
-static void Seed(DataContext context)
+static void Seed(UserEventDataContext context)
 {
+    if (context.UserEvents.Any()) return;
+
     context.UserEvents.Add(new UserEvent
     {
         Name = "Test name from seed",
         Category = "test category from seed",
         Place = "test place from seed",
-        Date = DateTime.Now,
-        Time = DateTime.Now,
+        Date = DateTime.UtcNow,
+        Time = DateTime.UtcNow,
         Description = "test description from seed",
         AdditionalInfo = "test additionalInfo from seed",
         ImageUrl = "test image url from seed"

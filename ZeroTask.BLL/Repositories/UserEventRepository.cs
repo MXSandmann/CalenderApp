@@ -1,14 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ZeroTask.DAL.Context;
 using ZeroTask.DAL.Entities;
 using ZeroTask.BLL.Repositories.Contracts;
+using ZeroTask.DAL.DataContext;
 
 namespace ZeroTask.BLL.Repositories
 {
     public class UserEventRepository : IUserEventRepository
     {
-        private readonly DataContext _context;
-        public UserEventRepository(DataContext context)
+        private readonly UserEventDataContext _context;
+        public UserEventRepository(UserEventDataContext context)
         {
             _context = context;
         }
