@@ -1,4 +1,4 @@
-﻿using ZeroTask.DAL.Entities;
+﻿using ZeroTask.BLL.Models;
 
 namespace ZeroTask.BLL.Services.Contracts
 {

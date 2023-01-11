@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ZeroTask.DAL.Entities
+namespace ZeroTask.BLL.Models
 {
     public class UserEvent
     {

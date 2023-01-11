@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
-using ZeroTask.DAL.Entities;
+using ZeroTask.BLL.Models;
 
 namespace ZeroTask.PL.Models
 {

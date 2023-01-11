@@ -2,9 +2,9 @@
 using Moq;
 using Shouldly;
 using ZeroTask.BLL.Services.Contracts;
-using ZeroTask.DAL.Entities;
 using ZeroTask.PL.Controllers;
 using ZeroTask.PL.Models;
+using ZeroTask.BLL.Models;
 
 namespace ZeroTask.Tests.Controllers
 {

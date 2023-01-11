@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using ZeroTask.DAL.Entities;
+using ZeroTask.BLL.Models;
 
 namespace ZeroTask.DAL.Configurations
 {

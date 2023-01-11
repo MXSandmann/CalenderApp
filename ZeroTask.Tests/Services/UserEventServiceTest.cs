@@ -2,8 +2,8 @@
 using Shouldly;
 using ZeroTask.BLL.Services;
 using ZeroTask.BLL.Services.Contracts;
-using ZeroTask.DAL.Entities;
 using ZeroTask.BLL.Repositories.Contracts;
+using ZeroTask.BLL.Models;
 
 namespace ZeroTask.Tests.Services
 {

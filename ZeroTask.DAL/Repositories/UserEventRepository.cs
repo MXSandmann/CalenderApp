@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ZeroTask.DAL.Entities;
 using ZeroTask.BLL.Repositories.Contracts;
 using ZeroTask.DAL.DataContext;
+using ZeroTask.BLL.Models;
 
-namespace ZeroTask.BLL.Repositories
+namespace ZeroTask.DAL.Repositories
 {
     public class UserEventRepository : IUserEventRepository
     {

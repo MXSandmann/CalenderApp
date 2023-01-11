@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ZeroTask.DAL.Entities;
+using ZeroTask.BLL.Models;
 
 namespace ZeroTask.DAL.DataContext
 {

@@ -1,5 +1,5 @@
-﻿using ZeroTask.DAL.Entities;
-using ZeroTask.PL.Models;
+﻿using ZeroTask.PL.Models;
+using ZeroTask.BLL.Models;
 
 namespace ZeroTask.Tests
 {
