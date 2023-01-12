@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZeroTask.BLL", "ZeroTask.BLL\ZeroTask.BLL.csproj", "{30A16429-004B-4F91-AD71-53CD4F636153}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApplicationCore", "ApplicationCore\ApplicationCore.csproj", "{30A16429-004B-4F91-AD71-53CD4F636153}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZeroTask.DAL", "ZeroTask.DAL\ZeroTask.DAL.csproj", "{0403D5DF-4DB2-4DCA-8FB6-A30ED7BAF610}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{0403D5DF-4DB2-4DCA-8FB6-A30ED7BAF610}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZeroTask.PL", "ZeroTask.PL\ZeroTask.PL.csproj", "{FDB69308-4D99-4572-B4B2-294C7D4A871B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebUI", "WebUI\WebUI.csproj", "{FDB69308-4D99-4572-B4B2-294C7D4A871B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZeroTask.Tests", "ZeroTask.Tests\ZeroTask.Tests.csproj", "{639F76E8-1E20-498B-A7B9-8C0AB6BBEA41}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "Tests\Tests.csproj", "{639F76E8-1E20-498B-A7B9-8C0AB6BBEA41}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
