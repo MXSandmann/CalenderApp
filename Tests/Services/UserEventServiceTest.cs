@@ -59,10 +59,10 @@ namespace Tests.Services
                 .ReturnsAsync(() => null!);
 
             // Act
-            var result = await _sut.GetUserEventById(Guid.NewGuid());
+            var func = async () => await _sut.GetUserEventById(Guid.NewGuid());
 
             // Assert
-            result.ShouldBeNull();
+            func.ShouldThrow<ArgumentNullException>();
         }
 
         [Fact]
