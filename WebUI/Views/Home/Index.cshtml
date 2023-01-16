@@ -5,19 +5,17 @@
 @model List<UserEventViewModel>
 
 
-<script src="~/js/index.global.js"></script>
-<script src="~/js/index.global.min.js"></script>
+
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth'
+    });
+    calendar.render();
+    });
+</script>
 
-      document.addEventListener('DOMContentLoaded', function() {
-        var calendarEl = document.getElementById('calendar');
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-          initialView: 'dayGridMonth'
-        });
-        calendar.render();
-      });
-
-    </script>
 <div id="calendar"></div>
 
 <div class="text-center">
