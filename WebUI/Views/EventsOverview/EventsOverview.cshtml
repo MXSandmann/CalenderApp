@@ -24,16 +24,19 @@
             Place
         </th>
         <th>
-            Time
+            Start DateTime
         </th>
         <th>
-            Date
+            End DateTime
         </th>
         <th>
             AdditionalInfo
         </th>
         <th>
             ImageUrl
+        </th>
+        <th>
+            Recurrency
         </th>
     </tr>
     @foreach (var item in Model)
@@ -52,16 +55,19 @@
                 @item.Place
             </td>
             <td>
-                @item.Time.ToShortTimeString()
+                @item.StartDateTime
             </td>
             <td>
-                @item.Date.ToShortDateString()
+                @item.EndDateTime
             </td>
             <td>
                 @item.AdditionalInfo
             </td>
             <td>
                 @item.ImageUrl
+            </td>
+            <td>
+                @item.Recurrency.ToString()
             </td>
             <td>
                 <div class="btn-group">

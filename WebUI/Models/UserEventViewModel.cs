@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ApplicationCore.Models;
+using ApplicationCore.Models.Enums;
+using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
-using ApplicationCore.Models;
-using WebUI.Models;
 
 namespace WebUI.Models
 {
@@ -11,13 +11,14 @@ namespace WebUI.Models
         public string Name { get; set; } = null!;
         public string Category { get; set; } = null!;
         public string Place { get; set; } = null!;
-        [BindProperty, DataType(DataType.Date)]
-        public DateTime Date { get; set; }
-        [BindProperty, DataType(DataType.Time)]
-        public DateTime Time { get; set; }
+        [BindProperty]
+        public DateTime StartDateTime { get; set; }
+        [BindProperty]
+        public DateTime EndDateTime { get; set; }
         public string Description { get; set; } = null!;
         public string AdditionalInfo { get; set; } = null!;
         public string ImageUrl { get; set; } = null!;
+        public Recurrency Recurrency { get; set; }
 
         public UserEvent ToUserEvent()
         {
@@ -26,12 +27,13 @@ namespace WebUI.Models
                 Id = this.Id,
                 Name = this.Name,
                 Category = this.Category,
-                Place = this.Place,
-                Date = this.Date,
-                Time = this.Time,
+                Place = this.Place,                
+                StartDateTime = this.StartDateTime,
+                EndDateTime = this.EndDateTime,
                 Description = this.Description,
                 AdditionalInfo = this.AdditionalInfo,
-                ImageUrl = this.ImageUrl
+                ImageUrl = this.ImageUrl,
+                Recurrency = this.Recurrency
             };
         }
 
@@ -43,11 +45,12 @@ namespace WebUI.Models
                 Name = userEvent.Name,
                 Category = userEvent.Category,
                 Place = userEvent.Place,
-                Date = userEvent.Date,
-                Time = userEvent.Time,
+                StartDateTime = userEvent.StartDateTime,
+                EndDateTime = userEvent.EndDateTime,
                 Description = userEvent.Description,
                 AdditionalInfo = userEvent.AdditionalInfo,
-                ImageUrl = userEvent.ImageUrl
+                ImageUrl = userEvent.ImageUrl,
+                Recurrency = userEvent.Recurrency
             };
         }
     }

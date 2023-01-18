@@ -24,24 +24,24 @@
                 asp-for="Place" />
     </div>
     <div>
-        <label class="form-label">Date</label>
+        <label class="form-label">Start Time</label>
         <input class="form-control"
-                type="date"
+                type="datetime-local"
                 data-val="true"
-                data-val-required="The Date is required"
-                id="Date"
-                name="Date"
-                asp-for="Date"/>
+                data-val-required="The Start Time is required"
+                id="StartDateTime"
+                name="StartDateTime"
+                asp-for="StartDateTime" />
     </div>
     <div>
-        <label class="form-label">Time</label>
+        <label class="form-label">End Time</label>
         <input class="form-control"
-                type="time"
+                type="datetime-local"
                 data-val="true"
-                data-val-required="The Time is required"
-                id="Time"
-                name="Time"
-                asp-for="Time" />
+                data-val-required="The End Time is required"
+                id="EndDateTime"
+                name="EndDateTime"
+                asp-for="EndDateTime" />
     </div>
     <div>
         <label class="form-label">Description</label>
@@ -63,6 +63,13 @@
                data-val="true"
                data-val-required="The ImageUrl is required"
                 asp-for="ImageUrl" />
+    </div>
+    <div>
+        <label class="form-label">Recurrency</label>
+        <input class="form-control"
+               data-val="true"
+               data-val-required="The Recurrency is required"
+               asp-for="Recurrency" />
     </div>
     <div>
         <button class="btn btn-primary" type="submit">Submit</button>

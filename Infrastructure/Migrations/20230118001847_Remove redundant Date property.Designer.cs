@@ -3,6 +3,7 @@ using System;
 using Infrastructure.DataContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(UserEventDataContext))]
-    partial class UserEventDataContextModelSnapshot : ModelSnapshot
+    [Migration("20230118001847_Remove redundant Date property")]
+    partial class RemoveredundantDateproperty
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,9 +42,6 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("EndDateTime")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<string>("ImageUrl")
                         .IsRequired()
                         .HasColumnType("text");
@@ -55,11 +54,7 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Recurrency")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("StartDateTime")
+                    b.Property<DateTime>("Time")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
@@ -69,16 +64,14 @@ namespace Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("bc81b825-7a3e-41fa-bf92-ac2c8c5d9481"),
+                            Id = new Guid("8f45561f-68c7-4868-864e-806ea40b6427"),
                             AdditionalInfo = "test additionalInfo from seed",
                             Category = "test category from seed",
                             Description = "test description from seed",
-                            EndDateTime = new DateTime(2023, 1, 18, 2, 39, 21, 729, DateTimeKind.Utc).AddTicks(9932),
                             ImageUrl = "test image url from seed",
                             Name = "Test name from seed",
                             Place = "test place from seed",
-                            Recurrency = "Weekly",
-                            StartDateTime = new DateTime(2023, 1, 18, 0, 39, 21, 729, DateTimeKind.Utc).AddTicks(9928)
+                            Time = new DateTime(2023, 1, 18, 0, 18, 47, 550, DateTimeKind.Utc).AddTicks(731)
                         });
                 });
 #pragma warning restore 612, 618
