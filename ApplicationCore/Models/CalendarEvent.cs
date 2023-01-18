@@ -8,8 +8,16 @@ namespace ApplicationCore.Models
 {
     public class CalendarEvent
     {
-        public int id { get; set; }
-        public DateTime start { get; set; }
-        public DateTime end { get; set; }
+        public CalendarEvent(int id, string title, DateTime start, DateTime end)
+        {
+            this.id = id;
+            this.title = title;
+            this.start = start;
+            this.end = end;
+        }
+        public int id { get; }
+        public string title { get; }
+        public DateTime start { get; }
+        public DateTime end { get; }
     }
 }

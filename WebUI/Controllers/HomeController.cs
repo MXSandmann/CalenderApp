@@ -18,7 +18,7 @@ public class HomeController : Controller
     public async Task<IActionResult> Index()
     {
         var userEvents = await _service.GetUserEvents();        
-        ViewData["Events"] = JsonHelper.SerializeUserEvensToJsonString(userEvents);
+        ViewData["Events"] = EventParseHelper.SerializeUserEvensToJsonString(userEvents);
         return View();
     }
 
