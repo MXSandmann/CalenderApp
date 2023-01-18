@@ -1,4 +1,5 @@
 ﻿using ApplicationCore.Models;
+using ApplicationCore.Models.Enums;
 using ApplicationCore.Repositories.Contracts;
 using ApplicationCore.Services.Contracts;
 
@@ -15,8 +16,50 @@ namespace ApplicationCore.Services
 
         public async Task<UserEvent> AddNewUserEvent(UserEvent userEvent)
         {
-            await _repository.Add(userEvent);
+            switch(userEvent.Recurrency)
+            {
+                case Recurrency.None:
+                    {
+                        await _repository.Add(userEvent);
+                        break;
+                    }
+
+
+                case Recurrency.Daily:
+                    {
+                        // While start day + iterator < end day => create 
+                        var events = new List<UserEvent>();
+                        events.Add(userEvent);
+                        var dateOfNextEvent = userEvent.StartDateTime;
+                        while(dateOfNextEvent < userEvent.EndDateTime)
+                        {
+                            var nextUserEvent = UserEvent.Copy(userEvent);
+                            nextUserEvent.StartDateTime = dateOfNextEvent;                                                        
+                            events.Add(nextUserEvent);
+                            dateOfNextEvent = dateOfNextEvent.AddDays(1);
+                        }
+                        await _repository.AddRange(events);
+                        break;
+                    }
+                case Recurrency.Weekly:
+                    {
+
+                        break;
+                    }
+                case Recurrency.Monthly:
+                    {
+
+                        break;
+                    }
+                case Recurrency.Yearly:
+                    {
+
+                        break;
+                    }
+
+            }
             return userEvent;
+            
         }
 
         public async Task<UserEvent> GetUserEventById(Guid id)

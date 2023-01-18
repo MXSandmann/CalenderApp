@@ -16,5 +16,23 @@ namespace ApplicationCore.Models
         public string AdditionalInfo { get; set; } = null!;
         public string ImageUrl { get; set; } = null!;
         public Recurrency Recurrency { get; set; }
+
+        public static UserEvent Copy(UserEvent other)
+        {
+            return new UserEvent
+            {
+                Id = other.Id,
+                Name = other.Name,
+                Category = other.Category,
+                Place = other.Place,
+                StartDateTime = other.StartDateTime,
+                EndDateTime = other.EndDateTime,
+                Description = other.Description,
+                AdditionalInfo = other.AdditionalInfo,
+                ImageUrl = other.ImageUrl,
+                Recurrency = other.Recurrency
+            };
+
+        }
     }
 }

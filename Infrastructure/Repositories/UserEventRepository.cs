@@ -47,5 +47,11 @@ namespace Infrastructure.Repositories
             _context.UserEvents.Update(userEvent);
             await _context.SaveChangesAsync();
         }
+
+        public async Task AddRange(IEnumerable<UserEvent> userEvents)
+        {
+            await _context.AddRangeAsync(userEvents);
+            await _context.SaveChangesAsync();
+        }
     }
 }
