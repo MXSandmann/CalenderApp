@@ -1,10 +1,12 @@
 ﻿using ApplicationCore.Models;
 using ApplicationCore.Services.Contracts;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Shouldly;
 using WebUI.Controllers;
 using WebUI.Models;
+using WebUI.Validators;
 
 namespace Tests.Controllers
 {
@@ -14,11 +16,13 @@ namespace Tests.Controllers
 
         // System under test
         private readonly EventsOverviewController _sut;
+        private readonly IValidator<UserEventViewModel> _validator;
 
         public EventsOverviewControllerTest()
         {
             _serviceMock = new Mock<IUserEventService>();
-            _sut = new EventsOverviewController(_serviceMock.Object);
+            _validator = new DateValidator();
+            _sut = new EventsOverviewController(_serviceMock.Object, _validator);
         }
 
         [Fact]

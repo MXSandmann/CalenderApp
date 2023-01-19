@@ -25,11 +25,11 @@ namespace Tests.Services
         public async Task GetAll_ShouldReturnNull_WhenNoEvents()
         {
             // Arrange
-            _repoMock.Setup(x => x.GetAll())
+            _repoMock.Setup(x => x.GetAll(It.IsAny<string>()))
                 .ReturnsAsync(() => null!);
 
             // Act
-            var results = await _sut.GetUserEvents();
+            var results = await _sut.GetUserEvents(string.Empty);
 
             // Assert
             results.ShouldBeNull();
@@ -39,11 +39,11 @@ namespace Tests.Services
         public async Task GetAll_ShouldReturnEvents_WhenExists()
         {
             // Arrange
-            _repoMock.Setup(x => x.GetAll())
+            _repoMock.Setup(x => x.GetAll(It.IsAny<string>()))
                 .ReturnsAsync(TestData.GetUserEvents());
 
             // Act
-            var results = await _sut.GetUserEvents();
+            var results = await _sut.GetUserEvents(string.Empty);
 
             // Assert
             results.ShouldNotBeNull();
@@ -62,7 +62,7 @@ namespace Tests.Services
             var func = async () => await _sut.GetUserEventById(Guid.NewGuid());
 
             // Assert
-            func.ShouldThrow<ArgumentNullException>();
+            await func.ShouldThrowAsync<ArgumentNullException>();
         }
 
         [Fact]
