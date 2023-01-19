@@ -1,6 +1,7 @@
 ﻿using ApplicationCore.Services.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using Newtonsoft.Json;
 using Shouldly;
 using WebUI.Controllers;
 using WebUI.Models;
@@ -31,9 +32,10 @@ namespace Tests.Controllers
             var result = await _sut.Index();
 
             // Assert            
-            var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsAssignableFrom<IEnumerable<UserEventViewModel>>(viewResult.ViewData.Model);
-            model.Count().ShouldBe(2);
+            var viewResult = Assert.IsType<ViewResult>(result);            
+            var jsonString = JsonConvert.SerializeObject(viewResult.ViewData.Values);
+            jsonString.ShouldContain("testname1");
+            jsonString.ShouldContain("testname2");
         }        
     }
 }

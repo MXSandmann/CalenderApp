@@ -1,4 +1,5 @@
 ﻿using ApplicationCore.Models;
+using ApplicationCore.Models.Enums;
 using WebUI.Models;
 
 namespace Tests
@@ -21,7 +22,8 @@ namespace Tests
                     LastDate= DateTime.Now,
                     Description = "testdescr1",
                     AdditionalInfo = "addinfo1",
-                    ImageUrl = "testurl1"
+                    ImageUrl = "testurl1",
+                    Recurrency = Recurrency.None
                 },
                 new UserEvent
                 {
@@ -35,12 +37,13 @@ namespace Tests
                     LastDate = DateTime.Now.AddDays(2),
                     Description = "testdescr2",
                     AdditionalInfo = "addinfo2",
-                    ImageUrl = "testurl2"
+                    ImageUrl = "testurl2",
+                    Recurrency = Recurrency.None
                 }
             };
         }
 
-        internal static UserEventViewModel GetUserEventViewModel()
+        internal static UserEventViewModel GetUserEventViewModel(Recurrency recurrency)
         {
             return new UserEventViewModel
             {
@@ -54,8 +57,30 @@ namespace Tests
                 LastDate = DateTime.Now,
                 Description = "testdescr3",
                 AdditionalInfo = "addinfo3",
-                ImageUrl = "testurl3"
+                ImageUrl = "testurl3",
+                Recurrency = recurrency
             };
         }
+
+        internal static UserEventViewModel GetInvalidUserEventViewModel()
+        {
+            // Start time < End time
+            return new UserEventViewModel
+            {
+                Id = Guid.NewGuid(),
+                Name = "testname3",
+                Category = "testcategory3",
+                Place = "testplace3",
+                StartTime = DateTime.Now,
+                EndTime = DateTime.Now.AddHours(-1),
+                Date = DateTime.Now,
+                LastDate = DateTime.Now,
+                Description = "testdescr3",
+                AdditionalInfo = "addinfo3",
+                ImageUrl = "testurl3",
+                Recurrency = Recurrency.None
+            };
+        }
+
     }
 }

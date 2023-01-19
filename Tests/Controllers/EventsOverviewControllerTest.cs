@@ -1,8 +1,11 @@
 ﻿using ApplicationCore.Models;
+using ApplicationCore.Models.Enums;
 using ApplicationCore.Services.Contracts;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Shouldly;
 using WebUI.Controllers;
 using WebUI.Models;
@@ -48,7 +51,7 @@ namespace Tests.Controllers
             _serviceMock.Setup(x => x.AddNewUserEvent(It.IsAny<UserEvent>()))
                 .Verifiable();
             _sut.ModelState.AddModelError("Name", "Required");                        
-            var newModel = TestData.GetUserEventViewModel();
+            var newModel = TestData.GetUserEventViewModel(Recurrency.None);
 
             // Act
             var result = await _sut.Create(newModel);
@@ -59,12 +62,30 @@ namespace Tests.Controllers
         }
 
         [Fact]
+        public async Task CreatePost_ShouldReturnBadRequest_WhenValidationIsUnsuccessful()
+        {
+            // Arrange
+            _serviceMock.Setup(x => x.AddNewUserEvent(It.IsAny<UserEvent>()))
+                .Verifiable();
+            var newModel = TestData.GetInvalidUserEventViewModel();
+
+            // Act
+            var result = await _sut.Create(newModel);
+
+            // Assert            
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            Assert.NotNull(badRequestResult.Value);          
+            string jsonString = JsonConvert.SerializeObject(badRequestResult.Value);
+            jsonString.ShouldContain("\"ErrorMessage\":\"End time must after Start time\"");
+        }
+
+        [Fact]
         public async Task CreatePost_ShouldRedirect_WhenModelStateIsValid()
         {
             // Arrange            
             _serviceMock.Setup(x => x.GetUserEvents(It.IsAny<string>()))
                 .ReturnsAsync(TestData.GetUserEvents());
-            var newModel = TestData.GetUserEventViewModel();
+            var newModel = TestData.GetUserEventViewModel(Recurrency.None);
 
             // Act
             var result = await _sut.Create(newModel);

@@ -14,49 +14,52 @@ namespace ApplicationCore.Services
             _repository = repository;
         }
 
-        public async Task<UserEvent> AddNewUserEvent(UserEvent userEvent)
+        public async Task<IEnumerable<UserEvent>> AddNewUserEvent(UserEvent userEvent)
         {
+            var results = new List<UserEvent>();
             switch(userEvent.Recurrency)
             {
                 case Recurrency.None:
                     {
                         await _repository.Add(userEvent);
+                        results.Add(userEvent);
                         break;
                     }
-
 
                 case Recurrency.Daily:
                     {
                         var events = CompleteEventsForPeriod(userEvent, Recurrency.Daily);                        
                         await _repository.AddRange(events);
+                        results.AddRange(events);
                         break;
                     }
                 case Recurrency.Weekly:
                     {
                         var events = CompleteEventsForPeriod(userEvent, Recurrency.Weekly);
                         await _repository.AddRange(events);
+                        results.AddRange(events);
                         break;
                     }
                 case Recurrency.Monthly:
                     {
                         var events = CompleteEventsForPeriod(userEvent, Recurrency.Monthly);
                         await _repository.AddRange(events);
+                        results.AddRange(events);
                         break;
                     }
                 case Recurrency.Yearly:
                     {
                         var events = CompleteEventsForPeriod(userEvent, Recurrency.Yearly);
                         await _repository.AddRange(events);
+                        results.AddRange(events);
                         break;
                     }
                 default:
                     {
                         throw new ArgumentException($"The value of {nameof(userEvent.Recurrency)} unknown");
                     }
-
             }
-            return userEvent;
-            
+            return results;            
         }
 
         private static List<UserEvent> CompleteEventsForPeriod(UserEvent userEvent, Recurrency recurrency)

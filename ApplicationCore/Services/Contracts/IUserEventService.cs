@@ -4,7 +4,7 @@ namespace ApplicationCore.Services.Contracts
 {
     public interface IUserEventService
     {
-        Task<UserEvent> AddNewUserEvent(UserEvent userEvent);
+        Task<IEnumerable<UserEvent>> AddNewUserEvent(UserEvent userEvent);
         Task RemoveUserEvent(Guid id);
         Task<UserEvent> UpdateUserEvent(UserEvent userEvent);
         Task<IEnumerable<UserEvent>> GetUserEvents(string sortBy);
