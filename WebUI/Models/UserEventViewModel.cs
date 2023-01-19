@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WebUI.Models
 {
+
     public class UserEventViewModel
     {
         public Guid Id { get; set; }

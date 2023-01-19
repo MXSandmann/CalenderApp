@@ -1,4 +1,5 @@
 ﻿using ApplicationCore.Services.Contracts;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using WebUI.Models;
 
@@ -7,10 +8,12 @@ namespace WebUI.Controllers
     public class EventsOverviewController : Controller
     {
         private readonly IUserEventService _service;
+        private readonly IValidator<UserEventViewModel> _validator;
 
-        public EventsOverviewController(IUserEventService service)
+        public EventsOverviewController(IUserEventService service, IValidator<UserEventViewModel> validator)
         {
             _service = service;
+            _validator = validator;
         }
 
         [HttpGet]
@@ -34,10 +37,13 @@ namespace WebUI.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(UserEventViewModel newModel)
         {
+            var validationResult = _validator.Validate(newModel);
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+            if(!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
 
             await _service.AddNewUserEvent(newModel.ToUserEvent());
             return RedirectToAction(nameof(Events));

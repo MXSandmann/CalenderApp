@@ -3,6 +3,7 @@
 @model UserEventViewModel
 
 <form method="post">
+    <div asp-validation-summary ="ModelOnly"></div>
     <div>
         <label class="form-label">Name</label>
         <input class="form-control"
@@ -28,21 +29,19 @@
         <label class="form-label">Start Time</label>
         <input class="form-control"
                 type="time"
-                data-val="true"
-                data-val-required="The Start Time is required"
                 id="StartTime"
                 name="StartTime"
                 asp-for="StartTime" />
+        <span asp-validation-for="StartTime"></span>
     </div>
     <div>
         <label class="form-label">End Time</label>
         <input class="form-control"
-                type="time"
-                data-val="true"
-                data-val-required="The End Time is required"
+                type="time"               
                 id="EndTime"
                 name="EndTime"
                 asp-for="EndTime" />
+        <span asp-validation-for="EndTime"></span>
     </div>
     <div>
         <label class="form-label">Date</label>

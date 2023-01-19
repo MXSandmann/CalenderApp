@@ -1,9 +1,12 @@
 using ApplicationCore.Repositories.Contracts;
 using ApplicationCore.Services;
 using ApplicationCore.Services.Contracts;
+using FluentValidation;
 using Infrastructure.DataContext;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
+using WebUI.Models;
+using WebUI.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +15,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<UserEventDataContext>(opt => opt.UseNpgsql(builder.Configuration.GetConnectionString("Postgresql")));
 builder.Services.AddScoped<IUserEventRepository, UserEventRepository>();
 builder.Services.AddScoped<IUserEventService, UserEventService>();
+builder.Services.AddScoped<IValidator<UserEventViewModel>, DateValidator>();
 
 var app = builder.Build();
 
