@@ -9,8 +9,8 @@ namespace Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<UserEvent> builder)
         {            
-            builder.Property(x => x.StartDateTime).HasConversion(x => DateTime.SpecifyKind(x, DateTimeKind.Utc), x => x.ToLocalTime());
-            builder.Property(x => x.EndDateTime).HasConversion(x => DateTime.SpecifyKind(x, DateTimeKind.Utc), x => x.ToLocalTime());
+            builder.Property(x => x.StartDateTime).HasConversion(x => DateTime.SpecifyKind(x, DateTimeKind.Utc), x => x);
+            builder.Property(x => x.EndDateTime).HasConversion(x => DateTime.SpecifyKind(x, DateTimeKind.Utc), x => x);
             builder.Property(x => x.Recurrency).HasConversion(x => x.ToString(), x => Enum.Parse<Recurrency>(x));
             builder.HasData(new UserEvent
             {

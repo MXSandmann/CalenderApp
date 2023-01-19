@@ -1,7 +1,6 @@
 ﻿using ApplicationCore.Models;
 using ApplicationCore.Models.Enums;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
 
 namespace WebUI.Models
 {

@@ -15,16 +15,16 @@
             Name
         </th>
         <th>
-            Category
+            @Html.ActionLink("Category", "Events", new { sortBy = ViewBag.SortCategoryParameter })            
         </th>
         <th>
             Description
         </th>
-        <th>
-            Place
+        <th>            
+            @Html.ActionLink("Place", "Events", new { sortBy = ViewBag.SortPlaceParameter })          
         </th>
         <th>
-            Start DateTime
+            @Html.ActionLink("Start DateTime", "Events", new { sortBy = ViewBag.SortTimeParameter })            
         </th>
         <th>
             End DateTime
@@ -74,7 +74,6 @@
                     <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
                     <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                 </div>
-
             </td>
         </tr>
     }

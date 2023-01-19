@@ -14,9 +14,13 @@ namespace WebUI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllEvents()
+        public async Task<IActionResult> Events(string sortBy)
         {
-            var userEvents = await _service.GetUserEvents();
+            // Add info to ViewBang to add query paremeter for sorting
+            ViewBag.SortTimeParameter = string.IsNullOrWhiteSpace(sortBy) ? "Time" : "";
+            ViewBag.SortCategoryParameter = "Category";
+            ViewBag.SortPlaceParameter = "Place";
+            var userEvents = await _service.GetUserEvents(sortBy);
             var userEventViewModels = userEvents.Select(x => UserEventViewModel.ToUserEventViewModel(x)).ToList();
             return View("EventsOverview", userEventViewModels);
         }
@@ -36,7 +40,7 @@ namespace WebUI.Controllers
             }
 
             await _service.AddNewUserEvent(newModel.ToUserEvent());
-            return RedirectToAction(nameof(GetAllEvents));
+            return RedirectToAction(nameof(Events));
         }
 
         [HttpGet("[action]/{id:guid}")]
@@ -52,14 +56,14 @@ namespace WebUI.Controllers
         public async Task<IActionResult> Edit(UserEventViewModel model)
         {
             await _service.UpdateUserEvent(model.ToUserEvent());
-            return RedirectToAction(nameof(GetAllEvents));
+            return RedirectToAction(nameof(Events));
         }
 
         [HttpGet("[action]/{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             await _service.RemoveUserEvent(id);
-            return RedirectToAction(nameof(GetAllEvents));
+            return RedirectToAction(nameof(Events));
         }
     }
 }

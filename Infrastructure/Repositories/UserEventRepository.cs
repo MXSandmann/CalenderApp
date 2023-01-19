@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using ApplicationCore.Models;
+﻿using ApplicationCore.Models;
 using ApplicationCore.Repositories.Contracts;
 using Infrastructure.DataContext;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
@@ -13,10 +13,16 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<UserEvent>> GetAll()
-        {
-            return await _context.UserEvents.ToListAsync();
-        }
+        public async Task<IEnumerable<UserEvent>> GetAll(string sortBy)
+        {            
+            if (sortBy != null
+                && sortBy.Equals("Place"))
+                return await _context.UserEvents.OrderBy(x => x.Place).ToListAsync();
+            if (sortBy != null
+                && sortBy.Equals("Category"))
+                return await _context.UserEvents.OrderBy(x => x.Category).ToListAsync();
+            return await _context.UserEvents.OrderBy(x => x.StartDateTime).ToListAsync();
+        }        
 
         public async Task<UserEvent> GetById(Guid id)
         {

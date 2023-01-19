@@ -4,7 +4,7 @@ namespace ApplicationCore.Repositories.Contracts
 {
     public interface IUserEventRepository
     {
-        Task<IEnumerable<UserEvent>> GetAll();
+        Task<IEnumerable<UserEvent>> GetAll(string sortBy);
         Task<UserEvent> GetById(Guid id);
         Task Add(UserEvent userEvent);
         Task AddRange(IEnumerable<UserEvent> userEvents);

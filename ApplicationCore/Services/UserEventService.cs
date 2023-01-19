@@ -28,15 +28,17 @@ namespace ApplicationCore.Services
                 case Recurrency.Daily:
                     {
                         // While start day + iterator < end day => create 
-                        var events = new List<UserEvent>();
-                        events.Add(userEvent);
+                        var events = new List<UserEvent>
+                        {
+                            userEvent
+                        };
                         var dateOfNextEvent = userEvent.StartDateTime;
                         while(dateOfNextEvent < userEvent.EndDateTime)
                         {
+                            dateOfNextEvent = dateOfNextEvent.AddDays(1);
                             var nextUserEvent = UserEvent.Copy(userEvent);
                             nextUserEvent.StartDateTime = dateOfNextEvent;                                                        
                             events.Add(nextUserEvent);
-                            dateOfNextEvent = dateOfNextEvent.AddDays(1);
                         }
                         await _repository.AddRange(events);
                         break;
@@ -69,9 +71,9 @@ namespace ApplicationCore.Services
             return userEventFound;
         }
 
-        public async Task<IEnumerable<UserEvent>> GetUserEvents()
+        public async Task<IEnumerable<UserEvent>> GetUserEvents(string sortBy)
         {
-            return await _repository.GetAll();
+            return await _repository.GetAll(sortBy);
         }
 
         public async Task RemoveUserEvent(Guid id)
