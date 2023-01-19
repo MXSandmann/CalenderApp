@@ -24,10 +24,16 @@
             @Html.ActionLink("Place", "Events", new { sortBy = ViewBag.SortPlaceParameter })          
         </th>
         <th>
-            @Html.ActionLink("Start DateTime", "Events", new { sortBy = ViewBag.SortTimeParameter })            
+            @Html.ActionLink("Start Time", "Events", new { sortBy = ViewBag.SortTimeParameter })            
         </th>
         <th>
-            End DateTime
+            End Time
+        </th>
+        <th>
+            Date
+        </th>
+        <th>
+            Last Date
         </th>
         <th>
             AdditionalInfo
@@ -55,10 +61,16 @@
                 @item.Place
             </td>
             <td>
-                @item.StartDateTime
+                @item.StartTime.ToShortTimeString()
             </td>
             <td>
-                @item.EndDateTime
+                @item.EndTime.ToShortTimeString()
+            </td>
+            <td>
+                @item.Date.ToShortDateString()
+            </td>
+            <td>
+                @item.LastDate.ToShortDateString()
             </td>
             <td>
                 @item.AdditionalInfo

@@ -1,6 +1,7 @@
 ﻿using ApplicationCore.Models;
 using ApplicationCore.Models.Enums;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace WebUI.Models
 {
@@ -10,10 +11,14 @@ namespace WebUI.Models
         public string Name { get; set; } = null!;
         public string Category { get; set; } = null!;
         public string Place { get; set; } = null!;
-        [BindProperty]
-        public DateTime StartDateTime { get; set; }
-        [BindProperty]
-        public DateTime EndDateTime { get; set; }
+        [BindProperty, DataType(DataType.Time)]
+        public DateTime StartTime { get; set; }
+        [BindProperty, DataType(DataType.Time)]
+        public DateTime EndTime { get; set; }
+        [BindProperty, DataType(DataType.Date)]
+        public DateTime Date { get; set; }
+        [BindProperty, DataType(DataType.Date)]
+        public DateTime? LastDate { get; set; }
         public string Description { get; set; } = null!;
         public string AdditionalInfo { get; set; } = null!;
         public string ImageUrl { get; set; } = null!;
@@ -27,8 +32,10 @@ namespace WebUI.Models
                 Name = this.Name,
                 Category = this.Category,
                 Place = this.Place,                
-                StartDateTime = this.StartDateTime,
-                EndDateTime = this.EndDateTime,
+                StartTime = this.StartTime,
+                EndTime = this.EndTime,
+                Date = this.Date,
+                LastDate = this.LastDate ?? this.Date,
                 Description = this.Description,
                 AdditionalInfo = this.AdditionalInfo,
                 ImageUrl = this.ImageUrl,
@@ -44,8 +51,10 @@ namespace WebUI.Models
                 Name = userEvent.Name,
                 Category = userEvent.Category,
                 Place = userEvent.Place,
-                StartDateTime = userEvent.StartDateTime,
-                EndDateTime = userEvent.EndDateTime,
+                StartTime = userEvent.StartTime,
+                EndTime = userEvent.EndTime,
+                Date = userEvent.Date,
+                LastDate = userEvent.LastDate,
                 Description = userEvent.Description,
                 AdditionalInfo = userEvent.AdditionalInfo,
                 ImageUrl = userEvent.ImageUrl,

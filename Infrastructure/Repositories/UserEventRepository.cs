@@ -21,7 +21,7 @@ namespace Infrastructure.Repositories
             if (sortBy != null
                 && sortBy.Equals("Category"))
                 return await _context.UserEvents.OrderBy(x => x.Category).ToListAsync();
-            return await _context.UserEvents.OrderBy(x => x.StartDateTime).ToListAsync();
+            return await _context.UserEvents.OrderBy(x => x.Date).ThenBy(x => x.StartTime).ToListAsync();
         }        
 
         public async Task<UserEvent> GetById(Guid id)

@@ -9,8 +9,10 @@ namespace Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<UserEvent> builder)
         {            
-            builder.Property(x => x.StartDateTime).HasConversion(x => DateTime.SpecifyKind(x, DateTimeKind.Utc), x => x);
-            builder.Property(x => x.EndDateTime).HasConversion(x => DateTime.SpecifyKind(x, DateTimeKind.Utc), x => x);
+            builder.Property(x => x.StartTime).HasConversion(x => DateTime.SpecifyKind(x, DateTimeKind.Utc), x => x);
+            builder.Property(x => x.EndTime).HasConversion(x => DateTime.SpecifyKind(x, DateTimeKind.Utc), x => x);
+            builder.Property(x => x.Date).HasConversion(x => DateTime.SpecifyKind(x, DateTimeKind.Utc), x => x);
+            builder.Property(x => x.LastDate).HasConversion(x => DateTime.SpecifyKind(x, DateTimeKind.Utc), x => x);
             builder.Property(x => x.Recurrency).HasConversion(x => x.ToString(), x => Enum.Parse<Recurrency>(x));
             builder.HasData(new UserEvent
             {
@@ -18,8 +20,10 @@ namespace Infrastructure.Configurations
                 Name = "Test name from seed",
                 Category = "test category from seed",
                 Place = "test place from seed",
-                StartDateTime = DateTime.UtcNow,
-                EndDateTime = DateTime.UtcNow.AddHours(2),
+                StartTime = DateTime.UtcNow,
+                EndTime = DateTime.UtcNow.AddHours(2),
+                Date = DateTime.UtcNow,
+                LastDate = DateTime.UtcNow,
                 Description = "test description from seed",
                 AdditionalInfo = "test additionalInfo from seed",
                 ImageUrl = "test image url from seed",

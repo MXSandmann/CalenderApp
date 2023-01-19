@@ -27,22 +27,40 @@
     <div>
         <label class="form-label">Start Time</label>
         <input class="form-control"
-                type="datetime-local"
+                type="time"
                 data-val="true"
                 data-val-required="The Start Time is required"
-                id="StartDateTime"
-                name="StartDateTime"
-                asp-for="StartDateTime" />
+                id="StartTime"
+                name="StartTime"
+                asp-for="StartTime" />
     </div>
     <div>
         <label class="form-label">End Time</label>
         <input class="form-control"
-                type="datetime-local"
+                type="time"
                 data-val="true"
                 data-val-required="The End Time is required"
-                id="EndDateTime"
-                name="EndDateTime"
-                asp-for="EndDateTime" />
+                id="EndTime"
+                name="EndTime"
+                asp-for="EndTime" />
+    </div>
+    <div>
+        <label class="form-label">Date</label>
+        <input class="form-control"
+               type="date"
+               data-val="true"
+               data-val-required="The Date is required"
+               id="Date"
+               name="Date"
+               asp-for="Date" />
+    </div>
+    <div>
+        <label class="form-label">Last Date</label>
+        <input class="form-control"
+               type="date"               
+               id="LastDate"
+               name="LastDate"
+               asp-for="LastDate" />
     </div>
     <div>
         <label class="form-label">Description</label>

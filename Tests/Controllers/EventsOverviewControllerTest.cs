@@ -25,11 +25,11 @@ namespace Tests.Controllers
         public async Task IndexGet_ShouldReturnViewResult_WhenOk()
         {
             // Arrange
-            _serviceMock.Setup(x => x.GetUserEvents())
+            _serviceMock.Setup(x => x.GetUserEvents(It.IsAny<string>()))
                 .ReturnsAsync(TestData.GetUserEvents());
 
             // Act
-            var result = await _sut.GetAllEvents();
+            var result = await _sut.Events(string.Empty);
 
             // Assert            
             var viewResult = Assert.IsType<ViewResult>(result);
@@ -58,7 +58,7 @@ namespace Tests.Controllers
         public async Task CreatePost_ShouldRedirect_WhenModelStateIsValid()
         {
             // Arrange            
-            _serviceMock.Setup(x => x.GetUserEvents())
+            _serviceMock.Setup(x => x.GetUserEvents(It.IsAny<string>()))
                 .ReturnsAsync(TestData.GetUserEvents());
             var newModel = TestData.GetUserEventViewModel();
 
@@ -67,7 +67,7 @@ namespace Tests.Controllers
 
             // Assert            
             var requestResult = Assert.IsType<RedirectToActionResult>(result);
-            requestResult.ActionName.ShouldBe("GetAllEvents");
+            requestResult.ActionName.ShouldBe("Events");
         }
 
         [Fact]
@@ -92,8 +92,10 @@ namespace Tests.Controllers
             model.Name.ShouldBe(startModel.Name);
             model.Category.ShouldBe(startModel.Category);
             model.Place.ShouldBe(startModel.Place);            
-            model.StartDateTime.ShouldBe(startModel.StartDateTime);
-            model.EndDateTime.ShouldBe(startModel.EndDateTime);
+            model.StartTime.ShouldBe(startModel.StartTime);
+            model.EndTime.ShouldBe(startModel.EndTime);
+            model.Date.ShouldBe(startModel.Date);
+            model.LastDate.ShouldBe(startModel.LastDate);
             model.Description.ShouldBe(startModel.Description);
             model.AdditionalInfo.ShouldBe(startModel.AdditionalInfo);
             model.ImageUrl.ShouldBe(startModel.ImageUrl);

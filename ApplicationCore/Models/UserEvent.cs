@@ -9,9 +9,15 @@ namespace ApplicationCore.Models
         public Guid Id { get; set; }
         public string Name { get; set; } = null!;
         public string Category { get; set; } = null!;
-        public string Place { get; set; } = null!;        
-        public DateTime StartDateTime { get; set; }
-        public DateTime EndDateTime { get; set; }
+        public string Place { get; set; } = null!;
+        [DataType(DataType.Time)]
+        public DateTime StartTime { get; set; }
+        [DataType(DataType.Time)]
+        public DateTime EndTime { get; set; }
+        [DataType(DataType.Date)]
+        public DateTime Date { get; set; }
+        [DataType(DataType.Date)]
+        public DateTime LastDate { get; set; }
         public string Description { get; set; } = null!;
         public string AdditionalInfo { get; set; } = null!;
         public string ImageUrl { get; set; } = null!;
@@ -25,8 +31,10 @@ namespace ApplicationCore.Models
                 Name = other.Name,
                 Category = other.Category,
                 Place = other.Place,
-                StartDateTime = other.StartDateTime,
-                EndDateTime = other.EndDateTime,
+                StartTime = other.StartTime,
+                EndTime = other.EndTime,
+                Date = other.Date,
+                LastDate = other.LastDate,
                 Description = other.Description,
                 AdditionalInfo = other.AdditionalInfo,
                 ImageUrl = other.ImageUrl,

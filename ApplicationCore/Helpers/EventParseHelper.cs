@@ -12,8 +12,10 @@ namespace ApplicationCore.Helpers
             {
                 calendarEvents.Add(new CalendarEvent(
                     id: i + 1,
-                    start: userEvent.StartDateTime,
-                    end: userEvent.EndDateTime,
+                    start: userEvent.Date,
+                    end: userEvent.Date,
+                    startTime: userEvent.StartTime,
+                    endTime: userEvent.EndTime,
                     title: userEvent.Name));
             }
             return JsonSerializer.Serialize(calendarEvents);
