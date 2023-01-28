@@ -21,7 +21,8 @@ namespace ApplicationCore.Models
         public string Description { get; set; } = null!;
         public string AdditionalInfo { get; set; } = null!;
         public string ImageUrl { get; set; } = null!;
-        public Recurrency Recurrency { get; set; }
+        public YesNo HasRecurrency { get; set; }
+        public ICollection<RecurrencyRule>? RecurrencyRules { get; set; }
 
         public static UserEvent Copy(UserEvent other)
         {
@@ -38,9 +39,8 @@ namespace ApplicationCore.Models
                 Description = other.Description,
                 AdditionalInfo = other.AdditionalInfo,
                 ImageUrl = other.ImageUrl,
-                Recurrency = other.Recurrency
+                RecurrencyRules = other.RecurrencyRules
             };
-
         }
     }
 }

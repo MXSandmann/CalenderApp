@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using ApplicationCore.Models;
+﻿using ApplicationCore.Models;
 using ApplicationCore.Models.Enums;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Configurations
 {
@@ -13,7 +13,8 @@ namespace Infrastructure.Configurations
             builder.Property(x => x.EndTime).HasConversion(x => DateTime.SpecifyKind(x, DateTimeKind.Utc), x => x);
             builder.Property(x => x.Date).HasConversion(x => DateTime.SpecifyKind(x, DateTimeKind.Utc), x => x);
             builder.Property(x => x.LastDate).HasConversion(x => DateTime.SpecifyKind(x, DateTimeKind.Utc), x => x);
-            builder.Property(x => x.Recurrency).HasConversion(x => x.ToString(), x => Enum.Parse<Recurrency>(x));
+            builder.Property(x => x.HasRecurrency).HasConversion(x => x.ToString(), x => Enum.Parse<YesNo>(x));
+            builder.HasMany(x => x.RecurrencyRules).WithOne(x => x.UserEvent);
             builder.HasData(new UserEvent
             {
                 Id = Guid.NewGuid(),
@@ -27,8 +28,9 @@ namespace Infrastructure.Configurations
                 Description = "test description from seed",
                 AdditionalInfo = "test additionalInfo from seed",
                 ImageUrl = "test image url from seed",
-                Recurrency = Recurrency.Weekly
+                HasRecurrency = YesNo.Yes
             });
+            
         }
     }
 }

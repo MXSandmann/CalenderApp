@@ -23,7 +23,8 @@ namespace WebUI.Models
         public string Description { get; set; } = null!;
         public string AdditionalInfo { get; set; } = null!;
         public string ImageUrl { get; set; } = null!;
-        public Recurrency Recurrency { get; set; }
+        public YesNo HasRecurrency { get; set; }
+        //public RecurrencyRule RecurrencyRule { get; set; } = null!;
 
         public UserEvent ToUserEvent()
         {
@@ -40,7 +41,7 @@ namespace WebUI.Models
                 Description = this.Description,
                 AdditionalInfo = this.AdditionalInfo,
                 ImageUrl = this.ImageUrl,
-                Recurrency = this.Recurrency
+                HasRecurrency = this.HasRecurrency
             };
         }
 
@@ -59,8 +60,8 @@ namespace WebUI.Models
                 Description = userEvent.Description,
                 AdditionalInfo = userEvent.AdditionalInfo,
                 ImageUrl = userEvent.ImageUrl,
-                Recurrency = userEvent.Recurrency
+                HasRecurrency = userEvent.HasRecurrency
             };
         }
-    }
+    }    
 }

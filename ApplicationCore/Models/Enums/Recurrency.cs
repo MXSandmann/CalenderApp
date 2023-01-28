@@ -6,6 +6,7 @@
         Daily,
         Weekly,
         Monthly,
-        Yearly
+        Yearly,
+        Other
     }
 }

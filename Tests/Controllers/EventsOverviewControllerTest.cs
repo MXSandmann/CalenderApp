@@ -51,7 +51,7 @@ namespace Tests.Controllers
             _serviceMock.Setup(x => x.AddNewUserEvent(It.IsAny<UserEvent>()))
                 .Verifiable();
             _sut.ModelState.AddModelError("Name", "Required");                        
-            var newModel = TestData.GetUserEventViewModel(Recurrency.None);
+            var newModel = TestData.GetUserEventViewModel();
 
             // Act
             var result = await _sut.Create(newModel);
@@ -85,7 +85,7 @@ namespace Tests.Controllers
             // Arrange            
             _serviceMock.Setup(x => x.GetUserEvents(It.IsAny<string>()))
                 .ReturnsAsync(TestData.GetUserEvents());
-            var newModel = TestData.GetUserEventViewModel(Recurrency.None);
+            var newModel = TestData.GetUserEventViewModel();
 
             // Act
             var result = await _sut.Create(newModel);

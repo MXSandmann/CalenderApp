@@ -23,7 +23,7 @@ namespace Tests
                     Description = "testdescr1",
                     AdditionalInfo = "addinfo1",
                     ImageUrl = "testurl1",
-                    Recurrency = Recurrency.None
+                    HasRecurrency = YesNo.No
                 },
                 new UserEvent
                 {
@@ -38,12 +38,12 @@ namespace Tests
                     Description = "testdescr2",
                     AdditionalInfo = "addinfo2",
                     ImageUrl = "testurl2",
-                    Recurrency = Recurrency.None
+                    HasRecurrency = YesNo.No
                 }
             };
         }
 
-        internal static UserEventViewModel GetUserEventViewModel(Recurrency recurrency)
+        internal static UserEventViewModel GetUserEventViewModel()
         {
             return new UserEventViewModel
             {
@@ -58,7 +58,7 @@ namespace Tests
                 Description = "testdescr3",
                 AdditionalInfo = "addinfo3",
                 ImageUrl = "testurl3",
-                Recurrency = recurrency
+                HasRecurrency = YesNo.No
             };
         }
 
@@ -78,6 +78,24 @@ namespace Tests
                 Description = "testdescr3",
                 AdditionalInfo = "addinfo3",
                 ImageUrl = "testurl3",
+                HasRecurrency = YesNo.No
+            };
+        }
+
+        //internal static RecurrencyRule GetRecurrencyRule(Recurrency recurrency, List<DayOfTheWeek> days, TimesInMonth timesInMonth)
+        //{
+        //    return new RecurrencyRule
+        //    {
+        //        Recurrency = recurrency,
+        //        DaysWhenOccur = days,
+        //        TimesInMonth = timesInMonth
+        //    };
+        //}
+
+        internal static RecurrencyRule GetRecurrencyRuleWithoutRecurrency()
+        {
+            return new RecurrencyRule
+            {
                 Recurrency = Recurrency.None
             };
         }

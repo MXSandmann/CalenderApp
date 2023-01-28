@@ -17,48 +17,48 @@ namespace ApplicationCore.Services
         public async Task<IEnumerable<UserEvent>> AddNewUserEvent(UserEvent userEvent)
         {
             var results = new List<UserEvent>();
-            switch(userEvent.Recurrency)
-            {
-                case Recurrency.None:
-                    {
-                        await _repository.Add(userEvent);
-                        results.Add(userEvent);
-                        break;
-                    }
+            //switch(userEvent.RecurrencyRule.Recurrency)
+            //{
+            //    case Recurrency.None:
+            //        {
+            //            await _repository.Add(userEvent);
+            //            results.Add(userEvent);
+            //            break;
+            //        }
 
-                case Recurrency.Daily:
-                    {
-                        var events = CompleteEventsForPeriod(userEvent, Recurrency.Daily);                        
-                        await _repository.AddRange(events);
-                        results.AddRange(events);
-                        break;
-                    }
-                case Recurrency.Weekly:
-                    {
-                        var events = CompleteEventsForPeriod(userEvent, Recurrency.Weekly);
-                        await _repository.AddRange(events);
-                        results.AddRange(events);
-                        break;
-                    }
-                case Recurrency.Monthly:
-                    {
-                        var events = CompleteEventsForPeriod(userEvent, Recurrency.Monthly);
-                        await _repository.AddRange(events);
-                        results.AddRange(events);
-                        break;
-                    }
-                case Recurrency.Yearly:
-                    {
-                        var events = CompleteEventsForPeriod(userEvent, Recurrency.Yearly);
-                        await _repository.AddRange(events);
-                        results.AddRange(events);
-                        break;
-                    }
-                default:
-                    {
-                        throw new ArgumentException($"The value of {nameof(userEvent.Recurrency)} unknown");
-                    }
-            }
+            //    case Recurrency.Daily:
+            //        {
+            //            var events = CompleteEventsForPeriod(userEvent, Recurrency.Daily);                        
+            //            await _repository.AddRange(events);
+            //            results.AddRange(events);
+            //            break;
+            //        }
+            //    case Recurrency.Weekly:
+            //        {
+            //            var events = CompleteEventsForPeriod(userEvent, Recurrency.Weekly);
+            //            await _repository.AddRange(events);
+            //            results.AddRange(events);
+            //            break;
+            //        }
+            //    case Recurrency.Monthly:
+            //        {
+            //            var events = CompleteEventsForPeriod(userEvent, Recurrency.Monthly);
+            //            await _repository.AddRange(events);
+            //            results.AddRange(events);
+            //            break;
+            //        }
+            //    case Recurrency.Yearly:
+            //        {
+            //            var events = CompleteEventsForPeriod(userEvent, Recurrency.Yearly);
+            //            await _repository.AddRange(events);
+            //            results.AddRange(events);
+            //            break;
+            //        }
+            //    default:
+            //        {
+            //            throw new ArgumentException($"The value of {nameof(userEvent.RecurrencyRule.Recurrency)} unknown");
+            //        }
+            //}
             return results;            
         }
 

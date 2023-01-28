@@ -17,6 +17,7 @@ namespace Infrastructure.DataContext
         }
 
         public DbSet<UserEvent> UserEvents { get; set; } = null!;
+        public DbSet<RecurrencyRule> RecurrencyRules { get; set; } = null!;
 
     }
 }
