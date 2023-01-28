@@ -1,4 +1,4 @@
-﻿using ApplicationCore.Models;
+﻿using ApplicationCore.Models.Entities;
 using ApplicationCore.Models.Enums;
 using WebUI.Models;
 
@@ -43,9 +43,9 @@ namespace Tests
             };
         }
 
-        internal static UserEventViewModel GetUserEventViewModel()
+        internal static CreateUpdateUserEventViewModel GetUserEventViewModel()
         {
-            return new UserEventViewModel
+            return new CreateUpdateUserEventViewModel
             {
                 Id = Guid.NewGuid(),
                 Name = "testname3",
@@ -62,10 +62,10 @@ namespace Tests
             };
         }
 
-        internal static UserEventViewModel GetInvalidUserEventViewModel()
+        internal static CreateUpdateUserEventViewModel GetInvalidUserEventViewModel()
         {
             // Start time < End time
-            return new UserEventViewModel
+            return new CreateUpdateUserEventViewModel
             {
                 Id = Guid.NewGuid(),
                 Name = "testname3",

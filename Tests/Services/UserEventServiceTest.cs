@@ -1,4 +1,4 @@
-﻿using ApplicationCore.Models;
+﻿using ApplicationCore.Models.Entities;
 using ApplicationCore.Models.Enums;
 using ApplicationCore.Repositories.Contracts;
 using ApplicationCore.Services;

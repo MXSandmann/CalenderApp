@@ -8,9 +8,9 @@ namespace WebUI.Controllers
     public class EventsOverviewController : Controller
     {
         private readonly IUserEventService _service;
-        private readonly IValidator<UserEventViewModel> _validator;
+        private readonly IValidator<CreateUpdateUserEventViewModel> _validator;
 
-        public EventsOverviewController(IUserEventService service, IValidator<UserEventViewModel> validator)
+        public EventsOverviewController(IUserEventService service, IValidator<CreateUpdateUserEventViewModel> validator)
         {
             _service = service;
             _validator = validator;
@@ -24,7 +24,7 @@ namespace WebUI.Controllers
             ViewBag.SortCategoryParameter = "Category";
             ViewBag.SortPlaceParameter = "Place";
             var userEvents = await _service.GetUserEvents(sortBy);
-            var userEventViewModels = userEvents.Select(x => UserEventViewModel.ToUserEventViewModel(x)).ToList();
+            var userEventViewModels = userEvents.Select(x => CreateUpdateUserEventViewModel.ToUserEventViewModel(x)).ToList();
             return View("EventsOverview", userEventViewModels);
         }
 
@@ -35,7 +35,7 @@ namespace WebUI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(UserEventViewModel newModel)
+        public async Task<IActionResult> Create(CreateUpdateUserEventViewModel newModel)
         {
             var validationResult = _validator.Validate(newModel);
             if (!ModelState.IsValid)
@@ -45,7 +45,7 @@ namespace WebUI.Controllers
             if(!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
 
-            await _service.AddNewUserEvent(newModel.ToUserEvent());
+            await _service.AddNewUserEvent(newModel.ToUserEvent(), newModel.ToRecurrencyRule());
             return RedirectToAction(nameof(Events));
         }
 
@@ -55,11 +55,11 @@ namespace WebUI.Controllers
             var eventToUpdate = await _service.GetUserEventById(id);
             if (eventToUpdate == null)
                 return NotFound($"The event with id {id} not found");
-            return View("Create", UserEventViewModel.ToUserEventViewModel(eventToUpdate));
+            return View("Create", CreateUpdateUserEventViewModel.ToUserEventViewModel(eventToUpdate));
         }
 
         [HttpPost("[action]/{id:guid?}")]
-        public async Task<IActionResult> Edit(UserEventViewModel model)
+        public async Task<IActionResult> Edit(CreateUpdateUserEventViewModel model)
         {
             await _service.UpdateUserEvent(model.ToUserEvent());
             return RedirectToAction(nameof(Events));

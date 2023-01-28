@@ -1,4 +1,4 @@
-﻿using ApplicationCore.Models;
+﻿using ApplicationCore.Models.Entities;
 using ApplicationCore.Models.Enums;
 using ApplicationCore.Repositories.Contracts;
 using ApplicationCore.Services.Contracts;
@@ -7,16 +7,33 @@ namespace ApplicationCore.Services
 {
     public class UserEventService : IUserEventService
     {
-        private readonly IUserEventRepository _repository;
+        private readonly IUserEventRepository _userEventRepository;
+        private readonly IRecurrencyRuleRepository _recurrencyRuleRepository;
 
-        public UserEventService(IUserEventRepository repository)
+        public UserEventService(IUserEventRepository repository, IRecurrencyRuleRepository recurrencyRuleRepository)
         {
-            _repository = repository;
+            _userEventRepository = repository;
+            _recurrencyRuleRepository = recurrencyRuleRepository;
         }
-
-        public async Task<IEnumerable<UserEvent>> AddNewUserEvent(UserEvent userEvent)
+        public async Task<UserEvent> AddNewUserEvent(UserEvent userEvent, RecurrencyRule recurrencyRule)
         {
-            var results = new List<UserEvent>();
+            // First add a new event to the db
+            var newUserEventId = await _userEventRepository.Add(userEvent);
+
+            // Next check if there is an incoming recurrency for this event
+            if(userEvent.HasRecurrency == YesNo.Yes)
+            {
+                ArgumentNullException.ThrowIfNull(recurrencyRule);
+                recurrencyRule.UserEventId = newUserEventId;
+                await _recurrencyRuleRepository.Add(recurrencyRule);                
+            }
+            var newUserEvent = await _userEventRepository.GetById(newUserEventId);
+            ArgumentNullException.ThrowIfNull(newUserEvent);
+            return newUserEvent;
+        }
+        //public async Task<IEnumerable<UserEvent>> AddNewUserEvent(UserEvent userEvent, RecurrencyRule recurrencyRule)
+        //{
+        //    var results = new List<UserEvent>();
             //switch(userEvent.RecurrencyRule.Recurrency)
             //{
             //    case Recurrency.None:
@@ -59,8 +76,8 @@ namespace ApplicationCore.Services
             //            throw new ArgumentException($"The value of {nameof(userEvent.RecurrencyRule.Recurrency)} unknown");
             //        }
             //}
-            return results;            
-        }
+        //    return results;            
+        //}
 
         private static List<UserEvent> CompleteEventsForPeriod(UserEvent userEvent, Recurrency recurrency)
         {
@@ -95,26 +112,26 @@ namespace ApplicationCore.Services
 
         public async Task<UserEvent> GetUserEventById(Guid id)
         {
-            var userEventFound = await _repository.GetById(id);            
+            var userEventFound = await _userEventRepository.GetById(id);
             ArgumentNullException.ThrowIfNull(userEventFound);
             return userEventFound;
-        }
+        }        
 
         public async Task<IEnumerable<UserEvent>> GetUserEvents(string sortBy)
         {
-            return await _repository.GetAll(sortBy);
+            return await _userEventRepository.GetAll(sortBy);
         }
 
         public async Task RemoveUserEvent(Guid id)
         {
-            var userEventToDelete = await _repository.GetById(id);
+            var userEventToDelete = await _userEventRepository.GetById(id);
             ArgumentNullException.ThrowIfNull(userEventToDelete);
-            await _repository.Remove(userEventToDelete);
+            await _userEventRepository.Remove(userEventToDelete);
         }
 
         public async Task<UserEvent> UpdateUserEvent(UserEvent userEvent)
         {
-            await _repository.Update(userEvent);
+            await _userEventRepository.Update(userEvent);
             return userEvent;
         }                     
     }

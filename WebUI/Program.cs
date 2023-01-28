@@ -14,8 +14,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<UserEventDataContext>(opt => opt.UseNpgsql(builder.Configuration.GetConnectionString("Postgresql")));
 builder.Services.AddScoped<IUserEventRepository, UserEventRepository>();
+builder.Services.AddScoped<IRecurrencyRuleRepository, RecurrencyRuleRepository>();
 builder.Services.AddScoped<IUserEventService, UserEventService>();
-builder.Services.AddScoped<IValidator<UserEventViewModel>, DateValidator>();
+builder.Services.AddScoped<IValidator<CreateUpdateUserEventViewModel>, DateValidator>();
 
 var app = builder.Build();
 

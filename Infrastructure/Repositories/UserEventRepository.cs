@@ -1,4 +1,4 @@
-﻿using ApplicationCore.Models;
+﻿using ApplicationCore.Models.Entities;
 using ApplicationCore.Repositories.Contracts;
 using Infrastructure.DataContext;
 using Microsoft.EntityFrameworkCore;
@@ -26,15 +26,16 @@ namespace Infrastructure.Repositories
 
         public async Task<UserEvent> GetById(Guid id)
         {
-            var userEvent = await _context.UserEvents.FindAsync(id);
+            var userEvent = await _context.UserEvents.Include(x => x.RecurrencyRule).FirstOrDefaultAsync(x => x.Id == id);
             ArgumentNullException.ThrowIfNull(userEvent);
             return userEvent;
         }
 
-        public async Task Add(UserEvent userEvent)
+        public async Task<Guid> Add(UserEvent userEvent)
         {
             await _context.UserEvents.AddAsync(userEvent);
             await _context.SaveChangesAsync();
+            return userEvent.Id;
         }
 
         public async Task Remove(UserEvent userEvent)

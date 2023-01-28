@@ -3,7 +3,7 @@ using WebUI.Models;
 
 namespace WebUI.Validators
 {
-    public class DateValidator : AbstractValidator<UserEventViewModel>
+    public class DateValidator : AbstractValidator<CreateUpdateUserEventViewModel>
     {
         public DateValidator()
         {

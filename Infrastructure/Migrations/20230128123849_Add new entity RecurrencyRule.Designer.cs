@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(UserEventDataContext))]
-    [Migration("20230128120444_Add new entity RecurrencyRule")]
+    [Migration("20230128123849_Add new entity RecurrencyRule")]
     partial class AddnewentityRecurrencyRule
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -57,7 +57,8 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserEventId");
+                    b.HasIndex("UserEventId")
+                        .IsUnique();
 
                     b.ToTable("RecurrencyRules");
                 });
@@ -115,26 +116,26 @@ namespace Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("88b921b0-a20d-49b4-83f5-e42298531f61"),
+                            Id = new Guid("da58013a-c5ea-4dd5-a76a-f8d69abf00c9"),
                             AdditionalInfo = "test additionalInfo from seed",
                             Category = "test category from seed",
-                            Date = new DateTime(2023, 1, 28, 12, 4, 44, 163, DateTimeKind.Utc).AddTicks(9550),
+                            Date = new DateTime(2023, 1, 28, 12, 38, 49, 286, DateTimeKind.Utc).AddTicks(6641),
                             Description = "test description from seed",
-                            EndTime = new DateTime(2023, 1, 28, 14, 4, 44, 163, DateTimeKind.Utc).AddTicks(9525),
+                            EndTime = new DateTime(2023, 1, 28, 14, 38, 49, 286, DateTimeKind.Utc).AddTicks(6612),
                             HasRecurrency = "Yes",
                             ImageUrl = "test image url from seed",
-                            LastDate = new DateTime(2023, 1, 28, 12, 4, 44, 163, DateTimeKind.Utc).AddTicks(9551),
+                            LastDate = new DateTime(2023, 1, 28, 12, 38, 49, 286, DateTimeKind.Utc).AddTicks(6641),
                             Name = "Test name from seed",
                             Place = "test place from seed",
-                            StartTime = new DateTime(2023, 1, 28, 12, 4, 44, 163, DateTimeKind.Utc).AddTicks(9519)
+                            StartTime = new DateTime(2023, 1, 28, 12, 38, 49, 286, DateTimeKind.Utc).AddTicks(6608)
                         });
                 });
 
             modelBuilder.Entity("ApplicationCore.Models.RecurrencyRule", b =>
                 {
                     b.HasOne("ApplicationCore.Models.UserEvent", "UserEvent")
-                        .WithMany("RecurrencyRules")
-                        .HasForeignKey("UserEventId")
+                        .WithOne("RecurrencyRule")
+                        .HasForeignKey("ApplicationCore.Models.RecurrencyRule", "UserEventId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -143,7 +144,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("ApplicationCore.Models.UserEvent", b =>
                 {
-                    b.Navigation("RecurrencyRules");
+                    b.Navigation("RecurrencyRule");
                 });
 #pragma warning restore 612, 618
         }

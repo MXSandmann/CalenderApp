@@ -1,4 +1,4 @@
-﻿using ApplicationCore.Models;
+﻿using ApplicationCore.Models.Entities;
 
 namespace ApplicationCore.Repositories.Contracts
 {
@@ -6,7 +6,7 @@ namespace ApplicationCore.Repositories.Contracts
     {
         Task<IEnumerable<UserEvent>> GetAll(string sortBy);
         Task<UserEvent> GetById(Guid id);
-        Task Add(UserEvent userEvent);
+        Task<Guid> Add(UserEvent userEvent);
         Task AddRange(IEnumerable<UserEvent> userEvents);
         Task SaveAsync();
         Task Remove(UserEvent userEvent);

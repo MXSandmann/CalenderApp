@@ -46,12 +46,13 @@ namespace Infrastructure.Migrations
             migrationBuilder.InsertData(
                 table: "UserEvents",
                 columns: new[] { "Id", "AdditionalInfo", "Category", "Date", "Description", "EndTime", "HasRecurrency", "ImageUrl", "LastDate", "Name", "Place", "StartTime" },
-                values: new object[] { new Guid("88b921b0-a20d-49b4-83f5-e42298531f61"), "test additionalInfo from seed", "test category from seed", new DateTime(2023, 1, 28, 12, 4, 44, 163, DateTimeKind.Utc).AddTicks(9550), "test description from seed", new DateTime(2023, 1, 28, 14, 4, 44, 163, DateTimeKind.Utc).AddTicks(9525), "Yes", "test image url from seed", new DateTime(2023, 1, 28, 12, 4, 44, 163, DateTimeKind.Utc).AddTicks(9551), "Test name from seed", "test place from seed", new DateTime(2023, 1, 28, 12, 4, 44, 163, DateTimeKind.Utc).AddTicks(9519) });
+                values: new object[] { new Guid("da58013a-c5ea-4dd5-a76a-f8d69abf00c9"), "test additionalInfo from seed", "test category from seed", new DateTime(2023, 1, 28, 12, 38, 49, 286, DateTimeKind.Utc).AddTicks(6641), "test description from seed", new DateTime(2023, 1, 28, 14, 38, 49, 286, DateTimeKind.Utc).AddTicks(6612), "Yes", "test image url from seed", new DateTime(2023, 1, 28, 12, 38, 49, 286, DateTimeKind.Utc).AddTicks(6641), "Test name from seed", "test place from seed", new DateTime(2023, 1, 28, 12, 38, 49, 286, DateTimeKind.Utc).AddTicks(6608) });
 
             migrationBuilder.CreateIndex(
                 name: "IX_RecurrencyRules_UserEventId",
                 table: "RecurrencyRules",
-                column: "UserEventId");
+                column: "UserEventId",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -62,7 +63,7 @@ namespace Infrastructure.Migrations
             migrationBuilder.DeleteData(
                 table: "UserEvents",
                 keyColumn: "Id",
-                keyValue: new Guid("88b921b0-a20d-49b4-83f5-e42298531f61"));
+                keyValue: new Guid("da58013a-c5ea-4dd5-a76a-f8d69abf00c9"));
 
             migrationBuilder.RenameColumn(
                 name: "HasRecurrency",

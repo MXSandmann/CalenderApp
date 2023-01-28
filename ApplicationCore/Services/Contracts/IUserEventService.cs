@@ -1,10 +1,10 @@
-﻿using ApplicationCore.Models;
+﻿using ApplicationCore.Models.Entities;
 
 namespace ApplicationCore.Services.Contracts
 {
     public interface IUserEventService
     {
-        Task<IEnumerable<UserEvent>> AddNewUserEvent(UserEvent userEvent);
+        Task<UserEvent> AddNewUserEvent(UserEvent userEvent, RecurrencyRule recurrencyRule);
         Task RemoveUserEvent(Guid id);
         Task<UserEvent> UpdateUserEvent(UserEvent userEvent);
         Task<IEnumerable<UserEvent>> GetUserEvents(string sortBy);

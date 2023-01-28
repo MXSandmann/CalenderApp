@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ApplicationCore.Models;
 using Infrastructure.DataContext;
+using ApplicationCore.Models.Entities;
 
 namespace Infrastructure.DataContext
 {

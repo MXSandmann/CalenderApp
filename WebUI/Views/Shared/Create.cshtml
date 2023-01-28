@@ -1,6 +1,6 @@
 ﻿@using ApplicationCore.Models.Enums;
 @using WebUI.Models;
-@model UserEventViewModel
+@model CreateUpdateUserEventViewModel
 
 <form method="post">
     <div asp-validation-summary ="ModelOnly"></div>
@@ -88,6 +88,9 @@
             <option value="Chose if event should be recurrent"></option>
         </select>
         <span asp-validation-for="HasRecurrency" class="text-danger"></span>
+    </div>
+    <div>
+        <partial name="_CreateRecurrency" />
     </div>
     <div>
         <button class="btn btn-primary" type="submit">Submit</button>

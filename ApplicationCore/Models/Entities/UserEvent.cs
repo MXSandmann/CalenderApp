@@ -1,7 +1,7 @@
 ﻿using ApplicationCore.Models.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace ApplicationCore.Models
+namespace ApplicationCore.Models.Entities
 {
     public class UserEvent
     {
@@ -22,7 +22,7 @@ namespace ApplicationCore.Models
         public string AdditionalInfo { get; set; } = null!;
         public string ImageUrl { get; set; } = null!;
         public YesNo HasRecurrency { get; set; }
-        public ICollection<RecurrencyRule>? RecurrencyRules { get; set; }
+        public RecurrencyRule? RecurrencyRule { get; set; }
 
         public static UserEvent Copy(UserEvent other)
         {
@@ -39,7 +39,7 @@ namespace ApplicationCore.Models
                 Description = other.Description,
                 AdditionalInfo = other.AdditionalInfo,
                 ImageUrl = other.ImageUrl,
-                RecurrencyRules = other.RecurrencyRules
+                RecurrencyRule = other.RecurrencyRule
             };
         }
     }

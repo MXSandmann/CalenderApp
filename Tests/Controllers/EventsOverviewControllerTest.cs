@@ -1,4 +1,4 @@
-﻿using ApplicationCore.Models;
+﻿using ApplicationCore.Models.Entities;
 using ApplicationCore.Models.Enums;
 using ApplicationCore.Services.Contracts;
 using FluentValidation;
@@ -19,7 +19,7 @@ namespace Tests.Controllers
 
         // System under test
         private readonly EventsOverviewController _sut;
-        private readonly IValidator<UserEventViewModel> _validator;
+        private readonly IValidator<CreateUpdateUserEventViewModel> _validator;
 
         public EventsOverviewControllerTest()
         {
@@ -40,7 +40,7 @@ namespace Tests.Controllers
 
             // Assert            
             var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsAssignableFrom<IEnumerable<UserEventViewModel>>(viewResult.ViewData.Model);
+            var model = Assert.IsAssignableFrom<IEnumerable<CreateUpdateUserEventViewModel>>(viewResult.ViewData.Model);
             model.Count().ShouldBe(2);
         }
 
@@ -109,9 +109,9 @@ namespace Tests.Controllers
             // Assert            
             var requestResult = Assert.IsType<ViewResult>(result);
             requestResult.ViewName.ShouldBe("Create");
-            var model = Assert.IsAssignableFrom<UserEventViewModel>(requestResult.ViewData.Model);
+            var model = Assert.IsAssignableFrom<CreateUpdateUserEventViewModel>(requestResult.ViewData.Model);
 
-            var startModel = UserEventViewModel.ToUserEventViewModel(userEvent);
+            var startModel = CreateUpdateUserEventViewModel.ToUserEventViewModel(userEvent);
                         
             model.Id.ShouldBe(startModel.Id);
             model.Name.ShouldBe(startModel.Name);

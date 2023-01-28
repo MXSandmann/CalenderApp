@@ -1,4 +1,4 @@
-﻿using ApplicationCore.Models;
+﻿using ApplicationCore.Models.Entities;
 using ApplicationCore.Models.Enums;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
@@ -6,9 +6,9 @@ using System.ComponentModel.DataAnnotations;
 namespace WebUI.Models
 {
 
-    public class UserEventViewModel
+    public class CreateUpdateUserEventViewModel
     {
-        public Guid Id { get; set; }
+        //public Guid Id { get; set; }
         public string Name { get; set; } = null!;
         public string Category { get; set; } = null!;
         public string Place { get; set; } = null!;
@@ -24,13 +24,18 @@ namespace WebUI.Models
         public string AdditionalInfo { get; set; } = null!;
         public string ImageUrl { get; set; } = null!;
         public YesNo HasRecurrency { get; set; }
-        //public RecurrencyRule RecurrencyRule { get; set; } = null!;
+        public Recurrency Recurrency { get; set; }
+        public int Gap { get; set; }
+        public int MaximumOccurrencies { get; set; }
+        public DayOfTheWeek DayOfWeek { get; set; }
+        public WeekOfTheMonth WeekOfMonth { get; set; }
+        public MonthOfTheYear MonthOfYear { get; set; }
 
         public UserEvent ToUserEvent()
         {
             return new UserEvent
             {
-                Id = this.Id,
+                //Id = this.Id,
                 Name = this.Name,
                 Category = this.Category,
                 Place = this.Place,                
@@ -45,11 +50,24 @@ namespace WebUI.Models
             };
         }
 
-        public static UserEventViewModel ToUserEventViewModel(UserEvent userEvent)
+        public RecurrencyRule ToRecurrencyRule()
         {
-            return new UserEventViewModel
+            return new RecurrencyRule
             {
-                Id = userEvent.Id,
+                Recurrency = this.Recurrency,
+                Gap = this.Gap,
+                MaximumOccurrencies = this.MaximumOccurrencies,
+                DayOfWeek = this.DayOfWeek,
+                WeekOfMonth = this.WeekOfMonth,
+                MonthOfYear = this.MonthOfYear,
+            };
+        }
+
+        public static CreateUpdateUserEventViewModel ToUserEventViewModel(UserEvent userEvent)
+        {
+            return new CreateUpdateUserEventViewModel
+            {
+                //Id = userEvent.Id,
                 Name = userEvent.Name,
                 Category = userEvent.Category,
                 Place = userEvent.Place,

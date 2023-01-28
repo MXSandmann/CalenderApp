@@ -1,4 +1,5 @@
 ﻿using ApplicationCore.Models;
+using ApplicationCore.Models.Entities;
 using System.Text.Json;
 
 namespace ApplicationCore.Helpers
