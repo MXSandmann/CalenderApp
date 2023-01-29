@@ -10,6 +10,6 @@ namespace ApplicationCore.Repositories.Contracts
         Task AddRange(IEnumerable<UserEvent> userEvents);
         Task SaveAsync();
         Task Remove(UserEvent userEvent);
-        Task Update(UserEvent userEvent);
+        Task<UserEvent> Update(UserEvent userEvent);
     }
 }

@@ -6,5 +6,6 @@ namespace ApplicationCore.Repositories.Contracts
     {
         Task<Guid> Add(RecurrencyRule recurrencyRule);
         Task<RecurrencyRule> GetById(Guid recurrencyRuleId);
+        Task Update(RecurrencyRule recurrencyRule);
     }
 }

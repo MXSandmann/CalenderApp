@@ -1,8 +1,8 @@
-﻿using System.Diagnostics;
+﻿using ApplicationCore.Services.Contracts;
 using Microsoft.AspNetCore.Mvc;
-using ApplicationCore.Services.Contracts;
+using System.Diagnostics;
+using System.Text.Json;
 using WebUI.Models;
-using ApplicationCore.Helpers;
 
 namespace WebUI.Controllers;
 
@@ -17,10 +17,17 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Index()
     {
-        var userEvents = await _service.GetUserEvents(string.Empty);        
-        ViewData["Events"] = EventParseHelper.SerializeUserEvensToJsonString(userEvents);
+        var events = await _service.GetCalendarEvents();
+        ViewData["Events"] = JsonSerializer.Serialize(events);
         return View();
     }
+
+    //public async Task<IActionResult> Index()
+    //{
+    //    var userEvents = await _service.GetUserEvents(string.Empty);        
+    //    ViewData["Events"] = EventParseHelper.SerializeUserEvensToJsonString(userEvents);
+    //    return View();
+    //}
 
     public IActionResult Privacy()
     {

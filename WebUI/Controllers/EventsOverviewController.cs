@@ -61,7 +61,15 @@ namespace WebUI.Controllers
         [HttpPost("[action]/{id:guid?}")]
         public async Task<IActionResult> Edit(CreateUpdateUserEventViewModel model)
         {
-            await _service.UpdateUserEvent(model.ToUserEvent());
+            var validationResult = _validator.Validate(model);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
+
+            await _service.UpdateUserEvent(model.ToUserEvent(), model.ToRecurrencyRule());
             return RedirectToAction(nameof(Events));
         }
 

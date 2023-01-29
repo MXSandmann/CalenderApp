@@ -1,4 +1,5 @@
-﻿using ApplicationCore.Models.Entities;
+﻿using ApplicationCore.Models;
+using ApplicationCore.Models.Entities;
 
 namespace ApplicationCore.Services.Contracts
 {
@@ -6,8 +7,9 @@ namespace ApplicationCore.Services.Contracts
     {
         Task<UserEvent> AddNewUserEvent(UserEvent userEvent, RecurrencyRule recurrencyRule);
         Task RemoveUserEvent(Guid id);
-        Task<UserEvent> UpdateUserEvent(UserEvent userEvent);
+        Task<UserEvent> UpdateUserEvent(UserEvent userEvent, RecurrencyRule recurrencyRule);
         Task<IEnumerable<UserEvent>> GetUserEvents(string sortBy);
         Task<UserEvent> GetUserEventById(Guid id);
+        Task<IEnumerable<CalendarEvent>> GetCalendarEvents();
     }
 }

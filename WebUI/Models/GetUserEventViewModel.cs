@@ -1,4 +1,5 @@
-﻿using ApplicationCore.Models.Entities;
+﻿using ApplicationCore.Helpers;
+using ApplicationCore.Models.Entities;
 using ApplicationCore.Models.Enums;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
@@ -45,21 +46,21 @@ namespace WebUI.Models
             };            
         }
 
-        private static string GetRecurrencyDescription(RecurrencyRule recurrencyRule)
+        private static string GetRecurrencyDescription(RecurrencyRule rr)
         {
-            if(recurrencyRule == null)
+            if(rr == null)
                 return string.Empty;
             var sb = new StringBuilder();
-            if (recurrencyRule.OnMonday) sb.Append("On mondays; ");
-            if (recurrencyRule.OnTuesday) sb.Append("On tuesdays; ");
-            if (recurrencyRule.OnWednesday) sb.Append("On wednesdays; ");
-            if (recurrencyRule.OnTuesday) sb.Append("On tuesday; ");
-            if (recurrencyRule.OnFriday) sb.Append("On fridays; ");
-            if (recurrencyRule.OnSaturday) sb.Append("On saturdays; ");
-            if (recurrencyRule.OnSunday) sb.Append("On sundays; ");
-            if (recurrencyRule.WeekOfMonth != WeekOfTheMonth.None) sb.Append($"{recurrencyRule.WeekOfMonth.ToString()} week of month; ");
-            if (recurrencyRule.MonthOfYear != MonthOfTheYear.None) sb.Append($"{recurrencyRule.MonthOfYear.ToString()} every year; ");
-            if (recurrencyRule.Recurrency != RecurrencyEnum.None) sb.Append($"recurrencyRule.Recurrency.ToString(); ");
+            if (CertainDayHelper.IsOnMonday(rr.CertainDays)) sb.Append("On mondays; ");
+            if (CertainDayHelper.IsOnTuesday(rr.CertainDays)) sb.Append("On tuesdays; ");
+            if (CertainDayHelper.IsOnWednesday(rr.CertainDays)) sb.Append("On wednesdays; ");
+            if (CertainDayHelper.IsOnTuesday(rr.CertainDays)) sb.Append("On tuesday; ");
+            if (CertainDayHelper.IsOnFriday(rr.CertainDays)) sb.Append("On fridays; ");
+            if (CertainDayHelper.IsOnSaturday(rr.CertainDays)) sb.Append("On saturdays; ");
+            if (CertainDayHelper.IsOnSunday(rr.CertainDays)) sb.Append("On sundays; ");
+            if (rr.WeekOfMonth != WeekOfTheMonth.None) sb.Append($"{rr.WeekOfMonth.ToString()} week of month; ");
+            if (rr.MonthOfYear != MonthOfTheYear.None) sb.Append($"{rr.MonthOfYear.ToString()} every year; ");
+            if (rr.Recurrency != RecurrencyEnum.None) sb.Append(rr.Recurrency.ToString());
 
             return sb.ToString();
         }

@@ -49,10 +49,13 @@ namespace Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task Update(UserEvent userEvent)
+        public async Task<UserEvent> Update(UserEvent userEvent)
         {
             _context.UserEvents.Update(userEvent);
             await _context.SaveChangesAsync();
+            var updated = await _context.UserEvents.Include(x => x.RecurrencyRule).FirstOrDefaultAsync(x => x.Id == userEvent.Id);
+            ArgumentNullException.ThrowIfNull(updated);            
+            return updated;
         }
 
         public async Task AddRange(IEnumerable<UserEvent> userEvents)

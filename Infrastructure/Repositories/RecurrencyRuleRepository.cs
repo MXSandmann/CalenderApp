@@ -18,9 +18,26 @@ namespace Infrastructure.Repositories
             return recurrencyRule.Id;
         }
 
-        public Task<RecurrencyRule> GetById(Guid recurrencyRuleId)
+        public async Task<RecurrencyRule> GetById(Guid recurrencyRuleId)
         {
-            throw new NotImplementedException();
+            var toUpdate = await _context.RecurrencyRules.FindAsync(recurrencyRuleId);
+            ArgumentNullException.ThrowIfNull(toUpdate);
+            return toUpdate;
+        }
+
+        public async Task Update(RecurrencyRule recurrencyRule)
+        {
+            var toUpdate = await _context.RecurrencyRules.FindAsync(recurrencyRule.Id);
+            ArgumentNullException.ThrowIfNull(toUpdate);
+
+            toUpdate.Recurrency = recurrencyRule.Recurrency;
+            toUpdate.Gap = recurrencyRule.Gap;
+            toUpdate.MaximumOccurrencies = recurrencyRule.MaximumOccurrencies;
+            toUpdate.WeekOfMonth = recurrencyRule.WeekOfMonth;            
+            toUpdate.MonthOfYear = recurrencyRule.MonthOfYear;
+            toUpdate.CertainDays = recurrencyRule.CertainDays;           
+            
+            await _context.SaveChangesAsync();
         }
     }
 }
