@@ -4,8 +4,10 @@ namespace ApplicationCore.Models.Enums
 {
     public enum WeekOfTheMonth
     {
+        [Display(Name = "No")]
+        None,
         [Display(Name = "Every first")]
-        First = 1,
+        First,
         [Display(Name = "Every second")]
         Second,
         [Display(Name = "Every third")]

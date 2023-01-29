@@ -24,7 +24,7 @@ namespace WebUI.Controllers
             ViewBag.SortCategoryParameter = "Category";
             ViewBag.SortPlaceParameter = "Place";
             var userEvents = await _service.GetUserEvents(sortBy);
-            var userEventViewModels = userEvents.Select(x => CreateUpdateUserEventViewModel.ToUserEventViewModel(x)).ToList();
+            var userEventViewModels = userEvents.Select(x => GetUserEventViewModel.ToUserEventViewModel(x)).ToList();
             return View("EventsOverview", userEventViewModels);
         }
 

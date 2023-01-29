@@ -4,94 +4,181 @@
 
 <form method="post">
     <div asp-validation-summary ="ModelOnly"></div>
-    <div>
-        <label class="form-label">Name</label>
-        <input class="form-control"
-                data-val="true"
-                data-val-required="The Name is required"
-                asp-for="Name" />
-    </div>
-    <div>
-        <label class="form-label">Category</label>
-        <input class="form-control"
-                data-val="true"
-                data-val-required="The Category is required"
-                asp-for="Category" />
-    </div>
-    <div>
-        <label class="form-label">Place</label>
-        <input class="form-control"
-                data-val="true"
-                data-val-required="The Place is required"
-                asp-for="Place" />
-    </div>
-    <div>
-        <label class="form-label">Start Time</label>
-        <input class="form-control"
-                type="time"
-                id="StartTime"
-                name="StartTime"
-                asp-for="StartTime" />
-        <span asp-validation-for="StartTime"></span>
-    </div>
-    <div>
-        <label class="form-label">End Time</label>
-        <input class="form-control"
-                type="time"               
-                id="EndTime"
-                name="EndTime"
-                asp-for="EndTime" />
-        <span asp-validation-for="EndTime"></span>
-    </div>
-    <div>
-        <label class="form-label">Date</label>
-        <input class="form-control"
-               type="date"
-               data-val="true"
-               data-val-required="The Date is required"
-               id="Date"
-               name="Date"
-               asp-for="Date" />
-    </div>
-    <div>
-        <label class="form-label">Last Date (leave empty, if not recurrent)</label>
-        <input class="form-control"
-               type="date"
-               id="LastDate"
-               name="LastDate"
-               asp-for="LastDate" />
-    </div>
-    <div>
-        <label class="form-label">Description</label>
-        <input class="form-control"
-               data-val="true"
-               data-val-required="The Description is required"
-               asp-for="Description" />
-    </div>
-    <div>
-        <label class="form-label">AdditionalInfo</label>
-        <input class="form-control"
-               data-val="true"
-               data-val-required="The AdditionalInfo is required"
-                asp-for="AdditionalInfo" />
-    </div>
-    <div>
-        <label class="form-label">ImageUrl</label>
-        <input class="form-control"
-               data-val="true"
-               data-val-required="The ImageUrl is required"
-                asp-for="ImageUrl" />
-    </div>
-    <div class="form-group">
-        <label asp-for="HasRecurrency" class="control-label"></label>
-        <select asp-for="HasRecurrency" class="form-control" asp-items="Html.GetEnumSelectList<YesNo>()">
-            <option value="Chose if event should be recurrent"></option>
-        </select>
-        <span asp-validation-for="HasRecurrency" class="text-danger"></span>
-    </div>
-    <div>
-        <partial name="_CreateRecurrency" />
-    </div>
+        <div class="container">
+            <div class="row">
+                @*User Event part*@
+                <div class="col-sm">
+                    <h3>Create a new event</h3>
+                    <div>
+                        <label class="form-label">Name</label>
+                        <input class="form-control"
+                                data-val="true"
+                                data-val-required="The Name is required"
+                                asp-for="Name" />
+                    </div>
+                    <div>
+                        <label class="form-label">Category</label>
+                        <input class="form-control"
+                                data-val="true"
+                                data-val-required="The Category is required"
+                                asp-for="Category" />
+                    </div>
+                    <div>
+                        <label class="form-label">Place</label>
+                        <input class="form-control"
+                                data-val="true"
+                                data-val-required="The Place is required"
+                                asp-for="Place" />
+                    </div>
+                    <div>
+                        <label class="form-label">Start Time</label>
+                        <input class="form-control"
+                                type="time"
+                                id="StartTime"
+                                name="StartTime"
+                                asp-for="StartTime" />
+                        <span asp-validation-for="StartTime"></span>
+                    </div>
+                    <div>
+                        <label class="form-label">End Time</label>
+                        <input class="form-control"
+                                type="time"               
+                                id="EndTime"
+                                name="EndTime"
+                                asp-for="EndTime" />
+                        <span asp-validation-for="EndTime"></span>
+                    </div>
+                    <div>
+                        <label class="form-label">Date</label>
+                        <input class="form-control"
+                            type="date"
+                            data-val="true"
+                            data-val-required="The Date is required"
+                            id="Date"
+                            name="Date"
+                            asp-for="Date" />
+                    </div>
+                    <div>
+                        <label class="form-label">Last Date (leave empty, if not recurrent)</label>
+                        <input class="form-control"
+                            type="date"
+                            id="LastDate"
+                            name="LastDate"
+                            asp-for="LastDate" />
+                    </div>
+                    <div>
+                        <label class="form-label">Description</label>
+                        <input class="form-control"
+                            data-val="true"
+                            data-val-required="The Description is required"
+                            asp-for="Description" />
+                    </div>
+                    <div>
+                        <label class="form-label">AdditionalInfo</label>
+                        <input class="form-control"
+                            data-val="true"
+                            data-val-required="The AdditionalInfo is required"
+                                asp-for="AdditionalInfo" />
+                    </div>
+                    <div>
+                        <label class="form-label">ImageUrl</label>
+                        <input class="form-control"
+                            data-val="true"
+                            data-val-required="The ImageUrl is required"
+                                asp-for="ImageUrl" />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="HasRecurrency" class="control-label"></label>
+                        <select asp-for="HasRecurrency" class="form-control" asp-items="Html.GetEnumSelectList<YesNo>()">
+                            @*<option value=No></option>*@
+                        </select>
+                        <span asp-validation-for="HasRecurrency" class="text-danger"></span>
+                    </div>
+                </div>
+
+                @*Recurrency rule part*@
+                <div class="col-sm">
+                    <h3>Create a recurrency</h3>
+                    <div class="form-group">
+                        <label asp-for="Recurrency" class="control-label"></label>
+                        <select asp-for="Recurrency" class="form-control" asp-items="Html.GetEnumSelectList<Recurrency>()">
+                            @*<option value="Chose if event should be recurrent"></option>*@
+                            </select>
+                        <span asp-validation-for="Recurrency" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label class="form-label">Gap between events</label>
+                        <input class="form-control"
+                               data-val="true"
+                               data-val-required="The Gap is required"
+                               asp-for="Gap" />
+                    </div>
+                    <div>
+                        <label class="form-label">How many times should occur</label>
+                        <input class="form-control"
+                               data-val="true"
+                               data-val-required="The MaximumOccurrencies is required"
+                               asp-for="MaximumOccurrencies" />
+                    </div>
+                    @*<div class="form-group">
+                    <label asp-for="DayOfWeek" class="control-label">Certain day of the week</label>
+                        <select asp-for="DayOfWeek" class="form-control" asp-items="Html.GetEnumSelectList<DayOfTheWeek>()">
+                            <option value="Chose if event should be recurrent"></option>
+                            </select>
+                        <span asp-validation-for="DayOfWeek" class="text-danger"></span>
+                    </div>*@
+                    <div class="form-group">
+                        <label asp-for="WeekOfMonth" class="control-label">Certain week in month</label>
+                        <select asp-for="WeekOfMonth" class="form-control" asp-items="Html.GetEnumSelectList<WeekOfTheMonth>()">
+                        @*<option value="Chose if event should be recurrent"></option>*@
+                            </select>
+                        <span asp-validation-for="WeekOfMonth" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="MonthOfYear" class="control-label">Certain month in year</label>
+                        <select asp-for="MonthOfYear" class="form-control" asp-items="Html.GetEnumSelectList<MonthOfTheYear>()">
+                            @*<option value="Chose if event should be recurrent"></option>*@
+                        </select>
+                        <span asp-validation-for="MonthOfYear" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Monday</label>
+                        <input type="checkbox"                               
+                               asp-for="OnMonday" />
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Tuesday</label>
+                        <input type="checkbox"
+                               asp-for="OnTuesday" />
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Wednesday</label>
+                        <input type="checkbox"
+                               asp-for="OnWednesday" />
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Thursday</label>
+                        <input type="checkbox"
+                               asp-for="OnThursday" />
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Friday</label>
+                            <input type="checkbox"                               
+                                   asp-for="OnFriday" />
+                        </div>
+                        <div class="form-group">
+                        <label class="form-label">Saturday</label>
+                            <input type="checkbox"                               
+                                   asp-for="OnSaturday" />
+                        </div>
+                    <div class="form-group">
+                        <label class="form-label">Sunday</label>
+                        <input type="checkbox"
+                               asp-for="OnSunday" />
+                    </div>
+                </div>
+            </div>
+        </div>
     <div>
         <button class="btn btn-primary" type="submit">Submit</button>
     </div>

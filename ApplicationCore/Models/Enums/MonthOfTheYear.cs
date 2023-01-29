@@ -4,8 +4,10 @@ namespace ApplicationCore.Models.Enums
 {
     public enum MonthOfTheYear
     {
+        [Display(Name = "No")]
+        None,
         [Display(Name = "On january")]
-        Jan = 1,
+        Jan,
         [Display(Name = "On february")]
         Feb,
         [Display(Name = "On march")]

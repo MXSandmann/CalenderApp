@@ -23,5 +23,12 @@ namespace ApplicationCore.Models.Entities
         public DayOfTheWeek DayOfWeek { get; set; }
         public WeekOfTheMonth WeekOfMonth { get; set; }
         public MonthOfTheYear MonthOfYear { get; set; }
+        public bool OnMonday { get; set; }
+        public bool OnTuesday { get; set; }
+        public bool OnWednesday { get; set; }
+        public bool OnThursday { get; set;  }
+        public bool OnFriday { get; set; }
+        public bool OnSaturday { get; set; }
+        public bool OnSunday { get; set; }
     }
 }

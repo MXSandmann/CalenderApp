@@ -2,7 +2,7 @@
 {
     public enum YesNo
     {
-        Yes = 1,
-        No
+        No = 1,
+        Yes
     }
 }

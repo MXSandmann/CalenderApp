@@ -17,11 +17,11 @@ namespace Infrastructure.Repositories
         {            
             if (sortBy != null
                 && sortBy.Equals("Place"))
-                return await _context.UserEvents.OrderBy(x => x.Place).ToListAsync();
+                return await _context.UserEvents.Include(x => x.RecurrencyRule).OrderBy(x => x.Place).ToListAsync();
             if (sortBy != null
                 && sortBy.Equals("Category"))
-                return await _context.UserEvents.OrderBy(x => x.Category).ToListAsync();
-            return await _context.UserEvents.OrderBy(x => x.Date).ThenBy(x => x.StartTime).ToListAsync();
+                return await _context.UserEvents.Include(x => x.RecurrencyRule).OrderBy(x => x.Category).ToListAsync();
+            return await _context.UserEvents.Include(x => x.RecurrencyRule).OrderBy(x => x.Date).ThenBy(x => x.StartTime).ToListAsync();
         }        
 
         public async Task<UserEvent> GetById(Guid id)
