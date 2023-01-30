@@ -33,55 +33,6 @@ namespace ApplicationCore.Services
             ArgumentNullException.ThrowIfNull(newUserEvent);
             return newUserEvent;
         }
-        //public async Task<IEnumerable<UserEvent>> AddNewUserEvent(UserEvent userEvent, RecurrencyRule recurrencyRule)
-        //{
-        //    var results = new List<UserEvent>();
-            //switch(userEvent.RecurrencyRule.Recurrency)
-            //{
-            //    case Recurrency.None:
-            //        {
-            //            await _repository.Add(userEvent);
-            //            results.Add(userEvent);
-            //            break;
-            //        }
-
-            //    case Recurrency.Daily:
-            //        {
-            //            var events = CompleteEventsForPeriod(userEvent, Recurrency.Daily);                        
-            //            await _repository.AddRange(events);
-            //            results.AddRange(events);
-            //            break;
-            //        }
-            //    case Recurrency.Weekly:
-            //        {
-            //            var events = CompleteEventsForPeriod(userEvent, Recurrency.Weekly);
-            //            await _repository.AddRange(events);
-            //            results.AddRange(events);
-            //            break;
-            //        }
-            //    case Recurrency.Monthly:
-            //        {
-            //            var events = CompleteEventsForPeriod(userEvent, Recurrency.Monthly);
-            //            await _repository.AddRange(events);
-            //            results.AddRange(events);
-            //            break;
-            //        }
-            //    case Recurrency.Yearly:
-            //        {
-            //            var events = CompleteEventsForPeriod(userEvent, Recurrency.Yearly);
-            //            await _repository.AddRange(events);
-            //            results.AddRange(events);
-            //            break;
-            //        }
-            //    default:
-            //        {
-            //            throw new ArgumentException($"The value of {nameof(userEvent.RecurrencyRule.Recurrency)} unknown");
-            //        }
-            //}
-        //    return results;            
-        //}
-
-        
 
         public async Task<UserEvent> GetUserEventById(Guid id)
         {
@@ -127,6 +78,9 @@ namespace ApplicationCore.Services
         public async Task<IEnumerable<CalendarEvent>> GetCalendarEvents()
         {
             var userEvents = await _userEventRepository.GetAll(string.Empty);
+            
+            if(!userEvents.Any()) return Enumerable.Empty<CalendarEvent>();
+            
             var calendarEvents = new List<CalendarEvent>();
 
             foreach(var userEvent in userEvents)
@@ -147,13 +101,14 @@ namespace ApplicationCore.Services
 
                 // 3. Check if certain day of week is set
                 if (rr.CertainDays != default)
-                    calendarEvents.AddRange(CreateCalendarEventsWithCertainDays(userEvent, rr.CertainDays));
+                    calendarEvents.AddRange(CreateCalendarEventsWithCertainDays(userEvent, rr.CertainDays, rr.WeekOfMonth));
 
-            }
-        
-            
+                // 4. Check if even or odd day
+                if (rr.EvenOdd != default)
+                    calendarEvents.AddRange(CreateCalendarEventsWithEvenOrOddDays(userEvent, rr.EvenOdd));
+
+            }   
             return calendarEvents;
-
         }
 
         private static IEnumerable<CalendarEvent> CreateCalendarEventsWithStandardRecurrency(UserEvent userEvent, Recurrency recurrency)
@@ -207,12 +162,18 @@ namespace ApplicationCore.Services
             {
 
                 dateOfNextEvent = AddTimePeriod(dateOfNextEvent, recurrency);
-                var nextCalendarEvent = CalendarEvent.Copy(firstCalendarEvent);
-                nextCalendarEvent.start = dateOfNextEvent;
-                nextCalendarEvent.end = dateOfNextEvent;
+                var nextCalendarEvent = CreateCalendarEvent(firstCalendarEvent, dateOfNextEvent);
                 events.Add(nextCalendarEvent);
             }
             return events;
+        }
+
+        private static CalendarEvent CreateCalendarEvent(CalendarEvent firstCalendarEvent, DateTime dateOfNextEvent)
+        {
+            var nextCalendarEvent = CalendarEvent.Copy(firstCalendarEvent);
+            nextCalendarEvent.start = dateOfNextEvent;
+            nextCalendarEvent.end = dateOfNextEvent;
+            return nextCalendarEvent;
         }
 
         private static DateTime AddTimePeriod(DateTime dateOfNextEvent, Recurrency recurrency)
@@ -228,7 +189,7 @@ namespace ApplicationCore.Services
             };
         }
 
-        private static IEnumerable<CalendarEvent> CreateCalendarEventsWithCertainDays(UserEvent userEvent, byte days)
+        private static IEnumerable<CalendarEvent> CreateCalendarEventsWithCertainDays(UserEvent userEvent, byte days, WeekOfTheMonth weekOfTheMonth)
         {            
             var firstCalendarEvent = CalendarEvent.ToCalendarEvent(userEvent);
             var events = new List<CalendarEvent>
@@ -238,12 +199,47 @@ namespace ApplicationCore.Services
             var dateOfNextEvent = userEvent.Date;
             while (dateOfNextEvent < userEvent.LastDate)
             {
-                dateOfNextEvent.AddDays(1);
-                if(CertainDayHelper.ShouldOccurOnThisDay(dateOfNextEvent.DayOfWeek, days))
+                dateOfNextEvent = dateOfNextEvent.AddDays(1);
+                var daysMatches = CertainDayHelper.ShouldOccurOnThisDay(dateOfNextEvent.DayOfWeek, days);
+
+                // If current day of the week is not chosen, continue
+                if (!daysMatches) continue;
+                                
+                // If no specific week is chosen, simply create event
+                if(weekOfTheMonth == default)
                 {
-                    var nextCalendarEvent = CalendarEvent.Copy(firstCalendarEvent);
-                    nextCalendarEvent.start = dateOfNextEvent;
-                    nextCalendarEvent.end = dateOfNextEvent;
+                    var nextCalendarEvent = CreateCalendarEvent(firstCalendarEvent, dateOfNextEvent);
+                    events.Add(nextCalendarEvent);
+                    continue;
+                }
+                
+                // Specific week is chosen, should check if current day is on this week
+                if(CertainDayHelper.IsOnGivenWeekOfMonth(weekOfTheMonth, dateOfNextEvent))
+                {
+                    var nextCalendarEvent = CreateCalendarEvent(firstCalendarEvent, dateOfNextEvent);
+                    events.Add(nextCalendarEvent);
+                }
+            }
+            return events;
+        }
+
+        private static IEnumerable<CalendarEvent> CreateCalendarEventsWithEvenOrOddDays(UserEvent userEvent, EvenOdd evenOdd)
+        {
+            var firstCalendarEvent = CalendarEvent.ToCalendarEvent(userEvent);
+            var events = new List<CalendarEvent>
+            {
+                firstCalendarEvent
+            };
+            var dateOfNextEvent = userEvent.Date;
+            while (dateOfNextEvent < userEvent.LastDate)
+            {
+                dateOfNextEvent = dateOfNextEvent.AddDays(1);
+                if((dateOfNextEvent.Day % 2 == 0
+                    && evenOdd == EvenOdd.Even)
+                    || (dateOfNextEvent.Day % 2 == 1
+                        && evenOdd == EvenOdd.Odd))
+                {
+                    var nextCalendarEvent = CreateCalendarEvent(firstCalendarEvent, dateOfNextEvent);
                     events.Add(nextCalendarEvent);
                 }
             }

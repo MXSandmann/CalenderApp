@@ -1,4 +1,5 @@
-﻿using ApplicationCore.Helpers;
+﻿using ApplicationCore.Constants;
+using ApplicationCore.Helpers;
 using ApplicationCore.Models.Entities;
 using ApplicationCore.Models.Enums;
 using Microsoft.AspNetCore.Mvc;
@@ -25,9 +26,7 @@ namespace WebUI.Models
         public string AdditionalInfo { get; set; } = null!;
         public string ImageUrl { get; set; } = null!;
         public YesNo HasRecurrency { get; set; }        
-        public Recurrency? Recurrency { get; set; }
-        public int? Gap { get; set; }
-        public int? MaximumOccurrencies { get; set; }        
+        public Recurrency? Recurrency { get; set; }       
         public bool OnMonday { get; set; }
         public bool OnTuesday { get; set; }
         public bool OnWednesday { get; set; }
@@ -37,6 +36,9 @@ namespace WebUI.Models
         public bool OnSunday { get; set; }
         public WeekOfTheMonth? WeekOfMonth { get; set; }
         public MonthOfTheYear? MonthOfYear { get; set; }
+        public bool OnWorkingDays { get; set; }
+        public bool OnWeekend { get; set; }
+        public EvenOdd EvenOdd { get; set; }
 
         /// <summary>
         /// Map viewmodel to user events
@@ -67,15 +69,22 @@ namespace WebUI.Models
         /// <returns></returns>
         public RecurrencyRule ToRecurrencyRule()
         {
+            var certaindays = CertainDayHelper.GetByteValue(OnMonday, OnTuesday, OnWednesday, OnThursday, OnFriday, OnSaturday, OnSunday);
+
+            if(OnWeekend)
+                certaindays |= DaysAsBinary.WEEKEND;
+
+            if (OnWorkingDays)
+                certaindays |= DaysAsBinary.WORKINGDAYS;
+
             return new RecurrencyRule
             {                
                 UserEventId = this.Id,
                 Recurrency = this.Recurrency ?? default,
-                Gap = this.Gap ?? default,
-                MaximumOccurrencies = this.MaximumOccurrencies ?? default,
-                CertainDays = CertainDayHelper.GetByteValue(OnMonday, OnTuesday, OnWednesday, OnThursday, OnFriday, OnSaturday, OnSunday),
+                CertainDays = certaindays,
                 WeekOfMonth = this.WeekOfMonth ?? default,
-                MonthOfYear = this.MonthOfYear ?? default,                
+                MonthOfYear = this.MonthOfYear ?? default,
+                EvenOdd = this.EvenOdd
             };
         }
 
@@ -102,9 +111,7 @@ namespace WebUI.Models
                 AdditionalInfo = userEvent.AdditionalInfo,
                 ImageUrl = userEvent.ImageUrl,
                 HasRecurrency = userEvent.HasRecurrency,                
-                Recurrency = userEvent.RecurrencyRule?.Recurrency ?? default,
-                Gap = userEvent.RecurrencyRule?.Gap ?? default,
-                MaximumOccurrencies = userEvent.RecurrencyRule?.MaximumOccurrencies ?? default,                
+                Recurrency = userEvent.RecurrencyRule?.Recurrency ?? default,                              
                 WeekOfMonth = userEvent.RecurrencyRule?.WeekOfMonth ?? default,
                 MonthOfYear = userEvent.RecurrencyRule?.MonthOfYear ?? default,
                 OnMonday = certainDays != null && CertainDayHelper.IsOnMonday(userEvent.RecurrencyRule!.CertainDays),
@@ -113,8 +120,11 @@ namespace WebUI.Models
                 OnThursday = certainDays != null && CertainDayHelper.IsOnThursday(userEvent.RecurrencyRule!.CertainDays),
                 OnFriday = certainDays != null && CertainDayHelper.IsOnFriday(userEvent.RecurrencyRule!.CertainDays),
                 OnSaturday = certainDays != null && CertainDayHelper.IsOnSaturday(userEvent.RecurrencyRule!.CertainDays),
-                OnSunday = certainDays != null && CertainDayHelper.IsOnSunday(userEvent.RecurrencyRule!.CertainDays)
+                OnSunday = certainDays != null && CertainDayHelper.IsOnSunday(userEvent.RecurrencyRule!.CertainDays),
+                OnWeekend = certainDays != null && CertainDayHelper.IsOnWeekend(userEvent.RecurrencyRule!.CertainDays),
+                OnWorkingDays = certainDays != null && CertainDayHelper.IsOnWorkingDays(userEvent.RecurrencyRule!.CertainDays),
+                EvenOdd = userEvent.RecurrencyRule?.EvenOdd ?? default
             };
-        }
+        }        
     }    
 }

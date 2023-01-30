@@ -13,6 +13,8 @@ namespace ApplicationCore.Models.Enums
         [Display(Name = "Every third")]
         Third,
         [Display(Name = "Every fourth")]
-        Fourth
+        Fourth,
+        [Display(Name = "Every fifth")]
+        Fifth
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Infrastructure.DataContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(UserEventDataContext))]
-    partial class UserEventDataContextModelSnapshot : ModelSnapshot
+    [Migration("20230129204354_Add a days property to RecurrencyRule")]
+    partial class AddadayspropertytoRecurrencyRule
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,7 +33,14 @@ namespace Infrastructure.Migrations
                     b.Property<byte>("CertainDays")
                         .HasColumnType("smallint");
 
-                    b.Property<int>("EvenOdd")
+                    b.Property<string>("DayOfWeek")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Gap")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("MaximumOccurrencies")
                         .HasColumnType("integer");
 
                     b.Property<string>("MonthOfYear")
@@ -110,18 +119,18 @@ namespace Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("906807a9-edc4-4abc-974d-1a30c6e2ea70"),
+                            Id = new Guid("e3cbb56c-3137-436c-a73f-dea568a16183"),
                             AdditionalInfo = "test additionalInfo from seed",
                             Category = "test category from seed",
-                            Date = new DateTime(2023, 1, 30, 0, 7, 31, 772, DateTimeKind.Utc).AddTicks(1037),
+                            Date = new DateTime(2023, 1, 29, 20, 43, 54, 539, DateTimeKind.Utc).AddTicks(4064),
                             Description = "test description from seed",
-                            EndTime = new DateTime(2023, 1, 30, 2, 7, 31, 772, DateTimeKind.Utc).AddTicks(1014),
+                            EndTime = new DateTime(2023, 1, 29, 22, 43, 54, 539, DateTimeKind.Utc).AddTicks(4038),
                             HasRecurrency = "Yes",
                             ImageUrl = "test image url from seed",
-                            LastDate = new DateTime(2023, 1, 30, 0, 7, 31, 772, DateTimeKind.Utc).AddTicks(1038),
+                            LastDate = new DateTime(2023, 1, 29, 20, 43, 54, 539, DateTimeKind.Utc).AddTicks(4065),
                             Name = "Test name from seed",
                             Place = "test place from seed",
-                            StartTime = new DateTime(2023, 1, 30, 0, 7, 31, 772, DateTimeKind.Utc).AddTicks(1011)
+                            StartTime = new DateTime(2023, 1, 29, 20, 43, 54, 539, DateTimeKind.Utc).AddTicks(4037)
                         });
                 });
 

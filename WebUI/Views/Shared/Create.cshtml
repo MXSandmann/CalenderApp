@@ -89,9 +89,7 @@
                     </div>
                     <div class="form-group">
                         <label asp-for="HasRecurrency" class="control-label"></label>
-                        <select asp-for="HasRecurrency" class="form-control" asp-items="Html.GetEnumSelectList<YesNo>()">
-                            @*<option value=No></option>*@
-                        </select>
+                        <select asp-for="HasRecurrency" class="form-control" asp-items="Html.GetEnumSelectList<YesNo>()"></select>                           
                         <span asp-validation-for="HasRecurrency" class="text-danger"></span>
                     </div>
                 </div>
@@ -101,44 +99,17 @@
                     <h3>Create a recurrency</h3>
                     <div class="form-group">
                         <label asp-for="Recurrency" class="control-label"></label>
-                        <select asp-for="Recurrency" class="form-control" asp-items="Html.GetEnumSelectList<Recurrency>()">
-                            @*<option value="Chose if event should be recurrent"></option>*@
-                            </select>
+                        <select asp-for="Recurrency" class="form-control" asp-items="Html.GetEnumSelectList<Recurrency>()"></select>
                         <span asp-validation-for="Recurrency" class="text-danger"></span>
-                    </div>
-                    <div>
-                        <label class="form-label">Gap between events</label>
-                        <input class="form-control"
-                               data-val="true"
-                               data-val-required="The Gap is required"
-                               asp-for="Gap" />
-                    </div>
-                    <div>
-                        <label class="form-label">How many times should occur</label>
-                        <input class="form-control"
-                               data-val="true"
-                               data-val-required="The MaximumOccurrencies is required"
-                               asp-for="MaximumOccurrencies" />
-                    </div>
-                    @*<div class="form-group">
-                    <label asp-for="DayOfWeek" class="control-label">Certain day of the week</label>
-                        <select asp-for="DayOfWeek" class="form-control" asp-items="Html.GetEnumSelectList<DayOfTheWeek>()">
-                            <option value="Chose if event should be recurrent"></option>
-                            </select>
-                        <span asp-validation-for="DayOfWeek" class="text-danger"></span>
-                    </div>*@
+                    </div>                   
                     <div class="form-group">
                         <label asp-for="WeekOfMonth" class="control-label">Certain week in month</label>
-                        <select asp-for="WeekOfMonth" class="form-control" asp-items="Html.GetEnumSelectList<WeekOfTheMonth>()">
-                        @*<option value="Chose if event should be recurrent"></option>*@
-                            </select>
+                        <select asp-for="WeekOfMonth" class="form-control" asp-items="Html.GetEnumSelectList<WeekOfTheMonth>()"></select>
                         <span asp-validation-for="WeekOfMonth" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="MonthOfYear" class="control-label">Certain month in year</label>
-                        <select asp-for="MonthOfYear" class="form-control" asp-items="Html.GetEnumSelectList<MonthOfTheYear>()">
-                            @*<option value="Chose if event should be recurrent"></option>*@
-                        </select>
+                        <select asp-for="MonthOfYear" class="form-control" asp-items="Html.GetEnumSelectList<MonthOfTheYear>()"></select>
                         <span asp-validation-for="MonthOfYear" class="text-danger"></span>
                     </div>
                     <div class="form-group">
@@ -163,18 +134,33 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label">Friday</label>
-                            <input type="checkbox"                               
-                                   asp-for="OnFriday" />
-                        </div>
-                        <div class="form-group">
+                        <input type="checkbox"                               
+                               asp-for="OnFriday" />
+                    </div>
+                    <div class="form-group">
                         <label class="form-label">Saturday</label>
-                            <input type="checkbox"                               
-                                   asp-for="OnSaturday" />
-                        </div>
+                        <input type="checkbox"                               
+                               asp-for="OnSaturday" />
+                    </div>
                     <div class="form-group">
                         <label class="form-label">Sunday</label>
                         <input type="checkbox"
                                asp-for="OnSunday" />
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">On weekend</label>
+                        <input type="checkbox"
+                               asp-for="OnWeekend" />
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">On working days</label>
+                        <input type="checkbox"
+                               asp-for="OnWorkingDays" />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="EvenOdd" class="control-label">Repeat on every even or odd day</label>
+                        <select asp-for="EvenOdd" class="form-control" asp-items="Html.GetEnumSelectList<EvenOdd>()"></select>
+                        <span asp-validation-for="EvenOdd" class="text-danger"></span>
                     </div>
                 </div>
             </div>

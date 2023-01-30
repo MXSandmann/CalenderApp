@@ -30,9 +30,7 @@ namespace Infrastructure.Repositories
             var toUpdate = await _context.RecurrencyRules.FindAsync(recurrencyRule.Id);
             ArgumentNullException.ThrowIfNull(toUpdate);
 
-            toUpdate.Recurrency = recurrencyRule.Recurrency;
-            toUpdate.Gap = recurrencyRule.Gap;
-            toUpdate.MaximumOccurrencies = recurrencyRule.MaximumOccurrencies;
+            toUpdate.Recurrency = recurrencyRule.Recurrency;            
             toUpdate.WeekOfMonth = recurrencyRule.WeekOfMonth;            
             toUpdate.MonthOfYear = recurrencyRule.MonthOfYear;
             toUpdate.CertainDays = recurrencyRule.CertainDays;           

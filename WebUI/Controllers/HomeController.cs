@@ -22,13 +22,6 @@ public class HomeController : Controller
         return View();
     }
 
-    //public async Task<IActionResult> Index()
-    //{
-    //    var userEvents = await _service.GetUserEvents(string.Empty);        
-    //    ViewData["Events"] = EventParseHelper.SerializeUserEvensToJsonString(userEvents);
-    //    return View();
-    //}
-
     public IActionResult Privacy()
     {
         return View();
