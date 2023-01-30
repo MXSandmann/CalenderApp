@@ -10,8 +10,7 @@ namespace Infrastructure.Configurations
         public void Configure(EntityTypeBuilder<RecurrencyRule> builder)
         {
             builder.Property(x => x.Recurrency).HasConversion(x => x.ToString(), x => Enum.Parse<Recurrency>(x));            
-            builder.Property(x => x.WeekOfMonth).HasConversion(x => x.ToString(), x => Enum.Parse<WeekOfTheMonth>(x));
-            builder.Property(x => x.MonthOfYear).HasConversion(x => x.ToString(), x => Enum.Parse<MonthOfTheYear>(x));
+            builder.Property(x => x.WeekOfMonth).HasConversion(x => x.ToString(), x => Enum.Parse<WeekOfTheMonth>(x));           
             builder.HasOne(x => x.UserEvent).WithOne(x => x.RecurrencyRule);
         }
     }

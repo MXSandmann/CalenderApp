@@ -1,11 +1,9 @@
 ﻿using ApplicationCore.Models.Entities;
-using ApplicationCore.Models.Enums;
 using ApplicationCore.Services.Contracts;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Shouldly;
 using WebUI.Controllers;
 using WebUI.Models;
@@ -40,7 +38,7 @@ namespace Tests.Controllers
 
             // Assert            
             var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsAssignableFrom<IEnumerable<CreateUpdateUserEventViewModel>>(viewResult.ViewData.Model);
+            var model = Assert.IsAssignableFrom<IEnumerable<GetUserEventViewModel>>(viewResult.ViewData.Model);
             model.Count().ShouldBe(2);
         }
 
@@ -48,9 +46,9 @@ namespace Tests.Controllers
         public async Task CreatePost_ShouldReturnBadRequest_WhenModelStateIsInvalid()
         {
             // Arrange
-            _serviceMock.Setup(x => x.AddNewUserEvent(It.IsAny<UserEvent>()))
+            _serviceMock.Setup(x => x.AddNewUserEvent(It.IsAny<UserEvent>(), It.IsAny<RecurrencyRule>()))
                 .Verifiable();
-            _sut.ModelState.AddModelError("Name", "Required");                        
+            _sut.ModelState.AddModelError("Name", "Required");
             var newModel = TestData.GetUserEventViewModel();
 
             // Act
@@ -58,14 +56,14 @@ namespace Tests.Controllers
 
             // Assert            
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.IsType<SerializableError>(badRequestResult.Value);            
+            Assert.IsType<SerializableError>(badRequestResult.Value);
         }
 
         [Fact]
         public async Task CreatePost_ShouldReturnBadRequest_WhenValidationIsUnsuccessful()
         {
             // Arrange
-            _serviceMock.Setup(x => x.AddNewUserEvent(It.IsAny<UserEvent>()))
+            _serviceMock.Setup(x => x.AddNewUserEvent(It.IsAny<UserEvent>(), It.IsAny<RecurrencyRule>()))
                 .Verifiable();
             var newModel = TestData.GetInvalidUserEventViewModel();
 
@@ -74,7 +72,7 @@ namespace Tests.Controllers
 
             // Assert            
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.NotNull(badRequestResult.Value);          
+            Assert.NotNull(badRequestResult.Value);
             string jsonString = JsonConvert.SerializeObject(badRequestResult.Value);
             jsonString.ShouldContain("\"ErrorMessage\":\"End time must after Start time\"");
         }

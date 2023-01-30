@@ -1,4 +1,5 @@
-﻿using ApplicationCore.Models.Entities;
+﻿using ApplicationCore.Models;
+using ApplicationCore.Models.Entities;
 using ApplicationCore.Models.Enums;
 using WebUI.Models;
 
@@ -82,23 +83,34 @@ namespace Tests
             };
         }
 
-        //internal static RecurrencyRule GetRecurrencyRule(Recurrency recurrency, List<DayOfTheWeek> days, TimesInMonth timesInMonth)
-        //{
-        //    return new RecurrencyRule
-        //    {
-        //        Recurrency = recurrency,
-        //        DaysWhenOccur = days,
-        //        TimesInMonth = timesInMonth
-        //    };
-        //}
-
-        internal static RecurrencyRule GetRecurrencyRuleWithoutRecurrency()
+        internal static RecurrencyRule GetRecurrencyRule(Recurrency recurrency)
         {
             return new RecurrencyRule
             {
-                Recurrency = Recurrency.None
+                Id = Guid.NewGuid(),
+                Recurrency = recurrency,
+                CertainDays = 1,
+                WeekOfMonth = WeekOfTheMonth.None,
+                EvenOdd = EvenOdd.None
             };
         }
+                
 
+        internal static IEnumerable<CalendarEvent> GetCalendarEvents()
+        {
+            return new List<CalendarEvent>
+            {
+                new CalendarEvent("testname1",
+                new DateTime(2023, 6, 1, 12, 0, 0),
+                new DateTime(2023, 6, 1, 12, 0, 0),
+                new DateTime(2023, 6, 1, 12, 0, 0),
+                new DateTime(2023, 6, 1, 13, 0, 0)),
+                new CalendarEvent("testname2",
+                new DateTime(2023, 7, 1, 12, 0, 0),
+                new DateTime(2023, 7, 1, 12, 0, 0),
+                new DateTime(2023, 7, 1, 12, 0, 0),
+                new DateTime(2023, 7, 1, 13, 0, 0)),
+            };
+        }
     }
 }

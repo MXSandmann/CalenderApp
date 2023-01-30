@@ -32,7 +32,6 @@ namespace Infrastructure.Repositories
 
             toUpdate.Recurrency = recurrencyRule.Recurrency;            
             toUpdate.WeekOfMonth = recurrencyRule.WeekOfMonth;            
-            toUpdate.MonthOfYear = recurrencyRule.MonthOfYear;
             toUpdate.CertainDays = recurrencyRule.CertainDays;           
             
             await _context.SaveChangesAsync();

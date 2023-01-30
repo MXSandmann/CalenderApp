@@ -106,12 +106,7 @@
                         <label asp-for="WeekOfMonth" class="control-label">Certain week in month</label>
                         <select asp-for="WeekOfMonth" class="form-control" asp-items="Html.GetEnumSelectList<WeekOfTheMonth>()"></select>
                         <span asp-validation-for="WeekOfMonth" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="MonthOfYear" class="control-label">Certain month in year</label>
-                        <select asp-for="MonthOfYear" class="form-control" asp-items="Html.GetEnumSelectList<MonthOfTheYear>()"></select>
-                        <span asp-validation-for="MonthOfYear" class="text-danger"></span>
-                    </div>
+                    </div>                    
                     <div class="form-group">
                         <label class="form-label">Monday</label>
                         <input type="checkbox"                               

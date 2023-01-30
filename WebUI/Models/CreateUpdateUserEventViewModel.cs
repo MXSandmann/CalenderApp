@@ -34,8 +34,7 @@ namespace WebUI.Models
         public bool OnFriday { get; set; }
         public bool OnSaturday { get; set; }
         public bool OnSunday { get; set; }
-        public WeekOfTheMonth? WeekOfMonth { get; set; }
-        public MonthOfTheYear? MonthOfYear { get; set; }
+        public WeekOfTheMonth? WeekOfMonth { get; set; }        
         public bool OnWorkingDays { get; set; }
         public bool OnWeekend { get; set; }
         public EvenOdd EvenOdd { get; set; }
@@ -82,8 +81,7 @@ namespace WebUI.Models
                 UserEventId = this.Id,
                 Recurrency = this.Recurrency ?? default,
                 CertainDays = certaindays,
-                WeekOfMonth = this.WeekOfMonth ?? default,
-                MonthOfYear = this.MonthOfYear ?? default,
+                WeekOfMonth = this.WeekOfMonth ?? default,                
                 EvenOdd = this.EvenOdd
             };
         }
@@ -112,8 +110,7 @@ namespace WebUI.Models
                 ImageUrl = userEvent.ImageUrl,
                 HasRecurrency = userEvent.HasRecurrency,                
                 Recurrency = userEvent.RecurrencyRule?.Recurrency ?? default,                              
-                WeekOfMonth = userEvent.RecurrencyRule?.WeekOfMonth ?? default,
-                MonthOfYear = userEvent.RecurrencyRule?.MonthOfYear ?? default,
+                WeekOfMonth = userEvent.RecurrencyRule?.WeekOfMonth ?? default,                
                 OnMonday = certainDays != null && CertainDayHelper.IsOnMonday(userEvent.RecurrencyRule!.CertainDays),
                 OnTuesday = certainDays != null && CertainDayHelper.IsOnTuesday(userEvent.RecurrencyRule!.CertainDays),
                 OnWednesday = certainDays != null && CertainDayHelper.IsOnWednesday(userEvent.RecurrencyRule!.CertainDays),

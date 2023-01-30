@@ -51,6 +51,7 @@ namespace WebUI.Models
             if(rr == null)
                 return string.Empty;
             var sb = new StringBuilder();
+
             if (CertainDayHelper.IsOnMonday(rr.CertainDays)) sb.Append("On mondays; ");
             if (CertainDayHelper.IsOnTuesday(rr.CertainDays)) sb.Append("On tuesdays; ");
             if (CertainDayHelper.IsOnWednesday(rr.CertainDays)) sb.Append("On wednesdays; ");
@@ -58,8 +59,7 @@ namespace WebUI.Models
             if (CertainDayHelper.IsOnFriday(rr.CertainDays)) sb.Append("On fridays; ");
             if (CertainDayHelper.IsOnSaturday(rr.CertainDays)) sb.Append("On saturdays; ");
             if (CertainDayHelper.IsOnSunday(rr.CertainDays)) sb.Append("On sundays; ");
-            if (rr.WeekOfMonth != WeekOfTheMonth.None) sb.Append($"{rr.WeekOfMonth.ToString()} week of month; ");
-            if (rr.MonthOfYear != MonthOfTheYear.None) sb.Append($"{rr.MonthOfYear.ToString()} every year; ");
+            if (rr.WeekOfMonth != WeekOfTheMonth.None) sb.Append($"{rr.WeekOfMonth.ToString()} week of month; ");            
             if (rr.Recurrency != RecurrencyEnum.None) sb.Append(rr.Recurrency.ToString());
 
             return sb.ToString();

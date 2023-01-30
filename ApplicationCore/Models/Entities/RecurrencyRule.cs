@@ -17,9 +17,7 @@ namespace ApplicationCore.Models.Entities
         /// Occurrency for certain day, bit coded
         /// </summary>
         public byte CertainDays { get; set; }
-        public WeekOfTheMonth WeekOfMonth { get; set; }
-        public MonthOfTheYear MonthOfYear { get; set; }
+        public WeekOfTheMonth WeekOfMonth { get; set; }        
         public EvenOdd EvenOdd { get; set; }
-
     }
 }
