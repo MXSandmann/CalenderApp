@@ -17,17 +17,18 @@ namespace ApplicationCore.Services
             _userEventRepository = repository;
             _recurrencyRuleRepository = recurrencyRuleRepository;
         }
+
         public async Task<UserEvent> AddNewUserEvent(UserEvent userEvent, RecurrencyRule recurrencyRule)
         {
             // First add a new event to the db
             var newUserEventId = await _userEventRepository.Add(userEvent);
 
             // Next check if there is an incoming recurrency for this event
-            if(userEvent.HasRecurrency == YesNo.Yes)
+            if (userEvent.HasRecurrency)
             {
                 ArgumentNullException.ThrowIfNull(recurrencyRule);
                 recurrencyRule.UserEventId = newUserEventId;
-                await _recurrencyRuleRepository.Add(recurrencyRule);                
+                await _recurrencyRuleRepository.Add(recurrencyRule);
             }
             var newUserEvent = await _userEventRepository.GetById(newUserEventId);
             ArgumentNullException.ThrowIfNull(newUserEvent);
@@ -39,7 +40,7 @@ namespace ApplicationCore.Services
             var userEventFound = await _userEventRepository.GetById(id);
             ArgumentNullException.ThrowIfNull(userEventFound);
             return userEventFound;
-        }        
+        }
 
         public async Task<IEnumerable<UserEvent>> GetUserEvents(string sortBy)
         {
@@ -55,22 +56,22 @@ namespace ApplicationCore.Services
 
         public async Task<UserEvent> UpdateUserEvent(UserEvent userEvent, RecurrencyRule recurrencyRule)
         {
-            var ue = await _userEventRepository.Update(userEvent);
+            var userEventUpdated = await _userEventRepository.Update(userEvent);
 
             // If user event doesn't have any recurrency, simply return
-            if(ue.HasRecurrency == YesNo.No)
+            if (!userEventUpdated.HasRecurrency)
                 return userEvent;
 
             // If user event no recurrency before, but now should have one, create a recurrency
-            if(ue.RecurrencyRule == null)
+            if (userEventUpdated.RecurrencyRule == null)
             {
-                recurrencyRule.UserEventId = ue.Id;
+                recurrencyRule.UserEventId = userEventUpdated.Id;
                 await _recurrencyRuleRepository.Add(recurrencyRule);
                 return userEvent;
             }
 
             // If user event had a recurrency before, and should remain it, get id of this recurrency rule            
-            recurrencyRule.Id = ue.RecurrencyRule.Id;
+            recurrencyRule.Id = userEventUpdated.RecurrencyRule.Id;
             await _recurrencyRuleRepository.Update(recurrencyRule);
             return userEvent;
         }
@@ -78,36 +79,36 @@ namespace ApplicationCore.Services
         public async Task<IEnumerable<CalendarEvent>> GetCalendarEvents()
         {
             var userEvents = await _userEventRepository.GetAll(string.Empty);
-            
-            if(!userEvents.Any()) return Enumerable.Empty<CalendarEvent>();
-            
+
+            if (!userEvents.Any()) return Enumerable.Empty<CalendarEvent>();
+
             var calendarEvents = new List<CalendarEvent>();
 
-            foreach(var userEvent in userEvents)
+            foreach (var userEvent in userEvents)
             {
-                var rr = userEvent.RecurrencyRule;
+                var rule = userEvent.RecurrencyRule;
 
                 // 1. Check if has recurrency
-                if (rr == null)
+                if (rule == null)
                 {
                     calendarEvents.Add(CalendarEvent.ToCalendarEvent(userEvent));
                     continue;
                 }
 
                 // 2. Check standard recurrency
-                if (rr.Recurrency != Recurrency.None)                
-                    calendarEvents.AddRange(CreateCalendarEventsWithStandardRecurrency(userEvent, rr.Recurrency));                    
-                
+                if (rule.Recurrency != Recurrency.None)
+                    calendarEvents.AddRange(CreateCalendarEventsWithStandardRecurrency(userEvent, rule.Recurrency));
+
 
                 // 3. Check if certain day of week is set
-                if (rr.CertainDays != default)
-                    calendarEvents.AddRange(CreateCalendarEventsWithCertainDays(userEvent, rr.CertainDays, rr.WeekOfMonth));
+                if (rule.DayOfWeek != default)
+                    calendarEvents.AddRange(CreateCalendarEventsWithCertainDays(userEvent, rule.DayOfWeek, rule.WeekOfMonth));
 
                 // 4. Check if even or odd day
-                if (rr.EvenOdd != default)
-                    calendarEvents.AddRange(CreateCalendarEventsWithEvenOrOddDays(userEvent, rr.EvenOdd));
+                if (rule.EvenOdd != default)
+                    calendarEvents.AddRange(CreateCalendarEventsWithEvenOrOddDays(userEvent, rule.EvenOdd));
 
-            }   
+            }
             return calendarEvents;
         }
 
@@ -115,7 +116,7 @@ namespace ApplicationCore.Services
         {
             var calendarEvents = new List<CalendarEvent>();
             switch (recurrency)
-            {             
+            {
                 case Recurrency.Daily:
                     {
                         var events = CompleteEventsForPeriod(userEvent, Recurrency.Daily);
@@ -132,13 +133,13 @@ namespace ApplicationCore.Services
                     }
                 case Recurrency.Monthly:
                     {
-                        var events = CompleteEventsForPeriod(userEvent, Recurrency.Monthly);                        
+                        var events = CompleteEventsForPeriod(userEvent, Recurrency.Monthly);
                         calendarEvents.AddRange(events);
                         break;
                     }
                 case Recurrency.Yearly:
                     {
-                        var events = CompleteEventsForPeriod(userEvent, Recurrency.Yearly);                        
+                        var events = CompleteEventsForPeriod(userEvent, Recurrency.Yearly);
                         calendarEvents.AddRange(events);
                         break;
                     }
@@ -171,8 +172,8 @@ namespace ApplicationCore.Services
         private static CalendarEvent CreateCalendarEvent(CalendarEvent firstCalendarEvent, DateTime dateOfNextEvent)
         {
             var nextCalendarEvent = CalendarEvent.Copy(firstCalendarEvent);
-            nextCalendarEvent.start = dateOfNextEvent;
-            nextCalendarEvent.end = dateOfNextEvent;
+            nextCalendarEvent.Start = dateOfNextEvent;
+            nextCalendarEvent.End = dateOfNextEvent;
             return nextCalendarEvent;
         }
 
@@ -189,8 +190,8 @@ namespace ApplicationCore.Services
             };
         }
 
-        private static IEnumerable<CalendarEvent> CreateCalendarEventsWithCertainDays(UserEvent userEvent, byte days, WeekOfTheMonth weekOfTheMonth)
-        {            
+        private static IEnumerable<CalendarEvent> CreateCalendarEventsWithCertainDays(UserEvent userEvent, CertainDays days, WeekOfTheMonth weekOfTheMonth)
+        {
             var firstCalendarEvent = CalendarEvent.ToCalendarEvent(userEvent);
             var events = new List<CalendarEvent>
             {
@@ -204,17 +205,17 @@ namespace ApplicationCore.Services
 
                 // If current day of the week is not chosen, continue
                 if (!daysMatches) continue;
-                                
+
                 // If no specific week is chosen, simply create event
-                if(weekOfTheMonth == default)
+                if (weekOfTheMonth == default)
                 {
                     var nextCalendarEvent = CreateCalendarEvent(firstCalendarEvent, dateOfNextEvent);
                     events.Add(nextCalendarEvent);
                     continue;
                 }
-                
+
                 // Specific week is chosen, should check if current day is on this week
-                if(CertainDayHelper.IsOnGivenWeekOfMonth(weekOfTheMonth, dateOfNextEvent))
+                if (CertainDayHelper.IsOnGivenWeekOfMonth(weekOfTheMonth, dateOfNextEvent))
                 {
                     var nextCalendarEvent = CreateCalendarEvent(firstCalendarEvent, dateOfNextEvent);
                     events.Add(nextCalendarEvent);
@@ -234,7 +235,7 @@ namespace ApplicationCore.Services
             while (dateOfNextEvent < userEvent.LastDate)
             {
                 dateOfNextEvent = dateOfNextEvent.AddDays(1);
-                if((dateOfNextEvent.Day % 2 == 0
+                if ((dateOfNextEvent.Day % 2 == 0
                     && evenOdd == EvenOdd.Even)
                     || (dateOfNextEvent.Day % 2 == 1
                         && evenOdd == EvenOdd.Odd))

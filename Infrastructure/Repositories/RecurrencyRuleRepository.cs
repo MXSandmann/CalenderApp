@@ -30,10 +30,10 @@ namespace Infrastructure.Repositories
             var toUpdate = await _context.RecurrencyRules.FindAsync(recurrencyRule.Id);
             ArgumentNullException.ThrowIfNull(toUpdate);
 
-            toUpdate.Recurrency = recurrencyRule.Recurrency;            
-            toUpdate.WeekOfMonth = recurrencyRule.WeekOfMonth;            
-            toUpdate.CertainDays = recurrencyRule.CertainDays;           
-            
+            toUpdate.Recurrency = recurrencyRule.Recurrency;
+            toUpdate.WeekOfMonth = recurrencyRule.WeekOfMonth;
+            toUpdate.DayOfWeek = recurrencyRule.DayOfWeek;
+
             await _context.SaveChangesAsync();
         }
     }

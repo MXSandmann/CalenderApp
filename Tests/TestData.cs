@@ -16,7 +16,7 @@ namespace Tests
                     Id = Guid.NewGuid(),
                     Name = "testname1",
                     Category = "testcategory1",
-                    Place = "testplace1",                    
+                    Place = "testplace1",
                     StartTime = DateTime.Now,
                     EndTime = DateTime.Now.AddHours(1),
                     Date = DateTime.Now,
@@ -24,7 +24,7 @@ namespace Tests
                     Description = "testdescr1",
                     AdditionalInfo = "addinfo1",
                     ImageUrl = "testurl1",
-                    HasRecurrency = YesNo.No
+                    HasRecurrency = false
                 },
                 new UserEvent
                 {
@@ -39,7 +39,7 @@ namespace Tests
                     Description = "testdescr2",
                     AdditionalInfo = "addinfo2",
                     ImageUrl = "testurl2",
-                    HasRecurrency = YesNo.No
+                    HasRecurrency = false
                 }
             };
         }
@@ -59,7 +59,7 @@ namespace Tests
                 Description = "testdescr3",
                 AdditionalInfo = "addinfo3",
                 ImageUrl = "testurl3",
-                HasRecurrency = YesNo.No
+                HasRecurrency = false
             };
         }
 
@@ -79,7 +79,7 @@ namespace Tests
                 Description = "testdescr3",
                 AdditionalInfo = "addinfo3",
                 ImageUrl = "testurl3",
-                HasRecurrency = YesNo.No
+                HasRecurrency = false
             };
         }
 
@@ -89,12 +89,12 @@ namespace Tests
             {
                 Id = Guid.NewGuid(),
                 Recurrency = recurrency,
-                CertainDays = 1,
+                DayOfWeek = (CertainDays)1,
                 WeekOfMonth = WeekOfTheMonth.None,
                 EvenOdd = EvenOdd.None
             };
         }
-                
+
 
         internal static IEnumerable<CalendarEvent> GetCalendarEvents()
         {

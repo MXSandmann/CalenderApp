@@ -1,6 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Infrastructure.DataContext;
-using ApplicationCore.Models.Entities;
+﻿using ApplicationCore.Models.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.DataContext
 {
@@ -12,7 +11,7 @@ namespace Infrastructure.DataContext
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {            
+        {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(UserEventDataContext).Assembly);
         }
 

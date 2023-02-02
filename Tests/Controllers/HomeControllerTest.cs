@@ -4,7 +4,6 @@ using Moq;
 using Newtonsoft.Json;
 using Shouldly;
 using WebUI.Controllers;
-using WebUI.Models;
 
 namespace Tests.Controllers
 {
@@ -31,10 +30,10 @@ namespace Tests.Controllers
             var result = await _sut.Index();
 
             // Assert            
-            var viewResult = Assert.IsType<ViewResult>(result);            
+            var viewResult = Assert.IsType<ViewResult>(result);
             var jsonString = JsonConvert.SerializeObject(viewResult.ViewData.Values);
             jsonString.ShouldContain("testname1");
             jsonString.ShouldContain("testname2");
-        }        
+        }
     }
 }

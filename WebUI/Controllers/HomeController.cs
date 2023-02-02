@@ -1,7 +1,7 @@
 ﻿using ApplicationCore.Services.Contracts;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Diagnostics;
-using System.Text.Json;
 using WebUI.Models;
 
 namespace WebUI.Controllers;
@@ -18,7 +18,7 @@ public class HomeController : Controller
     public async Task<IActionResult> Index()
     {
         var events = await _service.GetCalendarEvents();
-        ViewData["Events"] = JsonSerializer.Serialize(events);
+        ViewData["Events"] = JsonConvert.SerializeObject(events);
         return View();
     }
 

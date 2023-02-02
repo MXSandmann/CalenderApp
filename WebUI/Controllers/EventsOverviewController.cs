@@ -42,7 +42,7 @@ namespace WebUI.Controllers
             {
                 return BadRequest(ModelState);
             }
-            if(!validationResult.IsValid)
+            if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
 
             await _service.AddNewUserEvent(newModel.ToUserEvent(), newModel.ToRecurrencyRule());

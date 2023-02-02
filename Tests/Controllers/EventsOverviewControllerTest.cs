@@ -110,11 +110,11 @@ namespace Tests.Controllers
             var model = Assert.IsAssignableFrom<CreateUpdateUserEventViewModel>(requestResult.ViewData.Model);
 
             var startModel = CreateUpdateUserEventViewModel.ToUserEventViewModel(userEvent);
-                        
+
             model.Id.ShouldBe(startModel.Id);
             model.Name.ShouldBe(startModel.Name);
             model.Category.ShouldBe(startModel.Category);
-            model.Place.ShouldBe(startModel.Place);            
+            model.Place.ShouldBe(startModel.Place);
             model.StartTime.ShouldBe(startModel.StartTime);
             model.EndTime.ShouldBe(startModel.EndTime);
             model.Date.ShouldBe(startModel.Date);

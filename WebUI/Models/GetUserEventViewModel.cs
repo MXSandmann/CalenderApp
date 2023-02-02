@@ -1,5 +1,4 @@
-﻿using ApplicationCore.Helpers;
-using ApplicationCore.Models.Entities;
+﻿using ApplicationCore.Models.Entities;
 using ApplicationCore.Models.Enums;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
@@ -43,24 +42,24 @@ namespace WebUI.Models
                 AdditionalInfo = userEvent.AdditionalInfo,
                 ImageUrl = userEvent.ImageUrl,
                 Recurrency = GetRecurrencyDescription(userEvent.RecurrencyRule!)
-            };            
+            };
         }
 
-        private static string GetRecurrencyDescription(RecurrencyRule rr)
+        private static string GetRecurrencyDescription(RecurrencyRule recurrencyRule)
         {
-            if(rr == null)
+            if (recurrencyRule == null)
                 return string.Empty;
             var sb = new StringBuilder();
 
-            if (CertainDayHelper.IsOnMonday(rr.CertainDays)) sb.Append("On mondays; ");
-            if (CertainDayHelper.IsOnTuesday(rr.CertainDays)) sb.Append("On tuesdays; ");
-            if (CertainDayHelper.IsOnWednesday(rr.CertainDays)) sb.Append("On wednesdays; ");
-            if (CertainDayHelper.IsOnTuesday(rr.CertainDays)) sb.Append("On tuesday; ");
-            if (CertainDayHelper.IsOnFriday(rr.CertainDays)) sb.Append("On fridays; ");
-            if (CertainDayHelper.IsOnSaturday(rr.CertainDays)) sb.Append("On saturdays; ");
-            if (CertainDayHelper.IsOnSunday(rr.CertainDays)) sb.Append("On sundays; ");
-            if (rr.WeekOfMonth != WeekOfTheMonth.None) sb.Append($"{rr.WeekOfMonth.ToString()} week of month; ");            
-            if (rr.Recurrency != RecurrencyEnum.None) sb.Append(rr.Recurrency.ToString());
+            if (recurrencyRule.DayOfWeek.HasFlag(CertainDays.Monday)) sb.Append("On mondays; ");
+            if (recurrencyRule.DayOfWeek.HasFlag(CertainDays.Tuesday)) sb.Append("On tuesdays; ");
+            if (recurrencyRule.DayOfWeek.HasFlag(CertainDays.Wednesday)) sb.Append("On wednesdays; ");
+            if (recurrencyRule.DayOfWeek.HasFlag(CertainDays.Thursday)) sb.Append("On thursdays; ");
+            if (recurrencyRule.DayOfWeek.HasFlag(CertainDays.Friday)) sb.Append("On fridays; ");
+            if (recurrencyRule.DayOfWeek.HasFlag(CertainDays.Saturday)) sb.Append("On saturdays; ");
+            if (recurrencyRule.DayOfWeek.HasFlag(CertainDays.Sunday)) sb.Append("On sundays; ");
+            if (recurrencyRule.WeekOfMonth != WeekOfTheMonth.None) sb.Append($"{recurrencyRule.WeekOfMonth.ToString()} week of month; ");
+            if (recurrencyRule.Recurrency != RecurrencyEnum.None) sb.Append(recurrencyRule.Recurrency.ToString());
 
             return sb.ToString();
         }

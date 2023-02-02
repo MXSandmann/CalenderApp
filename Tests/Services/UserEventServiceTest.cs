@@ -49,7 +49,7 @@ namespace Tests.Services
 
             // Assert
             results.ShouldNotBeNull();
-            results.Count().ShouldBe(2);           
+            results.Count().ShouldBe(2);
             results.ToList().ForEach(x => x.ShouldBeOfType<UserEvent>());
         }
 
@@ -92,7 +92,7 @@ namespace Tests.Services
         {
             // Arrange
             var userEvent = TestData.GetUserEvents().First();
-            var recurrencyRule = TestData.GetRecurrencyRule((Recurrency)99);            
+            var recurrencyRule = TestData.GetRecurrencyRule((Recurrency)99);
             _userEventRepoMock.Setup(x => x.AddRange(It.IsAny<IEnumerable<UserEvent>>()))
                 .Verifiable();
 
@@ -138,7 +138,7 @@ namespace Tests.Services
                     Description = "Test",
                     AdditionalInfo = "Test",
                     ImageUrl = "Test",
-                    HasRecurrency = YesNo.No                    
+                    HasRecurrency = false
                 },
                 1
             };
@@ -157,7 +157,7 @@ namespace Tests.Services
                     Description = "Test",
                     AdditionalInfo = "Test",
                     ImageUrl = "Test",
-                    HasRecurrency = YesNo.Yes,
+                    HasRecurrency = true,
                     RecurrencyRule = new RecurrencyRule
                     {
                         Recurrency = Recurrency.Daily
@@ -180,7 +180,7 @@ namespace Tests.Services
                     Description = "Test",
                     AdditionalInfo = "Test",
                     ImageUrl = "Test",
-                    HasRecurrency = YesNo.Yes,
+                    HasRecurrency = true,
                     RecurrencyRule = new RecurrencyRule
                     {
                         Recurrency = Recurrency.Weekly
@@ -203,7 +203,7 @@ namespace Tests.Services
                     Description = "Test",
                     AdditionalInfo = "Test",
                     ImageUrl = "Test",
-                    HasRecurrency = YesNo.Yes,
+                    HasRecurrency = true,
                     RecurrencyRule = new RecurrencyRule
                     {
                         Recurrency = Recurrency.Monthly
@@ -248,7 +248,7 @@ namespace Tests.Services
                     Description = "Test",
                     AdditionalInfo = "Test",
                     ImageUrl = "Test",
-                    HasRecurrency = YesNo.Yes,
+                    HasRecurrency = true,
                     RecurrencyRule = new RecurrencyRule
                     {
                         EvenOdd = EvenOdd.Even
@@ -271,7 +271,7 @@ namespace Tests.Services
                     Description = "Test",
                     AdditionalInfo = "Test",
                     ImageUrl = "Test",
-                    HasRecurrency = YesNo.Yes,
+                    HasRecurrency = true,
                     RecurrencyRule = new RecurrencyRule
                     {
                         EvenOdd = EvenOdd.Odd
@@ -294,10 +294,10 @@ namespace Tests.Services
                     Description = "Test",
                     AdditionalInfo = "Test",
                     ImageUrl = "Test",
-                    HasRecurrency = YesNo.Yes,
+                    HasRecurrency = true,
                     RecurrencyRule = new RecurrencyRule
                     {
-                        CertainDays = 17,
+                        DayOfWeek = (CertainDays)17,
                         WeekOfMonth = WeekOfTheMonth.First
                     }
                 },
@@ -318,10 +318,10 @@ namespace Tests.Services
                     Description = "Test",
                     AdditionalInfo = "Test",
                     ImageUrl = "Test",
-                    HasRecurrency = YesNo.Yes,
+                    HasRecurrency = true,
                     RecurrencyRule = new RecurrencyRule
                     {
-                        CertainDays = 104,
+                        DayOfWeek = (CertainDays)104,
                         WeekOfMonth = WeekOfTheMonth.Third
                     }
                 },
@@ -342,10 +342,10 @@ namespace Tests.Services
                     Description = "Test",
                     AdditionalInfo = "Test",
                     ImageUrl = "Test",
-                    HasRecurrency = YesNo.Yes,
+                    HasRecurrency = true,
                     RecurrencyRule = new RecurrencyRule
                     {
-                        CertainDays = 31,                        
+                        DayOfWeek = (CertainDays)31,
                     }
                 },
                 11
@@ -365,10 +365,10 @@ namespace Tests.Services
                     Description = "Test",
                     AdditionalInfo = "Test",
                     ImageUrl = "Test",
-                    HasRecurrency = YesNo.Yes,
+                    HasRecurrency = true,
                     RecurrencyRule = new RecurrencyRule
                     {
-                        CertainDays = 96,
+                        DayOfWeek = (CertainDays)96,
                     }
                 },
                 5

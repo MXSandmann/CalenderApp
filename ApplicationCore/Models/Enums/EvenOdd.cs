@@ -4,6 +4,6 @@
     {
         None,
         Even,
-        Odd,        
+        Odd,
     }
 }

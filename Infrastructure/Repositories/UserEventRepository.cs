@@ -14,7 +14,7 @@ namespace Infrastructure.Repositories
         }
 
         public async Task<IEnumerable<UserEvent>> GetAll(string sortBy)
-        {            
+        {
             if (sortBy != null
                 && sortBy.Equals("Place"))
                 return await _context.UserEvents.Include(x => x.RecurrencyRule).OrderBy(x => x.Place).ToListAsync();
@@ -22,7 +22,7 @@ namespace Infrastructure.Repositories
                 && sortBy.Equals("Category"))
                 return await _context.UserEvents.Include(x => x.RecurrencyRule).OrderBy(x => x.Category).ToListAsync();
             return await _context.UserEvents.Include(x => x.RecurrencyRule).OrderBy(x => x.Date).ThenBy(x => x.StartTime).ToListAsync();
-        }        
+        }
 
         public async Task<UserEvent> GetById(Guid id)
         {
@@ -54,7 +54,7 @@ namespace Infrastructure.Repositories
             _context.UserEvents.Update(userEvent);
             await _context.SaveChangesAsync();
             var updated = await _context.UserEvents.Include(x => x.RecurrencyRule).FirstOrDefaultAsync(x => x.Id == userEvent.Id);
-            ArgumentNullException.ThrowIfNull(updated);            
+            ArgumentNullException.ThrowIfNull(updated);
             return updated;
         }
 

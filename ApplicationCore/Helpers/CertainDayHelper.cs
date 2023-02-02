@@ -1,11 +1,10 @@
-﻿using ApplicationCore.Constants;
-using ApplicationCore.Models.Enums;
+﻿using ApplicationCore.Models.Enums;
 
 namespace ApplicationCore.Helpers
 {
     public static class CertainDayHelper
     {
-        public static byte GetByteValue(bool onMonday,
+        public static CertainDays GetCertainsDaysValue(bool onMonday,
             bool onTuesday,
             bool onWednesday,
             bool onThursday,
@@ -13,82 +12,27 @@ namespace ApplicationCore.Helpers
             bool onSaturday,
             bool onSunday)
         {
-            byte value = DaysAsBinary.EMPTY;
-            if (onMonday) value |= DaysAsBinary.MONDAY;
-            if (onTuesday) value |= DaysAsBinary.TUESDAY;
-            if (onWednesday) value |= DaysAsBinary.WEDNESDAY;
-            if (onThursday) value |= DaysAsBinary.THURSDAY;
-            if (onFriday) value |= DaysAsBinary.FRIDAY;
-            if (onSaturday) value |= DaysAsBinary.SATURDAY;
-            if (onSunday) value |= DaysAsBinary.SUNDAY;
-            return value;
+            var result = onMonday ? CertainDays.Monday : 0;
+            result |= onTuesday ? CertainDays.Tuesday : 0;
+            result |= onWednesday ? CertainDays.Wednesday : 0;
+            result |= onThursday ? CertainDays.Thursday : 0;
+            result |= onFriday ? CertainDays.Friday : 0;
+            result |= onSaturday ? CertainDays.Saturday : 0;
+            result |= onSunday ? CertainDays.Sunday : 0;
+            return result;
         }
 
-        public static bool IsOnMonday(byte value)
-        {
-            var mask = DaysAsBinary.MONDAY;
-            return (value & mask) == mask;
-        }
-
-        public static bool IsOnTuesday(byte value)
-        {
-            var mask = DaysAsBinary.TUESDAY;
-            return (value & mask) == mask;
-        }
-
-        public static bool IsOnWednesday(byte value)
-        {
-            var mask = DaysAsBinary.WEDNESDAY;
-            return (value & mask) == mask;
-        }
-
-        public static bool IsOnThursday(byte value)
-        {
-            var mask = DaysAsBinary.THURSDAY;
-            return (value & mask) == mask;
-        }
-
-        public static bool IsOnFriday(byte value)
-        {
-            var mask = DaysAsBinary.FRIDAY;
-            return (value & mask) == mask;
-        }
-
-        public static bool IsOnSaturday(byte value)
-        {
-            var mask = DaysAsBinary.SATURDAY;
-            return (value & mask) == mask;
-        }
-
-        public static bool IsOnSunday(byte value)
-        {
-            var mask = DaysAsBinary.SUNDAY;
-            return (value & mask) == mask;
-        }
-
-        public static bool IsOnWeekend(byte value)
-        {
-            var mask = DaysAsBinary.WEEKEND;
-            return (value & mask) == mask;
-        }
-
-        public static bool IsOnWorkingDays(byte value)
-        {
-            var mask = DaysAsBinary.WORKINGDAYS;
-            return (value & mask) == mask;
-        }
-
-        public static bool ShouldOccurOnThisDay(DayOfWeek day, byte days)
+        public static bool ShouldOccurOnThisDay(DayOfWeek day, CertainDays days)
         {
             return day switch
             {
-                DayOfWeek.Monday => IsOnMonday(days),
-                DayOfWeek.Tuesday => IsOnTuesday(days),
-                DayOfWeek.Wednesday => IsOnWednesday(days),
-                DayOfWeek.Thursday => IsOnThursday(days),
-                DayOfWeek.Friday => IsOnFriday(days),
-                DayOfWeek.Saturday => IsOnSaturday(days),
-                DayOfWeek.Sunday => IsOnSunday(days),
+                DayOfWeek.Monday => days.HasFlag(CertainDays.Monday),
+                DayOfWeek.Tuesday => days.HasFlag(CertainDays.Tuesday),
+                DayOfWeek.Wednesday => days.HasFlag(CertainDays.Wednesday),
+                DayOfWeek.Thursday => days.HasFlag(CertainDays.Thursday),
+                DayOfWeek.Friday => days.HasFlag(CertainDays.Friday),
+                DayOfWeek.Saturday => days.HasFlag(CertainDays.Saturday),
+                DayOfWeek.Sunday => days.HasFlag(CertainDays.Sunday),
                 _ => throw new ArgumentOutOfRangeException(nameof(day)),
             };
         }

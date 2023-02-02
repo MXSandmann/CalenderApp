@@ -1,5 +1,4 @@
-﻿using ApplicationCore.Models.Enums;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ApplicationCore.Models.Entities
 {
@@ -21,7 +20,7 @@ namespace ApplicationCore.Models.Entities
         public string Description { get; set; } = null!;
         public string AdditionalInfo { get; set; } = null!;
         public string ImageUrl { get; set; } = null!;
-        public YesNo HasRecurrency { get; set; }
+        public bool HasRecurrency { get; set; }
         public RecurrencyRule? RecurrencyRule { get; set; }
 
         public static UserEvent Copy(UserEvent other)
