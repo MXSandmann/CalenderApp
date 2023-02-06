@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace ApplicationCore.Models
 {
-    public class CalendarEvent
+    public class CalendarEvent : ICloneable
     {
         public CalendarEvent(string title, DateTime start, DateTime end, DateTime startTime, DateTime endTime)
         {
@@ -27,12 +27,7 @@ namespace ApplicationCore.Models
         public DateTime StartTime { get; }
         [JsonProperty("endTime")]
         public DateTime EndTime { get; }
-
-        public static CalendarEvent Copy(CalendarEvent calendarEvent)
-        {
-            return new CalendarEvent(calendarEvent.Title, calendarEvent.Start, calendarEvent.End, calendarEvent.StartTime, calendarEvent.EndTime);
-        }
-
+               
         public static CalendarEvent ToCalendarEvent(UserEvent userEvent)
         {
             return new CalendarEvent(
@@ -41,6 +36,11 @@ namespace ApplicationCore.Models
                     userEvent.Date,
                     userEvent.StartTime,
                     userEvent.EndTime);
+        }
+
+        public object Clone()
+        {
+            return new CalendarEvent(Title, Start, End, StartTime, EndTime);
         }
     }
 }

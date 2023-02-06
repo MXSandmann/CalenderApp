@@ -171,7 +171,7 @@ namespace ApplicationCore.Services
 
         private static CalendarEvent CreateCalendarEvent(CalendarEvent firstCalendarEvent, DateTime dateOfNextEvent)
         {
-            var nextCalendarEvent = CalendarEvent.Copy(firstCalendarEvent);
+            var nextCalendarEvent = (CalendarEvent)firstCalendarEvent.Clone();
             nextCalendarEvent.Start = dateOfNextEvent;
             nextCalendarEvent.End = dateOfNextEvent;
             return nextCalendarEvent;
@@ -235,10 +235,8 @@ namespace ApplicationCore.Services
             while (dateOfNextEvent < userEvent.LastDate)
             {
                 dateOfNextEvent = dateOfNextEvent.AddDays(1);
-                if ((dateOfNextEvent.Day % 2 == 0
-                    && evenOdd == EvenOdd.Even)
-                    || (dateOfNextEvent.Day % 2 == 1
-                        && evenOdd == EvenOdd.Odd))
+                if ((evenOdd == EvenOdd.Even && dateOfNextEvent.Day % 2 == 0)
+                    || (evenOdd == EvenOdd.Odd && dateOfNextEvent.Day % 2 == 1))
                 {
                     var nextCalendarEvent = CreateCalendarEvent(firstCalendarEvent, dateOfNextEvent);
                     events.Add(nextCalendarEvent);
