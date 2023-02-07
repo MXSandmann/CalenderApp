@@ -1,4 +1,4 @@
-﻿using ApplicationCore.Helpers;
+﻿using ApplicationCore.Extensions;
 using ApplicationCore.Models;
 using ApplicationCore.Models.Entities;
 using ApplicationCore.Models.Enums;
@@ -201,7 +201,7 @@ namespace ApplicationCore.Services
             while (dateOfNextEvent < userEvent.LastDate)
             {
                 dateOfNextEvent = dateOfNextEvent.AddDays(1);
-                var daysMatches = CertainDayHelper.ShouldOccurOnThisDay(dateOfNextEvent.DayOfWeek, days);
+                var daysMatches = days.ShouldOccurOnThisDay(dateOfNextEvent.DayOfWeek);
 
                 // If current day of the week is not chosen, continue
                 if (!daysMatches) continue;
@@ -215,7 +215,7 @@ namespace ApplicationCore.Services
                 }
 
                 // Specific week is chosen, should check if current day is on this week
-                if (CertainDayHelper.IsOnGivenWeekOfMonth(weekOfTheMonth, dateOfNextEvent))
+                if (weekOfTheMonth.IsOnGivenWeekOfMonth(dateOfNextEvent))
                 {
                     var nextCalendarEvent = CreateCalendarEvent(firstCalendarEvent, dateOfNextEvent);
                     events.Add(nextCalendarEvent);

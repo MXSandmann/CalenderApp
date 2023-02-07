@@ -27,7 +27,7 @@ namespace ApplicationCore.Models
         public DateTime StartTime { get; }
         [JsonProperty("endTime")]
         public DateTime EndTime { get; }
-               
+
         public static CalendarEvent ToCalendarEvent(UserEvent userEvent)
         {
             return new CalendarEvent(
