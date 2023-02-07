@@ -5,6 +5,7 @@ using FluentValidation;
 using Infrastructure.DataContext;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 using WebUI.Models;
 using WebUI.Validators;
 
@@ -17,6 +18,7 @@ builder.Services.AddScoped<IUserEventRepository, UserEventRepository>();
 builder.Services.AddScoped<IRecurrencyRuleRepository, RecurrencyRuleRepository>();
 builder.Services.AddScoped<IUserEventService, UserEventService>();
 builder.Services.AddScoped<IValidator<CreateUpdateUserEventViewModel>, DateValidator>();
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
 var app = builder.Build();
 

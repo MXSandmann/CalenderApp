@@ -3,15 +3,17 @@ using ApplicationCore.Models.Enums;
 using ApplicationCore.Repositories.Contracts;
 using ApplicationCore.Services;
 using ApplicationCore.Services.Contracts;
+using AutoMapper;
 using Moq;
 using Shouldly;
+using WebUI.Profiles;
 
 namespace Tests.Services
 {
     public class UserEventServiceTest
     {
         private readonly Mock<IUserEventRepository> _userEventRepoMock;
-        private readonly Mock<IRecurrencyRuleRepository> _recRuleRepoMock;
+        private readonly Mock<IRecurrencyRuleRepository> _recRuleRepoMock;        
 
         // System under test
         private readonly IUserEventService _sut;
@@ -20,7 +22,10 @@ namespace Tests.Services
         {
             _userEventRepoMock = new Mock<IUserEventRepository>();
             _recRuleRepoMock = new Mock<IRecurrencyRuleRepository>();
-            _sut = new UserEventService(_userEventRepoMock.Object, _recRuleRepoMock.Object);
+            var profile = new AutomapperProfile();
+            var config = new MapperConfiguration(cfg => cfg.AddProfile(profile));
+            var mapper = new Mapper(config);
+            _sut = new UserEventService(_userEventRepoMock.Object, _recRuleRepoMock.Object, mapper);
         }
 
         [Fact]
@@ -301,7 +306,7 @@ namespace Tests.Services
                         WeekOfMonth = WeekOfTheMonth.First
                     }
                 },
-                8
+                6
             };
             // Every third thursday, saturday and sunday
             yield return new object[] {

@@ -1,4 +1,6 @@
-﻿using ApplicationCore.Services.Contracts;
+﻿using ApplicationCore.Models.Entities;
+using ApplicationCore.Services.Contracts;
+using AutoMapper;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using WebUI.Models;
@@ -9,11 +11,13 @@ namespace WebUI.Controllers
     {
         private readonly IUserEventService _service;
         private readonly IValidator<CreateUpdateUserEventViewModel> _validator;
+        private readonly IMapper _mapper;
 
-        public EventsOverviewController(IUserEventService service, IValidator<CreateUpdateUserEventViewModel> validator)
+        public EventsOverviewController(IUserEventService service, IValidator<CreateUpdateUserEventViewModel> validator, IMapper mapper)
         {
             _service = service;
             _validator = validator;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -24,7 +28,7 @@ namespace WebUI.Controllers
             ViewBag.SortCategoryParameter = "Category";
             ViewBag.SortPlaceParameter = "Place";
             var userEvents = await _service.GetUserEvents(sortBy);
-            var userEventViewModels = userEvents.Select(x => GetUserEventViewModel.ToUserEventViewModel(x)).ToList();
+            var userEventViewModels = _mapper.Map<IEnumerable<GetUserEventViewModel>>(userEvents);            
             return View("EventsOverview", userEventViewModels);
         }
 
@@ -45,7 +49,7 @@ namespace WebUI.Controllers
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
 
-            await _service.AddNewUserEvent(newModel.ToUserEvent(), newModel.ToRecurrencyRule());
+            await _service.AddNewUserEvent(_mapper.Map<UserEvent>(newModel), _mapper.Map<RecurrencyRule>(newModel));
             return RedirectToAction(nameof(Events));
         }
 
@@ -55,7 +59,7 @@ namespace WebUI.Controllers
             var eventToUpdate = await _service.GetUserEventById(id);
             if (eventToUpdate == null)
                 return NotFound($"The event with id {id} not found");
-            return View("Create", CreateUpdateUserEventViewModel.ToUserEventViewModel(eventToUpdate));
+            return View("Create", _mapper.Map<CreateUpdateUserEventViewModel>(eventToUpdate));
         }
 
         [HttpPost("[action]/{id:guid?}")]
@@ -69,7 +73,7 @@ namespace WebUI.Controllers
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
 
-            await _service.UpdateUserEvent(model.ToUserEvent(), model.ToRecurrencyRule());
+            await _service.UpdateUserEvent(_mapper.Map<UserEvent>(model), _mapper.Map<RecurrencyRule>(model));
             return RedirectToAction(nameof(Events));
         }
 

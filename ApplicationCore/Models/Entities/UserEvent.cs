@@ -21,25 +21,6 @@ namespace ApplicationCore.Models.Entities
         public string AdditionalInfo { get; set; } = null!;
         public string ImageUrl { get; set; } = null!;
         public bool HasRecurrency { get; set; }
-        public RecurrencyRule? RecurrencyRule { get; set; }
-
-        public static UserEvent Copy(UserEvent other)
-        {
-            return new UserEvent
-            {
-                Id = other.Id,
-                Name = other.Name,
-                Category = other.Category,
-                Place = other.Place,
-                StartTime = other.StartTime,
-                EndTime = other.EndTime,
-                Date = other.Date,
-                LastDate = other.LastDate,
-                Description = other.Description,
-                AdditionalInfo = other.AdditionalInfo,
-                ImageUrl = other.ImageUrl,
-                RecurrencyRule = other.RecurrencyRule
-            };
-        }
+        public RecurrencyRule? RecurrencyRule { get; set; }        
     }
 }

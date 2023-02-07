@@ -100,16 +100,22 @@ namespace Tests
         {
             return new List<CalendarEvent>
             {
-                new CalendarEvent("testname1",
-                new DateTime(2023, 6, 1, 12, 0, 0),
-                new DateTime(2023, 6, 1, 12, 0, 0),
-                new DateTime(2023, 6, 1, 12, 0, 0),
-                new DateTime(2023, 6, 1, 13, 0, 0)),
-                new CalendarEvent("testname2",
-                new DateTime(2023, 7, 1, 12, 0, 0),
-                new DateTime(2023, 7, 1, 12, 0, 0),
-                new DateTime(2023, 7, 1, 12, 0, 0),
-                new DateTime(2023, 7, 1, 13, 0, 0)),
+                new CalendarEvent
+                {
+                    Title = "testname1",
+                    Start = new DateTime(2023, 6, 1, 12, 0, 0),
+                    End = new DateTime(2023, 6, 1, 12, 0, 0),
+                    StartTime = new DateTime(2023, 6, 1, 12, 0, 0),
+                    EndTime = new DateTime(2023, 6, 1, 13, 0, 0)
+                },
+                new CalendarEvent
+                {
+                    Title = "testname2",
+                    Start = new DateTime(2023, 7, 1, 12, 0, 0),
+                    End = new DateTime(2023, 7, 1, 12, 0, 0),
+                    StartTime = new DateTime(2023, 7, 1, 12, 0, 0),
+                    EndTime = new DateTime(2023, 7, 1, 13, 0, 0)
+                }
             };
         }
     }

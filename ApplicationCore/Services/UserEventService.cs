@@ -4,6 +4,7 @@ using ApplicationCore.Models.Entities;
 using ApplicationCore.Models.Enums;
 using ApplicationCore.Repositories.Contracts;
 using ApplicationCore.Services.Contracts;
+using AutoMapper;
 
 namespace ApplicationCore.Services
 {
@@ -11,11 +12,13 @@ namespace ApplicationCore.Services
     {
         private readonly IUserEventRepository _userEventRepository;
         private readonly IRecurrencyRuleRepository _recurrencyRuleRepository;
+        private readonly IMapper _mapper;
 
-        public UserEventService(IUserEventRepository repository, IRecurrencyRuleRepository recurrencyRuleRepository)
+        public UserEventService(IUserEventRepository repository, IRecurrencyRuleRepository recurrencyRuleRepository, IMapper mapper)
         {
             _userEventRepository = repository;
             _recurrencyRuleRepository = recurrencyRuleRepository;
+            _mapper = mapper;
         }
 
         public async Task<UserEvent> AddNewUserEvent(UserEvent userEvent, RecurrencyRule recurrencyRule)
@@ -91,55 +94,55 @@ namespace ApplicationCore.Services
                 // 1. Check if has recurrency
                 if (rule == null)
                 {
-                    calendarEvents.Add(CalendarEvent.ToCalendarEvent(userEvent));
+                    calendarEvents.Add(_mapper.Map<CalendarEvent>(userEvent));
                     continue;
                 }
 
                 // 2. Check standard recurrency
                 if (rule.Recurrency != Recurrency.None)
-                    calendarEvents.AddRange(CreateCalendarEventsWithStandardRecurrency(userEvent, rule.Recurrency));
+                    calendarEvents.AddRange(CreateCalendarEventsWithStandardRecurrency(userEvent, rule.Recurrency, _mapper));
 
 
                 // 3. Check if certain day of week is set
                 if (rule.DayOfWeek != default)
-                    calendarEvents.AddRange(CreateCalendarEventsWithCertainDays(userEvent, rule.DayOfWeek, rule.WeekOfMonth));
+                    calendarEvents.AddRange(CreateCalendarEventsWithCertainDays(userEvent, rule.DayOfWeek, rule.WeekOfMonth, _mapper));
 
                 // 4. Check if even or odd day
                 if (rule.EvenOdd != default)
-                    calendarEvents.AddRange(CreateCalendarEventsWithEvenOrOddDays(userEvent, rule.EvenOdd));
+                    calendarEvents.AddRange(CreateCalendarEventsWithEvenOrOddDays(userEvent, rule.EvenOdd, _mapper));
 
             }
             return calendarEvents;
         }
 
-        private static IEnumerable<CalendarEvent> CreateCalendarEventsWithStandardRecurrency(UserEvent userEvent, Recurrency recurrency)
+        private static IEnumerable<CalendarEvent> CreateCalendarEventsWithStandardRecurrency(UserEvent userEvent, Recurrency recurrency, IMapper mapper)
         {
             var calendarEvents = new List<CalendarEvent>();
             switch (recurrency)
             {
                 case Recurrency.Daily:
                     {
-                        var events = CompleteEventsForPeriod(userEvent, Recurrency.Daily);
+                        var events = CompleteEventsForPeriod(userEvent, Recurrency.Daily, mapper);
 
                         calendarEvents.AddRange(events);
                         break;
                     }
                 case Recurrency.Weekly:
                     {
-                        var events = CompleteEventsForPeriod(userEvent, Recurrency.Weekly);
+                        var events = CompleteEventsForPeriod(userEvent, Recurrency.Weekly, mapper);
 
                         calendarEvents.AddRange(events);
                         break;
                     }
                 case Recurrency.Monthly:
                     {
-                        var events = CompleteEventsForPeriod(userEvent, Recurrency.Monthly);
+                        var events = CompleteEventsForPeriod(userEvent, Recurrency.Monthly, mapper);
                         calendarEvents.AddRange(events);
                         break;
                     }
                 case Recurrency.Yearly:
                     {
-                        var events = CompleteEventsForPeriod(userEvent, Recurrency.Yearly);
+                        var events = CompleteEventsForPeriod(userEvent, Recurrency.Yearly, mapper);
                         calendarEvents.AddRange(events);
                         break;
                     }
@@ -151,9 +154,9 @@ namespace ApplicationCore.Services
             return calendarEvents;
         }
 
-        private static List<CalendarEvent> CompleteEventsForPeriod(UserEvent userEvent, Recurrency recurrency)
+        private static List<CalendarEvent> CompleteEventsForPeriod(UserEvent userEvent, Recurrency recurrency, IMapper mapper)
         {
-            var firstCalendarEvent = CalendarEvent.ToCalendarEvent(userEvent);
+            var firstCalendarEvent = mapper.Map<CalendarEvent>(userEvent);
             var events = new List<CalendarEvent>
             {
                 firstCalendarEvent
@@ -190,9 +193,9 @@ namespace ApplicationCore.Services
             };
         }
 
-        private static IEnumerable<CalendarEvent> CreateCalendarEventsWithCertainDays(UserEvent userEvent, CertainDays days, WeekOfTheMonth weekOfTheMonth)
+        private static IEnumerable<CalendarEvent> CreateCalendarEventsWithCertainDays(UserEvent userEvent, CertainDays days, WeekOfTheMonth weekOfTheMonth, IMapper mapper)
         {
-            var firstCalendarEvent = CalendarEvent.ToCalendarEvent(userEvent);
+            var firstCalendarEvent = mapper.Map<CalendarEvent>(userEvent);
             var events = new List<CalendarEvent>
             {
                 firstCalendarEvent
@@ -224,9 +227,9 @@ namespace ApplicationCore.Services
             return events;
         }
 
-        private static IEnumerable<CalendarEvent> CreateCalendarEventsWithEvenOrOddDays(UserEvent userEvent, EvenOdd evenOdd)
+        private static IEnumerable<CalendarEvent> CreateCalendarEventsWithEvenOrOddDays(UserEvent userEvent, EvenOdd evenOdd, IMapper mapper)
         {
-            var firstCalendarEvent = CalendarEvent.ToCalendarEvent(userEvent);
+            var firstCalendarEvent = mapper.Map<CalendarEvent>(userEvent);
             var events = new List<CalendarEvent>
             {
                 firstCalendarEvent

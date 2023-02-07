@@ -1,5 +1,6 @@
 ﻿using ApplicationCore.Models.Entities;
 using ApplicationCore.Services.Contracts;
+using AutoMapper;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -7,23 +8,28 @@ using Newtonsoft.Json;
 using Shouldly;
 using WebUI.Controllers;
 using WebUI.Models;
+using WebUI.Profiles;
 using WebUI.Validators;
 
 namespace Tests.Controllers
 {
     public class EventsOverviewControllerTest
     {
-        private readonly Mock<IUserEventService> _serviceMock;
+        private readonly Mock<IUserEventService> _serviceMock;        
 
         // System under test
         private readonly EventsOverviewController _sut;
         private readonly IValidator<CreateUpdateUserEventViewModel> _validator;
+        private readonly IMapper _mapper;
 
         public EventsOverviewControllerTest()
         {
             _serviceMock = new Mock<IUserEventService>();
             _validator = new DateValidator();
-            _sut = new EventsOverviewController(_serviceMock.Object, _validator);
+            var profile = new AutomapperProfile();
+            var config = new MapperConfiguration(cfg => cfg.AddProfile(profile));
+            _mapper = new Mapper(config);
+            _sut = new EventsOverviewController(_serviceMock.Object, _validator, _mapper);
         }
 
         [Fact]
@@ -109,7 +115,7 @@ namespace Tests.Controllers
             requestResult.ViewName.ShouldBe("Create");
             var model = Assert.IsAssignableFrom<CreateUpdateUserEventViewModel>(requestResult.ViewData.Model);
 
-            var startModel = CreateUpdateUserEventViewModel.ToUserEventViewModel(userEvent);
+            var startModel = _mapper.Map<CreateUpdateUserEventViewModel>(userEvent);
 
             model.Id.ShouldBe(startModel.Id);
             model.Name.ShouldBe(startModel.Name);

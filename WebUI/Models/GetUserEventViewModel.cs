@@ -26,26 +26,7 @@ namespace WebUI.Models
         public string ImageUrl { get; set; } = null!;
         public string Recurrency { get; set; } = null!;
 
-        public static GetUserEventViewModel ToUserEventViewModel(UserEvent userEvent)
-        {
-            return new GetUserEventViewModel
-            {
-                Id = userEvent.Id,
-                Name = userEvent.Name,
-                Category = userEvent.Category,
-                Place = userEvent.Place,
-                StartTime = userEvent.StartTime,
-                EndTime = userEvent.EndTime,
-                Date = userEvent.Date,
-                LastDate = userEvent.LastDate,
-                Description = userEvent.Description,
-                AdditionalInfo = userEvent.AdditionalInfo,
-                ImageUrl = userEvent.ImageUrl,
-                Recurrency = GetRecurrencyDescription(userEvent.RecurrencyRule!)
-            };
-        }
-
-        private static string GetRecurrencyDescription(RecurrencyRule recurrencyRule)
+        public static string GetRecurrencyDescription(RecurrencyRule recurrencyRule)
         {
             if (recurrencyRule == null)
                 return string.Empty;
