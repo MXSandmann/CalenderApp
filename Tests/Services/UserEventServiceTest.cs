@@ -332,6 +332,30 @@ namespace Tests.Services
                 },
                 10
             };
+            // Every last friday of month
+            yield return new object[] {
+                new UserEvent
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Test",
+                    Category = "Test",
+                    Place = "Test",
+                    StartTime = startDateTime,
+                    EndTime = startDateTime.AddHours(1),
+                    Date = startDateTime,
+                    LastDate = startDateTime.AddMonths(3),
+                    Description = "Test",
+                    AdditionalInfo = "Test",
+                    ImageUrl = "Test",
+                    HasRecurrency = true,
+                    RecurrencyRule = new RecurrencyRule
+                    {
+                        DayOfWeek = (CertainDays)16,
+                        WeekOfMonth = WeekOfTheMonth.Last
+                    }
+                },
+                4
+            };
             // On working days
             yield return new object[] {
                 new UserEvent

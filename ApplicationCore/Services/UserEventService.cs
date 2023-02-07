@@ -118,39 +118,8 @@ namespace ApplicationCore.Services
         private static IEnumerable<CalendarEvent> CreateCalendarEventsWithStandardRecurrency(UserEvent userEvent, Recurrency recurrency, IMapper mapper)
         {
             var calendarEvents = new List<CalendarEvent>();
-            switch (recurrency)
-            {
-                case Recurrency.Daily:
-                    {
-                        var events = CompleteEventsForPeriod(userEvent, Recurrency.Daily, mapper);
-
-                        calendarEvents.AddRange(events);
-                        break;
-                    }
-                case Recurrency.Weekly:
-                    {
-                        var events = CompleteEventsForPeriod(userEvent, Recurrency.Weekly, mapper);
-
-                        calendarEvents.AddRange(events);
-                        break;
-                    }
-                case Recurrency.Monthly:
-                    {
-                        var events = CompleteEventsForPeriod(userEvent, Recurrency.Monthly, mapper);
-                        calendarEvents.AddRange(events);
-                        break;
-                    }
-                case Recurrency.Yearly:
-                    {
-                        var events = CompleteEventsForPeriod(userEvent, Recurrency.Yearly, mapper);
-                        calendarEvents.AddRange(events);
-                        break;
-                    }
-                default:
-                    {
-                        throw new ArgumentException($"The value of {nameof(recurrency)} unknown");
-                    }
-            }
+            var events = CompleteEventsForPeriod(userEvent, recurrency, mapper);
+            calendarEvents.AddRange(events);            
             return calendarEvents;
         }
 
