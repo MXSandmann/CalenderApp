@@ -102,7 +102,6 @@ namespace ApplicationCore.Services
                 if (rule.Recurrency != Recurrency.None)
                     calendarEvents.AddRange(CreateCalendarEventsWithStandardRecurrency(userEvent, rule.Recurrency, _mapper));
 
-
                 // 3. Check if certain day of week is set
                 if (rule.DayOfWeek != default)
                     calendarEvents.AddRange(CreateCalendarEventsWithCertainDays(userEvent, rule.DayOfWeek, rule.WeekOfMonth, _mapper));
@@ -110,7 +109,6 @@ namespace ApplicationCore.Services
                 // 4. Check if even or odd day
                 if (rule.EvenOdd != default)
                     calendarEvents.AddRange(CreateCalendarEventsWithEvenOrOddDays(userEvent, rule.EvenOdd, _mapper));
-
             }
             return calendarEvents;
         }
@@ -133,8 +131,7 @@ namespace ApplicationCore.Services
             var dateOfNextEvent = userEvent.Date;
             while (dateOfNextEvent < userEvent.LastDate)
             {
-
-                dateOfNextEvent = AddTimePeriod(dateOfNextEvent, recurrency);
+                dateOfNextEvent = dateOfNextEvent.AddTimePeriod(recurrency);
                 var nextCalendarEvent = CreateCalendarEvent(firstCalendarEvent, dateOfNextEvent);
                 events.Add(nextCalendarEvent);
             }
@@ -148,20 +145,7 @@ namespace ApplicationCore.Services
             nextCalendarEvent.End = dateOfNextEvent;
             return nextCalendarEvent;
         }
-
-        private static DateTime AddTimePeriod(DateTime dateOfNextEvent, Recurrency recurrency)
-        {
-            return recurrency switch
-            {
-                Recurrency.Daily => dateOfNextEvent.AddDays(1),
-                Recurrency.Weekly => dateOfNextEvent.AddDays(7),
-                Recurrency.Monthly => dateOfNextEvent.AddMonths(1),
-                Recurrency.Yearly => dateOfNextEvent.AddYears(1),
-                Recurrency.None => dateOfNextEvent,
-                _ => throw new ArgumentException($"The value of {nameof(recurrency)} unknown")
-            };
-        }
-
+              
         private static IEnumerable<CalendarEvent> CreateCalendarEventsWithCertainDays(UserEvent userEvent, CertainDays days, WeekOfTheMonth weekOfTheMonth, IMapper mapper)
         {
             var firstCalendarEvent = mapper.Map<CalendarEvent>(userEvent);
