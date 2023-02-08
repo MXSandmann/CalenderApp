@@ -3,6 +3,7 @@ using System;
 using Infrastructure.DataContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(UserEventDataContext))]
-    partial class UserEventDataContextModelSnapshot : ModelSnapshot
+    [Migration("20230119004030_Add again start time and end time andate separately")]
+    partial class Addagainstarttimeandendtimeandateseparately
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,38 +24,7 @@ namespace Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("ApplicationCore.Models.Entities.RecurrencyRule", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("DayOfWeek")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("EvenOdd")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Recurrency")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("UserEventId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("WeekOfMonth")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserEventId")
-                        .IsUnique();
-
-                    b.ToTable("RecurrencyRules");
-                });
-
-            modelBuilder.Entity("ApplicationCore.Models.Entities.UserEvent", b =>
+            modelBuilder.Entity("ApplicationCore.Models.UserEvent", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -77,9 +48,6 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<bool>("HasRecurrency")
-                        .HasColumnType("boolean");
-
                     b.Property<string>("ImageUrl")
                         .IsRequired()
                         .HasColumnType("text");
@@ -95,6 +63,10 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Recurrency")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("timestamp with time zone");
 
@@ -105,35 +77,19 @@ namespace Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("3cca59c6-821b-4cff-8773-1f37efb5527e"),
+                            Id = new Guid("4d4c5425-48f7-40f3-b98f-15d78c22c622"),
                             AdditionalInfo = "test additionalInfo from seed",
                             Category = "test category from seed",
-                            Date = new DateTime(2023, 2, 2, 22, 2, 11, 332, DateTimeKind.Utc).AddTicks(1697),
+                            Date = new DateTime(2023, 1, 19, 0, 40, 30, 215, DateTimeKind.Utc).AddTicks(7291),
                             Description = "test description from seed",
-                            EndTime = new DateTime(2023, 2, 3, 0, 2, 11, 332, DateTimeKind.Utc).AddTicks(1669),
-                            HasRecurrency = true,
+                            EndTime = new DateTime(2023, 1, 19, 2, 40, 30, 215, DateTimeKind.Utc).AddTicks(7267),
                             ImageUrl = "test image url from seed",
-                            LastDate = new DateTime(2023, 2, 2, 22, 2, 11, 332, DateTimeKind.Utc).AddTicks(1698),
+                            LastDate = new DateTime(2023, 1, 19, 0, 40, 30, 215, DateTimeKind.Utc).AddTicks(7291),
                             Name = "Test name from seed",
                             Place = "test place from seed",
-                            StartTime = new DateTime(2023, 2, 2, 22, 2, 11, 332, DateTimeKind.Utc).AddTicks(1665)
+                            Recurrency = "Weekly",
+                            StartTime = new DateTime(2023, 1, 19, 0, 40, 30, 215, DateTimeKind.Utc).AddTicks(7265)
                         });
-                });
-
-            modelBuilder.Entity("ApplicationCore.Models.Entities.RecurrencyRule", b =>
-                {
-                    b.HasOne("ApplicationCore.Models.Entities.UserEvent", "UserEvent")
-                        .WithOne("RecurrencyRule")
-                        .HasForeignKey("ApplicationCore.Models.Entities.RecurrencyRule", "UserEventId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("UserEvent");
-                });
-
-            modelBuilder.Entity("ApplicationCore.Models.Entities.UserEvent", b =>
-                {
-                    b.Navigation("RecurrencyRule");
                 });
 #pragma warning restore 612, 618
         }

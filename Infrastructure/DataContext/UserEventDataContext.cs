@@ -1,6 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using ApplicationCore.Models;
-using Infrastructure.DataContext;
+﻿using ApplicationCore.Models.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.DataContext
 {
@@ -12,11 +11,12 @@ namespace Infrastructure.DataContext
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {            
+        {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(UserEventDataContext).Assembly);
         }
 
         public DbSet<UserEvent> UserEvents { get; set; } = null!;
+        public DbSet<RecurrencyRule> RecurrencyRules { get; set; } = null!;
 
     }
 }

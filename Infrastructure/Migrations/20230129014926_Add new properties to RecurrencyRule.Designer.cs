@@ -3,6 +3,7 @@ using System;
 using Infrastructure.DataContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(UserEventDataContext))]
-    partial class UserEventDataContextModelSnapshot : ModelSnapshot
+    [Migration("20230129014926_Add new properties to RecurrencyRule")]
+    partial class AddnewpropertiestoRecurrencyRule
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -28,11 +30,40 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<int>("DayOfWeek")
+                    b.Property<string>("DayOfWeek")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Gap")
                         .HasColumnType("integer");
 
-                    b.Property<int>("EvenOdd")
+                    b.Property<int>("MaximumOccurrencies")
                         .HasColumnType("integer");
+
+                    b.Property<string>("MonthOfYear")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("OnFriday")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("OnMonday")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("OnSaturday")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("OnSunday")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("OnThursday")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("OnTuesday")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("OnWednesday")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Recurrency")
                         .IsRequired()
@@ -77,8 +108,9 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<bool>("HasRecurrency")
-                        .HasColumnType("boolean");
+                    b.Property<string>("HasRecurrency")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("ImageUrl")
                         .IsRequired()
@@ -105,18 +137,18 @@ namespace Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("3cca59c6-821b-4cff-8773-1f37efb5527e"),
+                            Id = new Guid("fcdb43b6-9411-48c9-9844-a407201c07ed"),
                             AdditionalInfo = "test additionalInfo from seed",
                             Category = "test category from seed",
-                            Date = new DateTime(2023, 2, 2, 22, 2, 11, 332, DateTimeKind.Utc).AddTicks(1697),
+                            Date = new DateTime(2023, 1, 29, 1, 49, 25, 719, DateTimeKind.Utc).AddTicks(4994),
                             Description = "test description from seed",
-                            EndTime = new DateTime(2023, 2, 3, 0, 2, 11, 332, DateTimeKind.Utc).AddTicks(1669),
-                            HasRecurrency = true,
+                            EndTime = new DateTime(2023, 1, 29, 3, 49, 25, 719, DateTimeKind.Utc).AddTicks(4957),
+                            HasRecurrency = "Yes",
                             ImageUrl = "test image url from seed",
-                            LastDate = new DateTime(2023, 2, 2, 22, 2, 11, 332, DateTimeKind.Utc).AddTicks(1698),
+                            LastDate = new DateTime(2023, 1, 29, 1, 49, 25, 719, DateTimeKind.Utc).AddTicks(4994),
                             Name = "Test name from seed",
                             Place = "test place from seed",
-                            StartTime = new DateTime(2023, 2, 2, 22, 2, 11, 332, DateTimeKind.Utc).AddTicks(1665)
+                            StartTime = new DateTime(2023, 1, 29, 1, 49, 25, 719, DateTimeKind.Utc).AddTicks(4954)
                         });
                 });
 

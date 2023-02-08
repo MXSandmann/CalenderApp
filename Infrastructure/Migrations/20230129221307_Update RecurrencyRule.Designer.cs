@@ -3,6 +3,7 @@ using System;
 using Infrastructure.DataContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(UserEventDataContext))]
-    partial class UserEventDataContextModelSnapshot : ModelSnapshot
+    [Migration("20230129221307_Update RecurrencyRule")]
+    partial class UpdateRecurrencyRule
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -28,11 +30,12 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<int>("DayOfWeek")
-                        .HasColumnType("integer");
+                    b.Property<byte>("CertainDays")
+                        .HasColumnType("smallint");
 
-                    b.Property<int>("EvenOdd")
-                        .HasColumnType("integer");
+                    b.Property<string>("MonthOfYear")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Recurrency")
                         .IsRequired()
@@ -77,8 +80,9 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<bool>("HasRecurrency")
-                        .HasColumnType("boolean");
+                    b.Property<string>("HasRecurrency")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("ImageUrl")
                         .IsRequired()
@@ -105,18 +109,18 @@ namespace Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("3cca59c6-821b-4cff-8773-1f37efb5527e"),
+                            Id = new Guid("14881e12-e2f5-45f1-992b-698525eb628c"),
                             AdditionalInfo = "test additionalInfo from seed",
                             Category = "test category from seed",
-                            Date = new DateTime(2023, 2, 2, 22, 2, 11, 332, DateTimeKind.Utc).AddTicks(1697),
+                            Date = new DateTime(2023, 1, 29, 22, 13, 7, 572, DateTimeKind.Utc).AddTicks(1143),
                             Description = "test description from seed",
-                            EndTime = new DateTime(2023, 2, 3, 0, 2, 11, 332, DateTimeKind.Utc).AddTicks(1669),
-                            HasRecurrency = true,
+                            EndTime = new DateTime(2023, 1, 30, 0, 13, 7, 572, DateTimeKind.Utc).AddTicks(1113),
+                            HasRecurrency = "Yes",
                             ImageUrl = "test image url from seed",
-                            LastDate = new DateTime(2023, 2, 2, 22, 2, 11, 332, DateTimeKind.Utc).AddTicks(1698),
+                            LastDate = new DateTime(2023, 1, 29, 22, 13, 7, 572, DateTimeKind.Utc).AddTicks(1143),
                             Name = "Test name from seed",
                             Place = "test place from seed",
-                            StartTime = new DateTime(2023, 2, 2, 22, 2, 11, 332, DateTimeKind.Utc).AddTicks(1665)
+                            StartTime = new DateTime(2023, 1, 29, 22, 13, 7, 572, DateTimeKind.Utc).AddTicks(1109)
                         });
                 });
 

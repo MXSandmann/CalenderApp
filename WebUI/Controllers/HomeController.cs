@@ -1,6 +1,7 @@
-﻿using System.Diagnostics;
+﻿using ApplicationCore.Services.Contracts;
 using Microsoft.AspNetCore.Mvc;
-using ApplicationCore.Services.Contracts;
+using Newtonsoft.Json;
+using System.Diagnostics;
 using WebUI.Models;
 
 namespace WebUI.Controllers;
@@ -16,50 +17,9 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Index()
     {
-        var userEvents = await _service.GetUserEvents();
-        var userEventViewModels = userEvents.Select(x => UserEventViewModel.ToUserEventViewModel(x)).ToList();
-        return View(userEventViewModels);
-    }
-
-    [HttpGet]
-    public IActionResult Create()
-    {
+        var events = await _service.GetCalendarEvents();
+        ViewData["Events"] = JsonConvert.SerializeObject(events);
         return View();
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> Create(UserEventViewModel newModel)
-    {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
-        await _service.AddNewUserEvent(newModel.ToUserEvent());
-        return RedirectToAction(nameof(Index));
-    }
-
-    [HttpGet("[action]/{id:guid}")]
-    public async Task<IActionResult> Edit(Guid id)
-    {
-        var eventToUpdate = await _service.GetUserEventById(id);
-        if (eventToUpdate == null)
-            return NotFound($"The event with id {id} not found");
-        return View("Create", UserEventViewModel.ToUserEventViewModel(eventToUpdate));
-    }
-
-    [HttpPost("[action]/{id:guid?}")]
-    public async Task<IActionResult> Edit(UserEventViewModel model)
-    {
-        await _service.UpdateUserEvent(model.ToUserEvent());
-        return RedirectToAction(nameof(Index));
-    }
-
-    [HttpGet("[action]/{id:guid}")]
-    public async Task<IActionResult> Delete(Guid id)
-    {
-        await _service.RemoveUserEvent(id);
-        return RedirectToAction(nameof(Index));
     }
 
     public IActionResult Privacy()

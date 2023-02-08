@@ -1,11 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ApplicationCore.Services.Contracts;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
+using Newtonsoft.Json;
 using Shouldly;
-using ApplicationCore.Models;
-using ApplicationCore.Services.Contracts;
-using Tests;
 using WebUI.Controllers;
-using WebUI.Models;
 
 namespace Tests.Controllers
 {
@@ -25,79 +23,17 @@ namespace Tests.Controllers
         [Fact]
         public async Task IndexGet_ShouldReturnViewResult_WhenOk()
         {
-            // Arrange
-            _serviceMock.Setup(x => x.GetUserEvents())
-                .ReturnsAsync(TestData.GetUserEvents());
+            // Arrange            
+            _serviceMock.Setup(x => x.GetCalendarEvents()).ReturnsAsync(TestData.GetCalendarEvents());
 
             // Act
             var result = await _sut.Index();
 
             // Assert            
             var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsAssignableFrom<IEnumerable<UserEventViewModel>>(viewResult.ViewData.Model);
-            model.Count().ShouldBe(2);
-        }
-
-        [Fact]
-        public async Task CreatePost_ShouldReturnBadRequest_WhenModelStateIsInvalid()
-        {
-            // Arrange
-            _serviceMock.Setup(x => x.AddNewUserEvent(It.IsAny<UserEvent>()))
-                .Verifiable();
-            _sut.ModelState.AddModelError("Name", "Required");                        
-            var newModel = TestData.GetUserEventViewModel();
-
-            // Act
-            var result = await _sut.Create(newModel);
-
-            // Assert            
-            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.IsType<SerializableError>(badRequestResult.Value);            
-        }
-
-        [Fact]
-        public async Task CreatePost_ShouldRedirect_WhenModelStateIsValid()
-        {
-            // Arrange            
-            _serviceMock.Setup(x => x.GetUserEvents())
-                .ReturnsAsync(TestData.GetUserEvents());
-            var newModel = TestData.GetUserEventViewModel();
-
-            // Act
-            var result = await _sut.Create(newModel);
-
-            // Assert            
-            var requestResult = Assert.IsType<RedirectToActionResult>(result);
-            requestResult.ActionName.ShouldBe("Index");
-        }
-
-        [Fact]
-        public async Task EditGet_ShouldRedirect_WhenFound()
-        {
-            // Arrange
-            var userEvent = TestData.GetUserEvents().First();
-            _serviceMock.Setup(x => x.GetUserEventById(It.IsAny<Guid>()))
-                .ReturnsAsync(userEvent);
-
-            // Act
-            var result = await _sut.Edit(Guid.NewGuid());
-
-            // Assert            
-            var requestResult = Assert.IsType<ViewResult>(result);
-            requestResult.ViewName.ShouldBe("Create");
-            var model = Assert.IsAssignableFrom<UserEventViewModel>(requestResult.ViewData.Model);
-
-            var startModel = UserEventViewModel.ToUserEventViewModel(userEvent);
-                        
-            model.Id.ShouldBe(startModel.Id);
-            model.Name.ShouldBe(startModel.Name);
-            model.Category.ShouldBe(startModel.Category);
-            model.Place.ShouldBe(startModel.Place);
-            model.Date.ShouldBe(startModel.Date);
-            model.Time.ShouldBe(startModel.Time);
-            model.Description.ShouldBe(startModel.Description);
-            model.AdditionalInfo.ShouldBe(startModel.AdditionalInfo);
-            model.ImageUrl.ShouldBe(startModel.ImageUrl);
+            var jsonString = JsonConvert.SerializeObject(viewResult.ViewData.Values);
+            jsonString.ShouldContain("testname1");
+            jsonString.ShouldContain("testname2");
         }
     }
 }

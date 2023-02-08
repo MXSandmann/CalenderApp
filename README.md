@@ -1,5 +1,21 @@
 # ZeroTask
 
+## Implement FullCalendar.js
+- npm install fullcalendar
+- copy index.global.js or index.global.min.js from node_modules\fullcalendar to wwwroot directory
+- add referency to this js files in _Layout.cshtml
+- add <script>
+    document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth'
+    });
+    calendar.render();
+    });
+</script>
+    and
+    <div id="calendar"></div>
+    to the cshtml where this calendar should be presented
 
 
 ## Getting started
