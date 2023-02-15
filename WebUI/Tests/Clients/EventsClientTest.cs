@@ -38,7 +38,7 @@ namespace Tests.Clients
             // Arrange
             var userEventDto = TestData.GetUserEventDtos().First();
             var recurrencyRuleDto = TestData.GetRecurrencyRuleDto(Recurrency.None);
-            _mockHttpHandler.When(HttpMethod.Post, "/api/Events/Create").Respond(HttpStatusCode.OK, new StringContent(GetSingleUserEventDtoOkContent()));            
+            _mockHttpHandler.When(HttpMethod.Post, "/Events/Create").Respond(HttpStatusCode.OK, new StringContent(GetSingleUserEventDtoOkContent()));            
 
             // Act
             var dto = await _sut.AddNewUserEvent(userEventDto, recurrencyRuleDto);
@@ -55,7 +55,7 @@ namespace Tests.Clients
             // Arrange
             var userEventDto = TestData.GetUserEventDtos().First();
             var recurrencyRuleDto = TestData.GetRecurrencyRuleDto(Recurrency.None);
-            _mockHttpHandler.When(HttpMethod.Post, "/api/Events/Create").Respond(HttpStatusCode.NotFound);
+            _mockHttpHandler.When(HttpMethod.Post, "/Events/Create").Respond(HttpStatusCode.NotFound);
 
             // Act
             var func = async () => await _sut.AddNewUserEvent(userEventDto, recurrencyRuleDto);
@@ -68,7 +68,7 @@ namespace Tests.Clients
         public async Task GetCalendarEvents_ShouldGetEvents_WhenAllOk()
         {
             // Arrange
-            _mockHttpHandler.When("/api/Home").Respond(HttpStatusCode.OK, new StringContent(GetCalendarEventsOkContent()));
+            _mockHttpHandler.When("/Home").Respond(HttpStatusCode.OK, new StringContent(GetCalendarEventsOkContent()));
 
             // Act
             var results = await _sut.GetCalendarEvents();
@@ -83,7 +83,7 @@ namespace Tests.Clients
         public async Task GetCalendarEvents_ShouldGetEmptyList_WhenNotOk()
         {
             // Arrange
-            _mockHttpHandler.When("/api/Home").Respond(HttpStatusCode.OK, new StringContent(GetEmptyCalendarEventsContent()));
+            _mockHttpHandler.When("/Home").Respond(HttpStatusCode.OK, new StringContent(GetEmptyCalendarEventsContent()));
 
             // Act
             var results = await _sut.GetCalendarEvents();
@@ -98,7 +98,7 @@ namespace Tests.Clients
         {
             // Arrange
             var id = Guid.NewGuid();
-            _mockHttpHandler.When($"/api/Events/{id}").Respond(HttpStatusCode.OK, new StringContent(GetSingleUserEventDtoOkContent()));
+            _mockHttpHandler.When($"/Events/{id}").Respond(HttpStatusCode.OK, new StringContent(GetSingleUserEventDtoOkContent()));
 
             // Act
             var result = await _sut.GetUserEventById(id);
@@ -113,7 +113,7 @@ namespace Tests.Clients
         {
             // Arrange
             var id = Guid.NewGuid();
-            _mockHttpHandler.When($"/api/Events/{id}").Respond(HttpStatusCode.OK, new StringContent(GetUserEventDtoNullContent()));
+            _mockHttpHandler.When($"/Events/{id}").Respond(HttpStatusCode.OK, new StringContent(GetUserEventDtoNullContent()));
 
             // Act
             var func = async () => await _sut.GetUserEventById(id);
@@ -130,7 +130,7 @@ namespace Tests.Clients
         public async Task GetUserEvents_ShouldReturnSortedEvents_WhenOk(string sortBy)
         {
             // Arrange            
-            _mockHttpHandler.When("/api/Events").Respond(HttpStatusCode.OK, new StringContent(GetUserEventDtosOkContent()));
+            _mockHttpHandler.When("/Events").Respond(HttpStatusCode.OK, new StringContent(GetUserEventDtosOkContent()));
             var dict = new Dictionary<string, Action<IEnumerable<UserEventDto>>>
             {
                 { "", (seq) => CheckOrderByTime(seq) },
@@ -152,7 +152,7 @@ namespace Tests.Clients
         public async Task GetUserEvents_ShouldReturnEmptyList_WhenNoEvents()
         {
             // Arrange
-            _mockHttpHandler.When("/api/Events").Respond(HttpStatusCode.OK, new StringContent(GetEmptyUserEventDtosContent()));
+            _mockHttpHandler.When("/Events").Respond(HttpStatusCode.OK, new StringContent(GetEmptyUserEventDtosContent()));
 
             // Act
             var results = await _sut.GetUserEvents(string.Empty);
@@ -168,7 +168,7 @@ namespace Tests.Clients
         {
             // Arrange
             var id = Guid.Empty;
-            _mockHttpHandler.When($"/api/Events/Remove/{id}").Respond(HttpStatusCode.NotFound);
+            _mockHttpHandler.When($"/Events/Remove/{id}").Respond(HttpStatusCode.NotFound);
 
             // Act
             var act = () => _sut.RemoveUserEvent(id);
@@ -185,7 +185,7 @@ namespace Tests.Clients
             var recurrencyRule = TestData.GetRecurrencyRuleDto(Recurrency.Daily);
             userEventDto.HasRecurrency = true;
             userEventDto.RecurrencyRule = recurrencyRule;
-            _mockHttpHandler.When("/api/Events/Update").Respond(HttpStatusCode.OK, new StringContent(JsonConvert.SerializeObject(userEventDto)));
+            _mockHttpHandler.When("/Events/Update").Respond(HttpStatusCode.OK, new StringContent(JsonConvert.SerializeObject(userEventDto)));
 
             // Act
             var result = await _sut.UpdateUserEvent(userEventDto, recurrencyRule);
@@ -204,7 +204,7 @@ namespace Tests.Clients
             var recurrencyRule = TestData.GetRecurrencyRuleDto(Recurrency.Daily);
             userEventDto.HasRecurrency = true;
             userEventDto.RecurrencyRule = recurrencyRule;
-            _mockHttpHandler.When("/api/Events/Update").Respond(HttpStatusCode.NotFound);
+            _mockHttpHandler.When("/Events/Update").Respond(HttpStatusCode.NotFound);
 
             // Act
             var act = () => _sut.UpdateUserEvent(userEventDto, recurrencyRule);

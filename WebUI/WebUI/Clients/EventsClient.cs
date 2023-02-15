@@ -22,7 +22,7 @@ namespace WebUI.Clients
             if(userEventDto.HasRecurrency)
                 userEventDto.RecurrencyRule = recurrencyRuleDto;
 
-            var responseMessage = await _httpClient.PostAsJsonAsync("api/Events/Create", userEventDto);
+            var responseMessage = await _httpClient.PostAsJsonAsync("Events/Create", userEventDto);
             if (!responseMessage.IsSuccessStatusCode)
             {
                 _logger.LogInformation("--> Http request on EventsService unsuccessful, status code: {responseMessage.StatusCode}", responseMessage.StatusCode);
@@ -37,7 +37,7 @@ namespace WebUI.Clients
 
         public async Task<IEnumerable<CalendarEvent>> GetCalendarEvents()
         {
-            var calendarEvents = await _httpClient.GetFromJsonAsync<IEnumerable<CalendarEvent>>("api/Home");
+            var calendarEvents = await _httpClient.GetFromJsonAsync<IEnumerable<CalendarEvent>>("Home");
             if(calendarEvents == null
                 || !calendarEvents.Any())
                 return Enumerable.Empty<CalendarEvent>();
@@ -46,7 +46,7 @@ namespace WebUI.Clients
 
         public async Task<UserEventDto> GetUserEventById(Guid id)
         {
-            var userEvent = await _httpClient.GetFromJsonAsync<UserEventDto>($"api/Events/{id}");
+            var userEvent = await _httpClient.GetFromJsonAsync<UserEventDto>($"Events/{id}");
             if (userEvent?.Id == null || userEvent.Id == Guid.Empty)
                 throw new ArgumentNullException(nameof(userEvent), "UserEvent Id is null or empty");
             return userEvent;
@@ -54,7 +54,7 @@ namespace WebUI.Clients
 
         public async Task<IEnumerable<UserEventDto>> GetUserEvents(string sortBy)
         {
-            var events = await _httpClient.GetFromJsonAsync<IEnumerable<UserEventDto>>("api/Events");
+            var events = await _httpClient.GetFromJsonAsync<IEnumerable<UserEventDto>>("Events");
             if(events == null || !events.Any())
                 return Enumerable.Empty<UserEventDto>();
 
@@ -72,7 +72,7 @@ namespace WebUI.Clients
 
         public async Task RemoveUserEvent(Guid id)
         {
-            var response = await _httpClient.DeleteAsync($"api/Events/Remove/{id}");
+            var response = await _httpClient.DeleteAsync($"Events/Remove/{id}");
             if(!response.IsSuccessStatusCode)
             {
                 _logger.LogInformation("--> Http request on EventsService unsuccessful, status code: {responseMessage.StatusCode}", response.StatusCode);
@@ -86,7 +86,7 @@ namespace WebUI.Clients
             if (userEventDto.HasRecurrency)
                 userEventDto.RecurrencyRule = recurrencyRuleDto;
 
-            var response = await _httpClient.PutAsJsonAsync("api/Events/Update", userEventDto);
+            var response = await _httpClient.PutAsJsonAsync("Events/Update", userEventDto);
             if (!response.IsSuccessStatusCode)
             {
                 _logger.LogInformation("--> Http request on EventsService unsuccessful, status code: {responseMessage.StatusCode}", response.StatusCode);

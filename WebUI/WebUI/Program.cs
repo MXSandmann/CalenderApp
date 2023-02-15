@@ -13,7 +13,7 @@ builder.Services.AddScoped<IValidator<CreateUpdateUserEventViewModel>, DateValid
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddHttpClient<IEventsClient, EventsClient>((client) =>
     {
-        client.BaseAddress = new Uri(builder.Configuration.GetValue<string>("Services:EventsServiceBaseUrl"));
+        client.BaseAddress = new Uri(builder.Configuration.GetValue<string>("Services:Gateway") + "/e/");
     });
     
 
