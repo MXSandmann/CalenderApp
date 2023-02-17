@@ -1,20 +1,49 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using WebUI.Models;
+using WebUI.Models.Dtos;
 
 namespace WebUI.Controllers
 {
     [Route("[controller]")]
     public class SubscriptionsController : Controller
     {
-        [HttpGet("[action]/{id:guid}")]
-        public IActionResult Create()
+        private readonly IMapper _mapper;
+
+        public SubscriptionsController(IMapper mapper)
         {
-            return View();
+            _mapper = mapper;
+        }
+
+        [HttpGet("[action]/{id:guid}")]
+        public IActionResult Create(Guid id)
+        {
+            var viewModel = new CreateSubscriptionViewModel { EventId = id };
+            return View(viewModel);
         }
 
         [HttpPost("[action]/{id:guid}")]
-        public IActionResult Create()
+        public IActionResult Create(CreateSubscriptionViewModel createSubscriptionViewModel,[FromRoute] Guid id)
         {
-            return View();
+            var subscriptionDto = _mapper.Map<SubscriptionDto>(createSubscriptionViewModel);
+            subscriptionDto.EventId = id;
+            var notificationDto = _mapper.Map<NotificationDto>(createSubscriptionViewModel);
+            // Send subscriptionDto to subscriptions service
+            return RedirectToAction("Events", "EventsOverview");
+        }
+
+        [HttpGet("[action]/{id:guid}")]
+        public IActionResult CreateNotification(Guid id)
+        {
+            var viewModel = new CreateNotificationViewModel { EventId = id };
+            return View("CreateNotification", viewModel);
+        }
+
+        [HttpPost("[action]/{id:guid}")]
+        public IActionResult CreateNotification(CreateNotificationViewModel notificationViewModel, [FromRoute] Guid id)
+        {
+            //var notificationDto = new();
+            return RedirectToAction("Events", "EventsOverview");
         }
 
     }

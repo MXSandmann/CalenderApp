@@ -1,10 +1,49 @@
-﻿<form method="post">
+﻿@model CreateSubscriptionViewModel
+
+<form method="post">
     <div asp-validation-summary="ModelOnly"></div>
     <div class="container">
         <div class="row">
             <div class="col-sm">
-                <h3>Create a notification</h3>
+                <h3>Create a Subscription</h3>
+                <div>
+                    <label class="form-label">Name</label>
+                    <input class="form-control"
+                           data-val="true"
+                           data-val-required="The Name is required"
+                           asp-for="UserName" />
+                </div>
+                <div>
+                    <label class="form-label">Email</label>
+                    <input class="form-control"
+                           data-val="true"
+                           data-val-required="The Name is required"
+                           asp-for="UserEmail" />
+                </div>
+                <div class="form-group">
+                        <label class="form-label">Add notification</label>
+                        <input type="checkbox"
+                           asp-for="HasNotification" />
+                </div>                
             </div>
-        </div>
+            <div class="col-sm">
+            @if (Model != null && Model.Notifications.Any())
+            {
+                <h4>Send notifications</h4>
+                @foreach (var notification in Model.Notifications)
+                {              
+                    <p>@notification.NotificationTime</p>
+                }                
+            }
+            </div>
+        </div>        
+    </div>
+    
+    <div>
+        <button class="btn btn-primary" type="submit">Submit</button>
     </div>
 </form>
+<div class="btn-group">
+        <a class="btn btn-success" asp-controller="Subscriptions" asp-action="CreateNotification" asp-route-id="@Model.EventId">Add Notification</a>
+    </div>
+

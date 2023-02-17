@@ -49,7 +49,10 @@ namespace WebUI.Profiles
 
             CreateMap<RecurrencyRuleDto, CreateUpdateUserEventViewModel>()
                 .ForMember(dest => dest.OnWeekend, opt => opt.MapFrom(src => CreateUpdateUserEventViewModel.IsOnWeekend(src.DayOfWeek)))
-                .ForMember(dest => dest.OnWorkingDays, opt => opt.MapFrom(src => CreateUpdateUserEventViewModel.IsOnWorkingDays(src.DayOfWeek)));            
+                .ForMember(dest => dest.OnWorkingDays, opt => opt.MapFrom(src => CreateUpdateUserEventViewModel.IsOnWorkingDays(src.DayOfWeek)));
+
+            CreateMap<CreateSubscriptionViewModel, SubscriptionDto>();
+
         }
 
         private static CertainDays ComputeCertainDays(CreateUpdateUserEventViewModel model)

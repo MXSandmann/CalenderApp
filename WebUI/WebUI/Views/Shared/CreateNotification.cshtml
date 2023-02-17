@@ -1,0 +1,21 @@
+﻿@using WebUI.Models.Enums;
+@model CreateNotificationViewModel
+
+<form method="post">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm">
+                <h3>Create a Notification</h3>                
+                <div class="form-group">
+                    <label asp-for="NotificationTime" class="control-label">Notify</label>
+                    <select asp-for="NotificationTime" class="form-control" asp-items="Html.GetEnumSelectList<NotificationTime>()"></select>
+                    <span asp-validation-for="NotificationTime" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <button class="btn btn-primary" type="submit">Submit</button>
+    </div>
+</form>
