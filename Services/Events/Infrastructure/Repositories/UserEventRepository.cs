@@ -2,7 +2,6 @@
 using ApplicationCore.Repositories.Contracts;
 using Infrastructure.DataContext;
 using Microsoft.EntityFrameworkCore;
-using Npgsql.Internal.TypeHandlers.DateTimeHandlers;
 
 namespace Infrastructure.Repositories
 {

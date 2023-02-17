@@ -26,8 +26,7 @@ namespace WebUI.Controllers
         public IActionResult Create(CreateSubscriptionViewModel createSubscriptionViewModel,[FromRoute] Guid id)
         {
             var subscriptionDto = _mapper.Map<SubscriptionDto>(createSubscriptionViewModel);
-            subscriptionDto.EventId = id;
-            var notificationDto = _mapper.Map<NotificationDto>(createSubscriptionViewModel);
+            subscriptionDto.EventId = id;            
             // Send subscriptionDto to subscriptions service
             return RedirectToAction("Events", "EventsOverview");
         }
