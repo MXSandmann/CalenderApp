@@ -7,7 +7,8 @@ namespace WebUI.Clients.Contracts
         Task<IEnumerable<SubscriptionDto>> GetSubscriptionForEvent(Guid eventId);
         Task<SubscriptionDto> AddSubscription(SubscriptionDto subscriptionDto);                
         Task<SubscriptionDto> UpdateSubscription(SubscriptionDto subscriptionDto);
-        Task SubscriptionForEvent(Guid eventId);
+        Task RemoveSubscriptionForEvent(Guid eventId);
         Task<NotificationDto> AddNotification(NotificationDto notificationDto);
+        Task<IEnumerable<SubscriptionDto>> GetAllSubscriptions();
     }
 }

@@ -43,12 +43,20 @@ namespace WebUI.Clients
             return newSubscription;
         }
 
+        public async Task<IEnumerable<SubscriptionDto>> GetAllSubscriptions()
+        {
+            var subscriptions = await _httpClient.GetFromJsonAsync<IEnumerable<SubscriptionDto>>("Subscriptions");
+            if(subscriptions == null || !subscriptions.Any()) return Enumerable.Empty<SubscriptionDto>();
+            return subscriptions;
+
+        }
+
         public Task<IEnumerable<SubscriptionDto>> GetSubscriptionForEvent(Guid eventId)
         {
             throw new NotImplementedException();
         }
 
-        public Task SubscriptionForEvent(Guid eventId)
+        public Task RemoveSubscriptionForEvent(Guid eventId)
         {
             throw new NotImplementedException();
         }

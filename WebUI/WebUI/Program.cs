@@ -10,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IValidator<CreateUpdateUserEventViewModel>, DateValidator>();
+builder.Services.AddScoped<IValidator<CreateSubscriptionViewModel>, SubscriptionValidator>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddHttpClient<IEventsClient, EventsClient>((client) =>
     {

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text;
 using WebUI.Models.Dtos;
 using WebUI.Models.Enums;
 
@@ -16,5 +17,19 @@ namespace WebUI.Models
         public List<NotificationDto> Notifications { get; set; } = new();
 
         public Guid EventId { get; set; }
+        public string EventName { get; set; } = string.Empty;
+
+        private string NotificationsToString(List<NotificationDto> notifications)
+        {
+            if (!notifications.Any()) return string.Empty;
+            var sb = new StringBuilder();
+            foreach (var item in notifications)
+            {
+                sb.Append(item.ToString()).Append("; ");
+            }
+            return sb.ToString();
+        }
     }    
+
+    
 }

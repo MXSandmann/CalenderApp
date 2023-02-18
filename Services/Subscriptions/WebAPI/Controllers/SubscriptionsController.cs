@@ -26,7 +26,7 @@ public class SubscriptionsController : ControllerBase
     public async Task<IActionResult> Get()
     {
         var subscriptions = await _subscriptionService.GetSubscriptions();        
-        return Ok(_mapper.Map<SubscriptionDto>(subscriptions));
+        return Ok(_mapper.Map<IEnumerable<SubscriptionDto>>(subscriptions));
     }
 
     [HttpPost]
@@ -34,6 +34,5 @@ public class SubscriptionsController : ControllerBase
     {
         var newSubscription = await _subscriptionService.CreateSubscription(_mapper.Map<Subscription>(subscriptionDto));
         return Ok(_mapper.Map<SubscriptionDto>(newSubscription));
-
     }
 }

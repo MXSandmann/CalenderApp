@@ -51,8 +51,10 @@ namespace WebUI.Profiles
                 .ForMember(dest => dest.OnWeekend, opt => opt.MapFrom(src => CreateUpdateUserEventViewModel.IsOnWeekend(src.DayOfWeek)))
                 .ForMember(dest => dest.OnWorkingDays, opt => opt.MapFrom(src => CreateUpdateUserEventViewModel.IsOnWorkingDays(src.DayOfWeek)));
 
-            CreateMap<CreateSubscriptionViewModel, SubscriptionDto>();
+            CreateMap<CreateSubscriptionViewModel, SubscriptionDto>().ReverseMap();
             CreateMap<CreateNotificationViewModel, NotificationDto>();
+            CreateMap<SubscriptionDto, GetSubscriptionViewModel>()
+                .ForMember(dest => dest.Notifications, opt => opt.MapFrom(src => GetSubscriptionViewModel.NotificationsToString(src.Notifications!)));
 
         }
 

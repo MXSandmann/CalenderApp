@@ -24,7 +24,7 @@ namespace Infrastructure.Repositories
 
         public async Task<IEnumerable<Subscription>> GetAll()
         {
-            return await _context.Subscriptions.ToListAsync();
+            return await _context.Subscriptions.Include(x => x.Notifications).ToListAsync();
         }
 
         public Task<Subscription> GetById(Guid id)
