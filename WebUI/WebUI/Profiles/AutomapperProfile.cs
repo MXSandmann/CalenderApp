@@ -52,6 +52,7 @@ namespace WebUI.Profiles
                 .ForMember(dest => dest.OnWorkingDays, opt => opt.MapFrom(src => CreateUpdateUserEventViewModel.IsOnWorkingDays(src.DayOfWeek)));
 
             CreateMap<CreateSubscriptionViewModel, SubscriptionDto>();
+            CreateMap<CreateNotificationViewModel, NotificationDto>();
 
         }
 

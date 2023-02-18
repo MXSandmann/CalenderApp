@@ -1,5 +1,6 @@
 using ApplicationCore.Profiles;
 using ApplicationCore.Repositories;
+using ApplicationCore.Services;
 using ApplicationCore.Services.Contracts;
 using Infrastructure.DataContext;
 using Infrastructure.Repositories;
@@ -17,6 +18,7 @@ builder.Services.AddDbContext<SubscriptionDataContext>(opt => opt.UseNpgsql(buil
 builder.Services.AddAutoMapper(typeof(AutomapperProfile).Assembly);
 builder.Services.AddScoped<ISubscriptionService, SubscriptionService>();
 builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
+builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 
 var app = builder.Build();
 

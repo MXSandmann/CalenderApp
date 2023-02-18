@@ -13,5 +13,6 @@ namespace Infrastructure.DataContext
         }
 
         public DbSet<Subscription> Subscriptions { get; set; } = null!;
+        public DbSet<Notification> Notifications { get; set; } = null!;
     }
 }

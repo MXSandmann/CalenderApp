@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using WebUI.Clients.Contracts;
 using WebUI.Models;
 using WebUI.Models.Dtos;
 
@@ -9,10 +10,12 @@ namespace WebUI.Controllers
     public class SubscriptionsController : Controller
     {
         private readonly IMapper _mapper;
+        private readonly ISubscriptionsClient _subscriptionsClient;
 
-        public SubscriptionsController(IMapper mapper)
+        public SubscriptionsController(IMapper mapper, ISubscriptionsClient subscriptionsClient)
         {
             _mapper = mapper;
+            _subscriptionsClient = subscriptionsClient;
         }
 
         [HttpGet("[action]/{id:guid}")]
@@ -23,11 +26,11 @@ namespace WebUI.Controllers
         }
 
         [HttpPost("[action]/{id:guid}")]
-        public IActionResult Create(CreateSubscriptionViewModel createSubscriptionViewModel,[FromRoute] Guid id)
+        public async Task<IActionResult> Create(CreateSubscriptionViewModel createSubscriptionViewModel,[FromRoute] Guid id)
         {
             var subscriptionDto = _mapper.Map<SubscriptionDto>(createSubscriptionViewModel);
             subscriptionDto.EventId = id;            
-            // Send subscriptionDto to subscriptions service
+            await _subscriptionsClient.AddSubscription(subscriptionDto);
             return RedirectToAction("Events", "EventsOverview");
         }
 
@@ -39,9 +42,11 @@ namespace WebUI.Controllers
         }
 
         [HttpPost("[action]/{id:guid}")]
-        public IActionResult CreateNotification(CreateNotificationViewModel notificationViewModel, [FromRoute] Guid id)
+        public async Task<IActionResult> CreateNotification(CreateNotificationViewModel notificationViewModel, [FromRoute] Guid id)
         {
-            //var notificationDto = new();
+            var notificationDto = _mapper.Map<NotificationDto>(notificationViewModel);
+            notificationDto.EventId = id;
+            await _subscriptionsClient.AddNotification(notificationDto);
             return RedirectToAction("Events", "EventsOverview");
         }
 

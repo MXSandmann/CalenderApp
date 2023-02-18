@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 namespace WebAPI.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class SubscriptionsController : ControllerBase
 {   
     private readonly ILogger<SubscriptionsController> _logger;

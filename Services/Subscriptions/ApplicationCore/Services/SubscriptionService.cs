@@ -1,15 +1,24 @@
 ﻿using ApplicationCore.Models.Entities;
 using ApplicationCore.Repositories;
+using ApplicationCore.Services.Contracts;
 
-namespace ApplicationCore.Services.Contracts
+namespace ApplicationCore.Services
 {
     public class SubscriptionService : ISubscriptionService
     {
         private readonly ISubscriptionRepository _subscriptionRepository;
+        private readonly INotificationRepository _notificationRepository;
 
-        public SubscriptionService(ISubscriptionRepository subscriptionRepository)
+        public SubscriptionService(ISubscriptionRepository subscriptionRepository, INotificationRepository notificationRepository)
         {
             _subscriptionRepository = subscriptionRepository;
+            _notificationRepository = notificationRepository;
+        }
+
+        public async Task<Notification> AddNotification(Notification notification)
+        {
+            var newNotification = await _notificationRepository.Add(notification);
+            return newNotification;
         }
 
         public async Task<Subscription> CreateSubscription(Subscription subscription)

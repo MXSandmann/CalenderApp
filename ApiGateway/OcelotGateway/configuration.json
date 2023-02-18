@@ -51,6 +51,30 @@
       ],
       "UpstreamPathTemplate": "/e/home",
       "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Subscriptions",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5256
+        }
+      ],
+      "UpstreamPathTemplate": "/s/subscriptions",
+      "UpstreamHttpMethod": [ "POST", "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Notifications",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5256
+        }
+      ],
+      "UpstreamPathTemplate": "/s/notifications",
+      "UpstreamHttpMethod": [ "POST", "GET" ]
     }
   ]
 }

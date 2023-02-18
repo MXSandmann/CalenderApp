@@ -9,5 +9,6 @@ namespace ApplicationCore.Services.Contracts
         Task RemoveSubscription(Guid id);
         Task<Subscription> GetSubscriptionById(Guid id);
         Task<Subscription> UpdateSubscription(Subscription subscription);
+        Task<Notification> AddNotification(Notification notification);
     }
 }

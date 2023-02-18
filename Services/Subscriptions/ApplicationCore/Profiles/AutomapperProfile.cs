@@ -9,6 +9,7 @@ namespace ApplicationCore.Profiles
         public AutomapperProfile()
         {
             CreateMap<Subscription, SubscriptionDto>().ReverseMap();
+            CreateMap<Notification, NotificationDto>().ReverseMap();
         }   
     }
 }
