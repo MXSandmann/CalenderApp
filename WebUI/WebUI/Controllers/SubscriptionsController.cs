@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using WebUI.Clients;
 using WebUI.Clients.Contracts;
 using WebUI.Models;
 using WebUI.Models.Dtos;
@@ -29,40 +31,69 @@ namespace WebUI.Controllers
             return View(viewModels);
         }
 
-        [HttpGet("[action]/{id:guid}")]
-        public IActionResult Create(Guid id)
+        [HttpGet("[action]/{eventId:guid}")]
+        public IActionResult Create(Guid eventId)
         {
-            var viewModel = new CreateSubscriptionViewModel { EventId = id };
+            var viewModel = new CreateSubscriptionViewModel { EventId = eventId };
             return View(viewModel);
         }
 
-        [HttpPost("[action]/{id:guid}")]
-        public async Task<IActionResult> Create(CreateSubscriptionViewModel createSubscriptionViewModel,[FromRoute] Guid id)
+        [HttpPost("[action]/{eventId:guid}")]
+        public async Task<IActionResult> Create(CreateSubscriptionViewModel createSubscriptionViewModel,[FromRoute] Guid eventId)
         {
             var validationResult = _validator.Validate(createSubscriptionViewModel);
+            if (!ModelState.IsValid)            
+                return BadRequest(ModelState);            
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
             var subscriptionDto = _mapper.Map<SubscriptionDto>(createSubscriptionViewModel);
-            subscriptionDto.EventId = id;            
+            subscriptionDto.EventId = eventId;            
             await _subscriptionsClient.AddSubscription(subscriptionDto);
-            return RedirectToAction("Events", "EventsOverview");
+            return RedirectToAction(nameof(SubscriptionOverview));
+        }
+
+        [HttpGet("[action]/{subscriptionId:guid}")]
+        public IActionResult CreateNotification(Guid subscriptionId)
+        {
+            var viewModel = new CreateNotificationViewModel { SubscriptionId = subscriptionId };
+            return View(nameof(CreateNotification), viewModel);
+        }
+
+        [HttpPost("[action]/{subscriptionId:guid}")]
+        public async Task<IActionResult> CreateNotification(CreateNotificationViewModel notificationViewModel, [FromRoute] Guid subscriptionId)
+        {
+            var notificationDto = _mapper.Map<NotificationDto>(notificationViewModel);
+            notificationDto.SubscriptionId = subscriptionId;
+            await _subscriptionsClient.AddNotification(notificationDto);
+            return RedirectToAction(nameof(SubscriptionOverview));
         }
 
         [HttpGet("[action]/{id:guid}")]
-        public IActionResult CreateNotification(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         {
-            var viewModel = new CreateNotificationViewModel { EventId = id };
-            return View("CreateNotification", viewModel);
+            await _subscriptionsClient.RemoveSubscription(id);
+            return RedirectToAction(nameof(SubscriptionOverview));
+        }
+
+        [HttpGet("[action]/{id:guid}")]
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            var subscriptionToUpdate = await _subscriptionsClient.GetSubscriptionById(id);
+            return View(nameof(Create), _mapper.Map<CreateSubscriptionViewModel>(subscriptionToUpdate));
         }
 
         [HttpPost("[action]/{id:guid}")]
-        public async Task<IActionResult> CreateNotification(CreateNotificationViewModel notificationViewModel, [FromRoute] Guid id)
+        public async Task<IActionResult> Edit(CreateSubscriptionViewModel model, [FromRoute] Guid id)
         {
-            var notificationDto = _mapper.Map<NotificationDto>(notificationViewModel);
-            notificationDto.EventId = id;
-            await _subscriptionsClient.AddNotification(notificationDto);
-            return RedirectToAction("Events", "EventsOverview");
+            var validationResult = _validator.Validate(model);
+            if (!ModelState.IsValid)            
+                return BadRequest(ModelState);            
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
+            model.SubscriptionId = id;
+            var subscriptionDto = _mapper.Map<SubscriptionDto>(model);
+            await _subscriptionsClient.UpdateSubscription(subscriptionDto);
+            return RedirectToAction(nameof(SubscriptionOverview));
         }
-
     }
 }

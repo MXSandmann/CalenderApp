@@ -1,15 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Reflection;
-using WebUI.Models.Enums;
 
 namespace WebUI.Extensions
 {
-    public static class EvenOddExtension
+    public static class EnumExtensions
     {
-        public static string GetDisplayName(this EvenOdd evenOdd)
+        public static string GetDisplayName<TEnum>(this TEnum enumValue) where TEnum : Enum
         {
-            return evenOdd.GetType()
-                .GetMember(evenOdd.ToString())
+            return enumValue.GetType()
+                .GetMember(enumValue.ToString())
                 .Single()
                 .GetCustomAttribute<DisplayAttribute>()?
                 .Name ?? string.Empty;                        

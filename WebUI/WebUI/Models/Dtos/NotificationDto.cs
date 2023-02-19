@@ -4,7 +4,7 @@ namespace WebUI.Models.Dtos
 {
     public class NotificationDto
     {
-        public Guid EventId { get; set; }        
+        public Guid SubscriptionId { get; set; }        
         public NotificationTime NotificationTime { get; set; }
     }
 }

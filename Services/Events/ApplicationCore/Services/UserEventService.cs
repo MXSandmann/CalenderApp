@@ -33,16 +33,12 @@ namespace ApplicationCore.Services
                 recurrencyRule.UserEventId = newUserEventId;
                 await _recurrencyRuleRepository.Add(recurrencyRule);
             }
-            var newUserEvent = await _userEventRepository.GetById(newUserEventId);
-            ArgumentNullException.ThrowIfNull(newUserEvent);
-            return newUserEvent;
+            return await _userEventRepository.GetById(newUserEventId);                        
         }
 
         public async Task<UserEvent> GetUserEventById(Guid id)
         {
-            var userEventFound = await _userEventRepository.GetById(id);
-            ArgumentNullException.ThrowIfNull(userEventFound);
-            return userEventFound;
+            return await _userEventRepository.GetById(id);            
         }
 
         public async Task<IEnumerable<UserEvent>> GetUserEvents()
@@ -52,8 +48,7 @@ namespace ApplicationCore.Services
 
         public async Task RemoveUserEvent(Guid id)
         {
-            var userEventToDelete = await _userEventRepository.GetById(id);
-            ArgumentNullException.ThrowIfNull(userEventToDelete);
+            var userEventToDelete = await _userEventRepository.GetById(id);            
             await _userEventRepository.Remove(userEventToDelete);
         }
 

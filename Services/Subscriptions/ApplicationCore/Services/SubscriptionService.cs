@@ -37,14 +37,17 @@ namespace ApplicationCore.Services
             return await _subscriptionRepository.GetAll();
         }
 
-        public Task RemoveSubscription(Guid id)
+        public async Task RemoveSubscription(Guid id)
         {
-            throw new NotImplementedException();
+            var subscriptionToDelete = await _subscriptionRepository.GetById(id);
+            ArgumentNullException.ThrowIfNull(subscriptionToDelete);
+            await _subscriptionRepository.Remove(subscriptionToDelete);
         }
 
-        public Task<Subscription> UpdateSubscription(Subscription subscription)
+        public async Task<Subscription> UpdateSubscription(Subscription subscription)
         {
-            throw new NotImplementedException();
+            var subscriptionUpdated = await _subscriptionRepository.Update(subscription);
+            return subscriptionUpdated;
         }
     }
 }

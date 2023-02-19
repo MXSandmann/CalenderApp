@@ -4,7 +4,7 @@ namespace WebUI.Models
 {
     public class CreateNotificationViewModel
     {
-        public Guid EventId { get; set; }
+        public Guid SubscriptionId { get; set; }
         public NotificationTime NotificationTime { get; set; }
     }
 }

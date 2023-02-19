@@ -76,7 +76,7 @@ namespace WebUI.Clients
             if(!response.IsSuccessStatusCode)
             {
                 _logger.LogInformation("--> Http request on EventsService unsuccessful, status code: {responseMessage.StatusCode}", response.StatusCode);
-                throw new HttpRequestException($"Error during updating an event: {response.StatusCode}");
+                throw new HttpRequestException($"Error during removing an event: {response.StatusCode}");
             }
             return;
         }
@@ -92,7 +92,6 @@ namespace WebUI.Clients
                 _logger.LogInformation("--> Http request on EventsService unsuccessful, status code: {responseMessage.StatusCode}", response.StatusCode);
                 throw new HttpRequestException($"Error during updating an event: {response.StatusCode}");
             }
-
             var content = await response.Content.ReadAsStringAsync();
             var newUserEvent = JsonConvert.DeserializeObject<UserEventDto>(content);
             ArgumentNullException.ThrowIfNull(newUserEvent);

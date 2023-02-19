@@ -42,10 +42,8 @@ namespace WebUI.Controllers
         public async Task<IActionResult> Create(CreateUpdateUserEventViewModel newModel)
         {
             var validationResult = _validator.Validate(newModel);
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            if (!ModelState.IsValid)            
+                return BadRequest(ModelState);            
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);                      
 
@@ -57,17 +55,15 @@ namespace WebUI.Controllers
         public async Task<IActionResult> Edit(Guid id)
         {            
             var eventToUpdate = await _eventsClient.GetUserEventById(id);         
-            return View("Create", _mapper.Map<CreateUpdateUserEventViewModel>(eventToUpdate));
+            return View(nameof(Create), _mapper.Map<CreateUpdateUserEventViewModel>(eventToUpdate));
         }
 
         [HttpPost("[action]/{id:guid?}")]
         public async Task<IActionResult> Edit(CreateUpdateUserEventViewModel model)
         {
             var validationResult = _validator.Validate(model);
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            if (!ModelState.IsValid)           
+                return BadRequest(ModelState);            
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
 

@@ -10,9 +10,10 @@ namespace WebUI.Clients
         private readonly ILogger<ISubscriptionsClient> _logger;
 
 
-        public SubscriptionsClient(HttpClient httpClient)
+        public SubscriptionsClient(HttpClient httpClient, ILogger<ISubscriptionsClient> logger)
         {
             _httpClient = httpClient;
+            _logger = logger;
         }
 
         public async Task<NotificationDto> AddNotification(NotificationDto notificationDto)
@@ -51,19 +52,37 @@ namespace WebUI.Clients
 
         }
 
-        public Task<IEnumerable<SubscriptionDto>> GetSubscriptionForEvent(Guid eventId)
+        public async Task<SubscriptionDto> GetSubscriptionById(Guid id)
         {
-            throw new NotImplementedException();
+            var subscription = await _httpClient.GetFromJsonAsync<SubscriptionDto>($"Subscriptions/{id}");
+            if (subscription?.SubscriptionId == null || subscription.SubscriptionId == Guid.Empty)
+                throw new ArgumentNullException(nameof(subscription), "Subscription Id is null or empty");
+            return subscription;
         }
 
-        public Task RemoveSubscriptionForEvent(Guid eventId)
+        public async Task RemoveSubscription(Guid id)
         {
-            throw new NotImplementedException();
+            var response = await _httpClient.DeleteAsync($"Subscriptions/Remove/{id}");
+            if (!response.IsSuccessStatusCode)
+            {
+                _logger.LogInformation("--> Http request on SubscriptionsService unsuccessful, status code: {response.StatusCode}", response.StatusCode);
+                throw new HttpRequestException($"Error during removing a subscription: {response.StatusCode}");
+            }
+            return;
         }
 
-        public Task<SubscriptionDto> UpdateSubscription(SubscriptionDto subscriptionDto)
+        public async Task<SubscriptionDto> UpdateSubscription(SubscriptionDto subscriptionDto)
         {
-            throw new NotImplementedException();
+            var response = await _httpClient.PutAsJsonAsync("Subscriptions/Update", subscriptionDto);
+            if (!response.IsSuccessStatusCode)
+            {
+                _logger.LogInformation("--> Http request on SubscriptionsService unsuccessful, status code: {response.StatusCode}", response.StatusCode);
+                throw new HttpRequestException($"Error during updating a subscription: {response.StatusCode}");
+            }
+            var content = await response.Content.ReadAsStringAsync();
+            var newSubscription = JsonConvert.DeserializeObject<SubscriptionDto>(content);
+            ArgumentNullException.ThrowIfNull(newSubscription);
+            return newSubscription;
         }
     }
 }

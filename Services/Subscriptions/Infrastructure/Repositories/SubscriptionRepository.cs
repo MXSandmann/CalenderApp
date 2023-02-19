@@ -19,7 +19,6 @@ namespace Infrastructure.Repositories
             await _context.Subscriptions.AddAsync(subscription);
             await _context.SaveChangesAsync();
             return subscription;
-
         }
 
         public async Task<IEnumerable<Subscription>> GetAll()
@@ -27,14 +26,17 @@ namespace Infrastructure.Repositories
             return await _context.Subscriptions.Include(x => x.Notifications).ToListAsync();
         }
 
-        public Task<Subscription> GetById(Guid id)
+        public async Task<Subscription> GetById(Guid id)
         {
-            throw new NotImplementedException();
+            var subscription = await _context.Subscriptions.FirstOrDefaultAsync(x => x.Id == id);
+            ArgumentNullException.ThrowIfNull(subscription);
+            return subscription;
         }
 
-        public Task Remove(Subscription subscription)
+        public async Task Remove(Subscription subscription)
         {
-            throw new NotImplementedException();
+            _context.Subscriptions.Remove(subscription);
+            await _context.SaveChangesAsync();
         }
 
         public async Task SaveAsync()
@@ -42,9 +44,16 @@ namespace Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public Task<Subscription> Update(Subscription subscription)
+        public async Task<Subscription> Update(Subscription subscription)
         {
-            throw new NotImplementedException();
+            var toUpdate = await _context.Subscriptions.FindAsync(subscription.Id);
+            ArgumentNullException.ThrowIfNull(toUpdate);
+
+            toUpdate.UserName = subscription.UserName;
+            toUpdate.UserEmail = subscription.UserEmail;
+            
+            await _context.SaveChangesAsync();
+            return toUpdate;
         }
     }
 }

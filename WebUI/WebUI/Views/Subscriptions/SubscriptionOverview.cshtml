@@ -5,7 +5,7 @@
 <h1>Subscriptions Overview</h1>
 
 @*<div class="d-flex flex-row">
-    <a class="btn btn-success" asp-action="Create">Create event</a>
+    <a class="btn btn-success" asp-controller="Subscriptions" asp-action="Create">Create event</a>
 </div>*@
 
 <table class="table">
@@ -15,11 +15,13 @@
         </th>        
         <th>
             Email
-        </th>
-        
+        </th>        
         <th>
             Notifications
-        </th>        
+        </th>
+        <th>
+            Event name
+        </th>
     </tr>
     @foreach (var item in Model)
     {
@@ -34,10 +36,13 @@
                 @item.Notifications
             </td>
             <td>
+                @item.EventName
+            </td>
+            <td>
                 <div class="btn-group">
-                    <a class="btn btn-success" asp-controller="Subscriptions" asp-action="CreateNotification" asp-route-id="@item.EventId">Add Notification</a>
-                    <a class="btn btn-primary" asp-controller="Subscriptions" asp-action="Edit" asp-route-id="@item.EventId">Edit</a>
-                    <a class="btn btn-danger" asp-controller="Subscriptions" asp-action="Delete" asp-route-id="@item.EventId">Delete</a>
+                    <a class="btn btn-success" asp-controller="Subscriptions" asp-action="CreateNotification" asp-route-id="@item.SubscriptionId">Add Notification</a>
+                    <a class="btn btn-primary" asp-controller="Subscriptions" asp-action="Edit" asp-route-id="@item.SubscriptionId">Edit</a>
+                    <a class="btn btn-danger" asp-controller="Subscriptions" asp-action="Delete" asp-route-id="@item.SubscriptionId">Delete</a>
                 </div>
             </td>
         </tr>

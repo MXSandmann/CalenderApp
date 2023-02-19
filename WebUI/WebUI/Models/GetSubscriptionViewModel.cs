@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using WebUI.Extensions;
 using WebUI.Models.Dtos;
 
 namespace WebUI.Models
@@ -22,7 +23,7 @@ namespace WebUI.Models
             var sb = new StringBuilder();
             foreach (var item in notifications)
             {
-                sb.Append(item.ToString()).Append("; ");
+                sb.Append(item.NotificationTime.GetDisplayName()).Append("; ");
             }
             return sb.ToString();
         }
