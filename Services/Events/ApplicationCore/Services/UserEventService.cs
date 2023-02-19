@@ -195,5 +195,10 @@ namespace ApplicationCore.Services
             }
             return events;
         }
+
+        public async Task<Dictionary<Guid, string>> GetEventNames(IEnumerable<Guid> eventIds)
+        {
+            return await _userEventRepository.GetEventNames(eventIds);
+        }
     }
 }

@@ -56,5 +56,12 @@ namespace WebAPI.Controllers
             await _service.RemoveUserEvent(id);            
             return Ok();
         }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> EventNames([FromBody] IEnumerable<Guid> eventIds)
+        {
+            var dict = await _service.GetEventNames(eventIds);
+            return Ok(dict);
+        }
     }
 }

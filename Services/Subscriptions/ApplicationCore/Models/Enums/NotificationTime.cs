@@ -1,8 +1,7 @@
 ﻿namespace ApplicationCore.Models.Enums
 {
     public enum NotificationTime
-    {
-        None,
+    {        
         InTime,
         For1Min,
         For15Min,

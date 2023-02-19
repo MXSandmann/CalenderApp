@@ -10,11 +10,7 @@ namespace WebUI.Models
         public string UserName { get; set; } = string.Empty;
         [Display(Name = "Email")]
         public string UserEmail { get; set; } = string.Empty;
-        [Display(Name = "Send notifications")]
-        public bool HasNotification { get; set; }
-
         public List<NotificationDto> Notifications { get; set; } = new();
-
         public Guid EventId { get; set; }
         public string EventName { get; set; } = string.Empty;
     }    

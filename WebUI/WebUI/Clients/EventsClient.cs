@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Net.Http.Json;
 using WebUI.Clients.Contracts;
 using WebUI.Models;
 using WebUI.Models.Dtos;
@@ -50,6 +51,25 @@ namespace WebUI.Clients
             if (userEvent?.Id == null || userEvent.Id == Guid.Empty)
                 throw new ArgumentNullException(nameof(userEvent), "UserEvent Id is null or empty");
             return userEvent;
+        }
+
+        public async Task AddUserEventNamesForSubscriptions(IEnumerable<SubscriptionDto> subscriptions)
+        {
+            var subscriptionIds = subscriptions.Select(x => x.EventId).ToList();
+            var responseMessage = await _httpClient.PostAsJsonAsync("Events/EventNames", subscriptionIds);
+            var content = await responseMessage.Content.ReadAsStringAsync();
+            var dict = JsonConvert.DeserializeObject<Dictionary<Guid, string>>(content);
+            ArgumentNullException.ThrowIfNull(dict);
+            MergeSubscriptionsWithEventNames(dict, subscriptions);            
+        }
+
+        private static void MergeSubscriptionsWithEventNames(Dictionary<Guid, string> dict, IEnumerable<SubscriptionDto> subscriptions)
+        {
+            foreach (var subscr in subscriptions)
+            {
+                if(!dict.TryGetValue(subscr.EventId, out var eventName)) continue;
+                subscr.EventName = eventName;
+            }            
         }
 
         public async Task<IEnumerable<UserEventDto>> GetUserEvents(string sortBy)

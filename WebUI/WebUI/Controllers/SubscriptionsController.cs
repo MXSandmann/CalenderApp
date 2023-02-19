@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using WebUI.Clients;
 using WebUI.Clients.Contracts;
 using WebUI.Models;
 using WebUI.Models.Dtos;
@@ -14,19 +12,22 @@ namespace WebUI.Controllers
     {
         private readonly IMapper _mapper;
         private readonly ISubscriptionsClient _subscriptionsClient;
+        private readonly IEventsClient _eventClient;
         private readonly IValidator<CreateSubscriptionViewModel> _validator;
 
-        public SubscriptionsController(IMapper mapper, ISubscriptionsClient subscriptionsClient, IValidator<CreateSubscriptionViewModel> validator)
+        public SubscriptionsController(IMapper mapper, ISubscriptionsClient subscriptionsClient, IValidator<CreateSubscriptionViewModel> validator, IEventsClient eventClient)
         {
             _mapper = mapper;
             _subscriptionsClient = subscriptionsClient;
             _validator = validator;
+            _eventClient = eventClient;
         }
 
         [HttpGet]
         public async Task<IActionResult> SubscriptionOverview()
         {
             var subscriptions = await _subscriptionsClient.GetAllSubscriptions();
+            await _eventClient.AddUserEventNamesForSubscriptions(subscriptions);
             var viewModels = _mapper.Map<IEnumerable<GetSubscriptionViewModel>>(subscriptions);
             return View(viewModels);
         }

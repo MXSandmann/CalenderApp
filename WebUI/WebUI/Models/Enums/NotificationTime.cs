@@ -3,8 +3,7 @@
 namespace WebUI.Models.Enums
 {
     public enum NotificationTime
-    {
-        None,
+    {        
         [Display(Name = "In time")]
         InTime,
         [Display(Name = "For 1 minute")]

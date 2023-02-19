@@ -11,5 +11,6 @@ namespace ApplicationCore.Repositories.Contracts
         Task SaveAsync();
         Task Remove(UserEvent userEvent);
         Task<UserEvent> Update(UserEvent userEvent);
+        Task<Dictionary<Guid, string>> GetEventNames(IEnumerable<Guid> eventIds);
     }
 }

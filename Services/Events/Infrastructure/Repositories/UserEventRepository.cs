@@ -2,6 +2,7 @@
 using ApplicationCore.Repositories.Contracts;
 using Infrastructure.DataContext;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.CompilerServices;
 
 namespace Infrastructure.Repositories
 {
@@ -56,6 +57,11 @@ namespace Infrastructure.Repositories
         {
             await _context.AddRangeAsync(userEvents);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<Dictionary<Guid, string>> GetEventNames(IEnumerable<Guid> eventIds)
+        {
+            return await _context.UserEvents.Where(ue => eventIds.Contains(ue.Id)).ToDictionaryAsync(ue => ue.Id, ue => ue.Name);
         }
     }
 }

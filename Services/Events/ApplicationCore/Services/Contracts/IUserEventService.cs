@@ -11,5 +11,6 @@ namespace ApplicationCore.Services.Contracts
         Task<IEnumerable<UserEvent>> GetUserEvents();
         Task<UserEvent> GetUserEventById(Guid id);
         Task<IEnumerable<CalendarEvent>> GetCalendarEvents();
+        Task<Dictionary<Guid, string>> GetEventNames(IEnumerable<Guid> eventIds);
     }
 }
