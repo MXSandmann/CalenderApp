@@ -3,6 +3,7 @@ using ApplicationCore.Models.Entities;
 using ApplicationCore.Services.Contracts;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace WebAPI.Controllers
 {
@@ -11,11 +12,13 @@ namespace WebAPI.Controllers
     {
         private readonly IUserEventService _service;
         private readonly IMapper _mapper;
+        private readonly ILogger<EventsController> _logger;
 
-        public EventsController(IUserEventService service, IMapper mapper)
+        public EventsController(IUserEventService service, IMapper mapper, ILogger<EventsController> logger)
         {
             _service = service;
             _mapper = mapper;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -23,6 +26,7 @@ namespace WebAPI.Controllers
         {
             var userEvents = await _service.GetUserEvents();
             var dtos = _mapper.Map<IEnumerable<UserEventDto>>(userEvents);
+            _logger.LogInformation("--> Found user events: {ue}", JsonConvert.SerializeObject(dtos));
             return Ok(dtos);
         }
 
@@ -31,6 +35,7 @@ namespace WebAPI.Controllers
         {
             var userEvent = await _service.AddNewUserEvent(_mapper.Map<UserEvent>(userEventDto), _mapper.Map<RecurrencyRule>(userEventDto.RecurrencyRule));
             var dto = _mapper.Map<UserEventDto>(userEvent);
+            _logger.LogInformation("--> Created user event: {ue}", JsonConvert.SerializeObject(dto));
             return Ok(dto);
         }
 
@@ -39,6 +44,7 @@ namespace WebAPI.Controllers
         {
             var userEvent = await _service.GetUserEventById(id);
             var dto = _mapper.Map<UserEventDto>(userEvent);
+            _logger.LogInformation("--> Found user event: {ue}", JsonConvert.SerializeObject(dto));
             return Ok(dto);
         }
 
@@ -47,6 +53,7 @@ namespace WebAPI.Controllers
         {
             var userEvent = await _service.UpdateUserEvent(_mapper.Map<UserEvent>(userEventDto), _mapper.Map<RecurrencyRule>(userEventDto.RecurrencyRule));
             var dto = _mapper.Map<UserEventDto>(userEvent);
+            _logger.LogInformation("--> Updated user event: {ue}", JsonConvert.SerializeObject(dto));
             return Ok(dto);
         }
 
@@ -61,6 +68,7 @@ namespace WebAPI.Controllers
         public async Task<IActionResult> EventNames([FromBody] IEnumerable<Guid> eventIds)
         {
             var dict = await _service.GetEventNames(eventIds);
+            _logger.LogInformation("--> Found following event names: {dict}", JsonConvert.SerializeObject(dict));
             return Ok(dict);
         }
     }

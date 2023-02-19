@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using WebUI.Clients.Contracts;
 using WebUI.Models;
 using WebUI.Models.Dtos;
@@ -14,20 +15,26 @@ namespace WebUI.Controllers
         private readonly ISubscriptionsClient _subscriptionsClient;
         private readonly IEventsClient _eventClient;
         private readonly IValidator<CreateSubscriptionViewModel> _validator;
+        private readonly ILogger<SubscriptionsController> _logger;
 
-        public SubscriptionsController(IMapper mapper, ISubscriptionsClient subscriptionsClient, IValidator<CreateSubscriptionViewModel> validator, IEventsClient eventClient)
+        public SubscriptionsController(IMapper mapper, ISubscriptionsClient subscriptionsClient, IValidator<CreateSubscriptionViewModel> validator, IEventsClient eventClient, ILogger<SubscriptionsController> logger)
         {
             _mapper = mapper;
             _subscriptionsClient = subscriptionsClient;
             _validator = validator;
             _eventClient = eventClient;
+            _logger = logger;
         }
 
         [HttpGet]
         public async Task<IActionResult> SubscriptionOverview()
         {
-            var subscriptions = await _subscriptionsClient.GetAllSubscriptions();
+            var subscriptions = await _subscriptionsClient.GetAllSubscriptions();                       
+            _logger.LogInformation("--> Recieved subscriptions: {subscription}", JsonConvert.SerializeObject(subscriptions));
+
             await _eventClient.AddUserEventNamesForSubscriptions(subscriptions);
+            _logger.LogInformation("--> Merging subscriptions with event names: {subscription}", JsonConvert.SerializeObject(subscriptions));
+
             var viewModels = _mapper.Map<IEnumerable<GetSubscriptionViewModel>>(subscriptions);
             return View(viewModels);
         }
@@ -48,7 +55,8 @@ namespace WebUI.Controllers
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
             var subscriptionDto = _mapper.Map<SubscriptionDto>(createSubscriptionViewModel);
-            subscriptionDto.EventId = eventId;            
+            subscriptionDto.EventId = eventId;
+            _logger.LogInformation("--> Adding subscription {subscription}", JsonConvert.SerializeObject(subscriptionDto));
             await _subscriptionsClient.AddSubscription(subscriptionDto);
             return RedirectToAction(nameof(SubscriptionOverview));
         }
@@ -65,6 +73,7 @@ namespace WebUI.Controllers
         {
             var notificationDto = _mapper.Map<NotificationDto>(notificationViewModel);
             notificationDto.SubscriptionId = subscriptionId;
+            _logger.LogInformation("--> Adding notification {notification}", JsonConvert.SerializeObject(notificationDto));
             await _subscriptionsClient.AddNotification(notificationDto);
             return RedirectToAction(nameof(SubscriptionOverview));
         }
@@ -93,6 +102,7 @@ namespace WebUI.Controllers
                 return BadRequest(validationResult.Errors);
             model.SubscriptionId = id;
             var subscriptionDto = _mapper.Map<SubscriptionDto>(model);
+            _logger.LogInformation("--> Updateing subscription {subscription}", JsonConvert.SerializeObject(subscriptionDto));
             await _subscriptionsClient.UpdateSubscription(subscriptionDto);
             return RedirectToAction(nameof(SubscriptionOverview));
         }

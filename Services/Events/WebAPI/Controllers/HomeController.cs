@@ -6,7 +6,7 @@ namespace WebAPI.Controllers
     [Route("api/[controller]")]
     public class HomeController : ControllerBase
     {
-        private readonly IUserEventService _service;
+        private readonly IUserEventService _service;        
 
         public HomeController(IUserEventService service)
         {

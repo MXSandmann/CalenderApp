@@ -3,6 +3,7 @@ using ApplicationCore.Models.Entities;
 using ApplicationCore.Services.Contracts;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace WebAPI.Controllers;
 
@@ -24,15 +25,18 @@ public class SubscriptionsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> Get()
     {
-        var subscriptions = await _subscriptionService.GetSubscriptions();        
-        return Ok(_mapper.Map<IEnumerable<SubscriptionDto>>(subscriptions));
+        var subscriptions = await _subscriptionService.GetSubscriptions();
+        var dtos = _mapper.Map<IEnumerable<SubscriptionDto>>(subscriptions);
+        _logger.LogInformation("--> Found subscriptions: {subs}", JsonConvert.SerializeObject(dtos));
+        return Ok(dtos);
     }
 
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id)
     {
-        var userEvent = await _subscriptionService.GetSubscriptionById(id);
-        var dto = _mapper.Map<SubscriptionDto>(userEvent);
+        var subscription = await _subscriptionService.GetSubscriptionById(id);
+        var dto = _mapper.Map<SubscriptionDto>(subscription);
+        _logger.LogInformation("--> Found subscriptions: {subs}", JsonConvert.SerializeObject(dto));
         return Ok(dto);
     }
 
@@ -40,7 +44,9 @@ public class SubscriptionsController : ControllerBase
     public async Task<IActionResult> AddSubscription(SubscriptionDto subscriptionDto)
     {
         var newSubscription = await _subscriptionService.CreateSubscription(_mapper.Map<Subscription>(subscriptionDto));
-        return Ok(_mapper.Map<SubscriptionDto>(newSubscription));
+        var dto = _mapper.Map<SubscriptionDto>(newSubscription);
+        _logger.LogInformation("--> Created subscription: {subs}", JsonConvert.SerializeObject(dto));
+        return Ok(dto);
     }
 
     [HttpDelete("[action]/{id:guid}")]
@@ -55,6 +61,7 @@ public class SubscriptionsController : ControllerBase
     {
         var subscription = await _subscriptionService.UpdateSubscription(_mapper.Map<Subscription>(subscriptionDto));
         var dto = _mapper.Map<SubscriptionDto>(subscription);
+        _logger.LogInformation("--> Updating subscription: {subs}", JsonConvert.SerializeObject(dto));
         return Ok(dto);
     }
 }

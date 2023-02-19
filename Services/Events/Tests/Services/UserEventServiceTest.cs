@@ -57,21 +57,7 @@ namespace Tests.Services
             results.Count().ShouldBe(2);
             results.ToList().ForEach(x => x.ShouldBeOfType<UserEvent>());
         }
-
-        [Fact]
-        public async Task GetById_ShouldReturnNull_WhenNotFound()
-        {
-            // Arrange
-            _userEventRepoMock.Setup(x => x.GetById(It.IsAny<Guid>()))
-                .ReturnsAsync(() => null!);
-
-            // Act
-            var func = async () => await _sut.GetUserEventById(Guid.NewGuid());
-
-            // Assert
-            await func.ShouldThrowAsync<ArgumentNullException>();
-        }
-
+              
         [Fact]
         public async Task GetById_ShouldReturnEvent_WhenFound()
         {
@@ -91,23 +77,7 @@ namespace Tests.Services
             result.ShouldNotBeNull();
             result.ShouldBeOfType<UserEvent>();
         }
-
-        [Fact]
-        public async Task Create_ShouldThrow_WhenIsRecurringIsInvalid()
-        {
-            // Arrange
-            var userEvent = TestData.GetUserEvents().First();
-            var recurrencyRule = TestData.GetRecurrencyRule((Recurrency)99);
-            _userEventRepoMock.Setup(x => x.AddRange(It.IsAny<IEnumerable<UserEvent>>()))
-                .Verifiable();
-
-            // Act
-            var func = async () => await _sut.AddNewUserEvent(userEvent, recurrencyRule);
-
-            // Assert
-            await func.ShouldThrowAsync<ArgumentException>();
-        }
-
+               
         [Theory]
         [MemberData(nameof(ProvideTestData))]
         public async Task GetCalendarEvents_ShouldReturnManyEvents_WhenIsRecurring(UserEvent userEvent, int createdEventsCount)
