@@ -27,7 +27,7 @@ namespace WebUI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> SubscriptionOverview()
+        public async Task<IActionResult> SubscriptionsOverview()
         {
             var subscriptions = await _subscriptionsClient.GetAllSubscriptions();                       
             _logger.LogInformation("--> Recieved subscriptions: {subscription}", JsonConvert.SerializeObject(subscriptions));
@@ -58,7 +58,7 @@ namespace WebUI.Controllers
             subscriptionDto.EventId = eventId;
             _logger.LogInformation("--> Adding subscription {subscription}", JsonConvert.SerializeObject(subscriptionDto));
             await _subscriptionsClient.AddSubscription(subscriptionDto);
-            return RedirectToAction(nameof(SubscriptionOverview));
+            return RedirectToAction(nameof(SubscriptionsOverview));
         }
 
         [HttpGet("[action]/{subscriptionId:guid}")]
@@ -75,14 +75,14 @@ namespace WebUI.Controllers
             notificationDto.SubscriptionId = subscriptionId;
             _logger.LogInformation("--> Adding notification {notification}", JsonConvert.SerializeObject(notificationDto));
             await _subscriptionsClient.AddNotification(notificationDto);
-            return RedirectToAction(nameof(SubscriptionOverview));
+            return RedirectToAction(nameof(SubscriptionsOverview));
         }
 
         [HttpGet("[action]/{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             await _subscriptionsClient.RemoveSubscription(id);
-            return RedirectToAction(nameof(SubscriptionOverview));
+            return RedirectToAction(nameof(SubscriptionsOverview));
         }
 
         [HttpGet("[action]/{id:guid}")]
@@ -104,7 +104,7 @@ namespace WebUI.Controllers
             var subscriptionDto = _mapper.Map<SubscriptionDto>(model);
             _logger.LogInformation("--> Updateing subscription {subscription}", JsonConvert.SerializeObject(subscriptionDto));
             await _subscriptionsClient.UpdateSubscription(subscriptionDto);
-            return RedirectToAction(nameof(SubscriptionOverview));
+            return RedirectToAction(nameof(SubscriptionsOverview));
         }
     }
 }

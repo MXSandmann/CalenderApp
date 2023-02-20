@@ -6,6 +6,33 @@ namespace Tests
 {
     internal static class TestData
     {
+        internal static IEnumerable<SubscriptionDto> GetSubscriptionDtos()
+        {
+            return new List<SubscriptionDto>
+            {
+                new()
+                {
+                    EventId = Guid.NewGuid(),
+                    EventName = "Ski jumping",
+                    UserEmail = "mda@gfg",
+                    UserName = "Mjuj",
+                    SubscriptionId = Guid.NewGuid(),
+                },
+                new()
+                {
+                    EventId = Guid.NewGuid(),
+                    EventName = "Music lesson",
+                    UserEmail = "mda@gfg",
+                    UserName = "Mjuj",
+                    SubscriptionId = Guid.NewGuid(),
+                    Notifications = new List<NotificationDto>
+                    {
+                        new() { NotificationTime = NotificationTime.InTime },
+                        new() { NotificationTime = NotificationTime.For30in },
+                    }
+                }
+            };
+        }
         internal static IEnumerable<UserEventDto> GetUserEventDtos()
         {
             var dateTime = new DateTime(2023, 6, 1, 12, 0, 0);
