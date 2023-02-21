@@ -26,7 +26,7 @@ namespace WebUI.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
+        [HttpGet("[action]")]
         public async Task<IActionResult> SubscriptionsOverview()
         {
             var subscriptions = await _subscriptionsClient.GetAllSubscriptions();                       
