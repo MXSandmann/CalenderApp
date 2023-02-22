@@ -1,4 +1,4 @@
-using ApplicationCore.Jobs;
+using ApplicationCore.Extensions;
 using ApplicationCore.Profiles;
 using ApplicationCore.Repositories;
 using ApplicationCore.Services;
@@ -6,9 +6,6 @@ using ApplicationCore.Services.Contracts;
 using Infrastructure.DataContext;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Quartz;
-using Quartz.Impl;
-using System.Collections.Specialized;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,10 +20,7 @@ builder.Services.AddAutoMapper(typeof(AutomapperProfile).Assembly);
 builder.Services.AddScoped<ISubscriptionService, SubscriptionService>();
 builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
-//builder.Services.AddQuartz(q => q.UseMicrosoftDependencyInjectionJobFactory());
-//builder.Services.AddQuartzServer(opt => opt.WaitForJobsToComplete = true);
-var quartzScheduler = CofigureQuartz();
-builder.Services.AddSingleton(p => quartzScheduler);
+builder.Services.AddQuartzScheduler();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -43,18 +37,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
-IScheduler CofigureQuartz()
-{
-    var props = new NameValueCollection
-    {
-        {"quartz.serializer.type", "binary" }
-    };
-    var factory = new StdSchedulerFactory(props);
-    var scheduler = factory.GetScheduler().Result;
-    scheduler.Start().Wait();
-    scheduler.ListenerManager.AddTriggerListener(new SendEmailTriggerListener());
-    scheduler.ListenerManager.AddJobListener(new SendEmailJobListener());
-    scheduler.ListenerManager.AddSchedulerListener(new SendEmailSchedulerListener());
-    return scheduler;
-}

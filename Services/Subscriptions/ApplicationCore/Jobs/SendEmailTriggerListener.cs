@@ -25,8 +25,7 @@ namespace ApplicationCore.Jobs
         }
 
         public Task<bool> VetoJobExecution(ITrigger trigger, IJobExecutionContext context, CancellationToken cancellationToken = default)
-        {
-            Console.WriteLine($"--> Trigger completed: {trigger.Key.Name}");
+        {            
             return Task.FromResult(false);
         }
     }
