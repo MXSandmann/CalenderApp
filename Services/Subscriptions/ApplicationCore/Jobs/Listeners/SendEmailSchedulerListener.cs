@@ -1,6 +1,6 @@
 ﻿using Quartz;
 
-namespace ApplicationCore.Jobs
+namespace ApplicationCore.Jobs.Listeners
 {
     public class SendEmailSchedulerListener : ISchedulerListener
     {
@@ -76,25 +76,25 @@ namespace ApplicationCore.Jobs
 
         public Task SchedulerShuttingdown(CancellationToken cancellationToken = default)
         {
-            Console.WriteLine(nameof(SchedulerShuttingdown));
+            Console.WriteLine("--> " + nameof(SchedulerShuttingdown));
             return Task.CompletedTask;
         }
 
         public Task SchedulerStarted(CancellationToken cancellationToken = default)
         {
-            Console.WriteLine(nameof(SchedulerStarted));
+            Console.WriteLine("--> " + nameof(SchedulerStarted));
             return Task.CompletedTask;
         }
 
         public Task SchedulerStarting(CancellationToken cancellationToken = default)
         {
-            Console.WriteLine(nameof(SchedulerStarting));
+            Console.WriteLine("--> " + nameof(SchedulerStarting));
             return Task.CompletedTask;
         }
 
         public Task SchedulingDataCleared(CancellationToken cancellationToken = default)
         {
-            Console.WriteLine(nameof(SchedulingDataCleared));
+            Console.WriteLine("--> " + nameof(SchedulingDataCleared));
             return Task.CompletedTask;
         }
 

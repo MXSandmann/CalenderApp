@@ -1,6 +1,6 @@
 ﻿using Quartz;
 
-namespace ApplicationCore.Jobs
+namespace ApplicationCore.Jobs.Listeners
 {
     public class SendEmailJobListener : IJobListener
     {

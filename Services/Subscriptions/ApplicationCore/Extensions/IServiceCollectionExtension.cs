@@ -1,4 +1,5 @@
-﻿using ApplicationCore.Jobs;
+﻿using ApplicationCore.Factories;
+using ApplicationCore.Jobs.Listeners;
 using Microsoft.Extensions.DependencyInjection;
 using Quartz;
 using Quartz.Impl;
@@ -10,12 +11,13 @@ namespace ApplicationCore.Extensions
     {
         public static IServiceCollection AddQuartzScheduler(this IServiceCollection services)
         {
-            var quartz = CofigureQuartz();
+            var quartz = ConfigureQuartz();
             services.AddSingleton(p => quartz);
+
             return services;
         }
 
-        private static IScheduler CofigureQuartz()
+        private static IScheduler ConfigureQuartz()
         {
             var props = new NameValueCollection
             {
@@ -26,8 +28,8 @@ namespace ApplicationCore.Extensions
             scheduler.Start().Wait();
             scheduler.ListenerManager.AddTriggerListener(new SendEmailTriggerListener());
             scheduler.ListenerManager.AddJobListener(new SendEmailJobListener());
-            scheduler.ListenerManager.AddSchedulerListener(new SendEmailSchedulerListener());
+            scheduler.ListenerManager.AddSchedulerListener(new SendEmailSchedulerListener());            
             return scheduler;
-        }
+        }       
     }
 }

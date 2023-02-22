@@ -77,6 +77,7 @@ namespace WebUI.Controllers
 
             var notificationDto = _mapper.Map<NotificationDto>(notificationViewModel);
             notificationDto.NotificationTime = CalculateNotificationTime(notificationViewModel.NotificationTimeSpan, userEvent);
+            notificationDto.EventName = userEvent.Name;
 
             _logger.LogInformation("--> Adding notification {notification}", JsonConvert.SerializeObject(notificationDto));
             await _subscriptionsClient.AddNotification(notificationDto);

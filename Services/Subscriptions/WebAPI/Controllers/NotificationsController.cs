@@ -35,9 +35,10 @@ namespace WebAPI.Controllers
             // Get the difference between local time and utc time
             var timeDif = DateTime.Now - DateTime.UtcNow;
             // Add the offset
-            var fireTime = newNotification.NotificationTime.Add(-timeDif);
+            //var fireTime = newNotification.NotificationTime.Add(-timeDif);
+            var fireTime = DateTime.Now;
 
-            await NotificationsFactory.ScheduleEmail(_scheduler, subscription.UserEmail, subscription.UserName, fireTime, newNotification.Id, cancellationToken);
+            await NotificationsFactory.ScheduleEmail(_scheduler, subscription.UserEmail, subscription.UserName, notificationDto.EventName, fireTime, newNotification.Id, cancellationToken);
             var dto = _mapper.Map<NotificationDto>(newNotification);
             _logger.LogInformation("--> Created Notification: {not}", JsonConvert.SerializeObject(dto));
             return Ok(dto);

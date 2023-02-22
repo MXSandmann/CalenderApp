@@ -1,6 +1,6 @@
 ﻿using Quartz;
 
-namespace ApplicationCore.Jobs
+namespace ApplicationCore.Jobs.Listeners
 {
     public class SendEmailTriggerListener : ITriggerListener
     {
@@ -25,7 +25,7 @@ namespace ApplicationCore.Jobs
         }
 
         public Task<bool> VetoJobExecution(ITrigger trigger, IJobExecutionContext context, CancellationToken cancellationToken = default)
-        {            
+        {
             return Task.FromResult(false);
         }
     }

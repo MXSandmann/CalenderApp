@@ -6,12 +6,13 @@ namespace ApplicationCore.Factories
     public static class NotificationsFactory
     {
 
-        public static async Task ScheduleEmail(IScheduler scheduler, string userEmail, string userName, DateTime notificationTime, Guid notificationId, CancellationToken cancellationToken)
+        public static async Task ScheduleEmail(IScheduler scheduler, string userEmail, string userName, string eventName, DateTime notificationTime, Guid notificationId, CancellationToken cancellationToken)
         {
 
             var job = JobBuilder.Create<SendEmailJob>()
                 .UsingJobData("UserName", userName)
                 .UsingJobData("UserEmail", userEmail)
+                .UsingJobData("EventName", eventName)
                 .WithIdentity($"Job_{notificationId}")
                 .Build();
 
