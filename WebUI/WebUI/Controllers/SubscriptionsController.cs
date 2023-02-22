@@ -69,13 +69,25 @@ namespace WebUI.Controllers
         }
 
         [HttpPost("[action]/{subscriptionId:guid}")]
-        public async Task<IActionResult> CreateNotification(CreateNotificationViewModel notificationViewModel, [FromRoute] Guid subscriptionId)
+        public async Task<IActionResult> CreateNotification(CreateNotificationViewModel notificationViewModel)
         {
+            // Request some data
+            var subscription = await _subscriptionsClient.GetSubscriptionById(notificationViewModel.SubscriptionId);
+            var userEvent = await _eventClient.GetUserEventById(subscription.EventId);            
+
             var notificationDto = _mapper.Map<NotificationDto>(notificationViewModel);
-            notificationDto.SubscriptionId = subscriptionId;
+            notificationDto.NotificationTime = CalculateNotificationTime(notificationViewModel.NotificationTimeSpan, userEvent);
+
             _logger.LogInformation("--> Adding notification {notification}", JsonConvert.SerializeObject(notificationDto));
             await _subscriptionsClient.AddNotification(notificationDto);
             return RedirectToAction(nameof(SubscriptionsOverview));
+        }
+
+        private static DateTime CalculateNotificationTime(TimeSpan notificationTimeSpan, UserEventDto userEvent)
+        {            
+            var time = userEvent.StartTime.TimeOfDay;
+            var date = userEvent.Date.Date.Add(time).Add(-notificationTimeSpan);
+            return date;
         }
 
         [HttpGet("[action]/{id:guid}")]

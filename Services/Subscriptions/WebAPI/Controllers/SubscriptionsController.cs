@@ -10,7 +10,7 @@ namespace WebAPI.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 public class SubscriptionsController : ControllerBase
-{   
+{
     private readonly ILogger<SubscriptionsController> _logger;
     private readonly ISubscriptionService _subscriptionService;
     private readonly IMapper _mapper;

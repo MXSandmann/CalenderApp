@@ -4,23 +4,24 @@ using Quartz;
 namespace ApplicationCore.Factories
 {
     public static class NotificationsFactory
-    {       
+    {
 
-        public static async Task ScheduleEmail(IScheduler scheduler, string userEmail, string userName, DateTime notificationTime, CancellationToken cancellationToken)
-        {            
+        public static async Task ScheduleEmail(IScheduler scheduler, string userEmail, string userName, DateTime notificationTime, Guid notificationId, CancellationToken cancellationToken)
+        {
 
             var job = JobBuilder.Create<SendEmailJob>()
-                .UsingJobData(userEmail, userName)
-                .WithIdentity("testjob")
+                .UsingJobData("UserName", userName)
+                .UsingJobData("UserEmail", userEmail)
+                .WithIdentity($"Job_{notificationId}")
                 .Build();
 
             var trigger = TriggerBuilder.Create()
-                .WithIdentity("testtrigger")
+                .WithIdentity($"Trigger_{notificationId}")
                 .StartAt(notificationTime)
                 .WithSimpleSchedule()
                 .Build();
-            
+
             await scheduler.ScheduleJob(job, trigger, cancellationToken);
-        }        
+        }
     }
 }

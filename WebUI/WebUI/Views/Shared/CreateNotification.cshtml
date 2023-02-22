@@ -6,12 +6,14 @@
     <div class="container">
         <div class="row">
             <div class="col-sm">
-                <h3>Create a Notification</h3>                
-                <div class="form-group">
-                    <label asp-for="NotificationTime" class="control-label">Notify</label>
-                    <select asp-for="NotificationTime" class="form-control" asp-items="Html.GetEnumSelectList<NotificationTime>()"></select>
-                    <span asp-validation-for="NotificationTime" class="text-danger"></span>
-                </div>
+                <h3>Create a Notification</h3>
+                <div>
+                <label class="form-label">Notify me before</label>
+                    <input class="form-control"
+                    data-val="true"
+                    data-val-required="The time is required"
+                    asp-for="NotificationTimeSpan" />
+                </div>                
             </div>
         </div>
     </div>

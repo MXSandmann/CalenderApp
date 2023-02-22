@@ -6,7 +6,10 @@ namespace ApplicationCore.Jobs
     {
         public Task Execute(IJobExecutionContext context)
         {
-            Console.WriteLine("--> Sending email");
+            var dataMap = context.JobDetail.JobDataMap;
+            var userName = dataMap.GetString("UserName");
+            var userEmail = dataMap.GetString("UserEmail");
+            Console.WriteLine($"--> Sending email to {userName}, {userEmail}");
             return Task.FromResult(true);
         }
     }

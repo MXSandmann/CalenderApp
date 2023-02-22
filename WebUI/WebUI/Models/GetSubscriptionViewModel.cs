@@ -23,7 +23,7 @@ namespace WebUI.Models
             var sb = new StringBuilder();
             foreach (var item in notifications)
             {
-                sb.Append(item.NotificationTime.GetDisplayName()).Append("; ");
+                sb.Append(item.NotificationTime.ToString()).Append("; ");
             }
             return sb.ToString();
         }

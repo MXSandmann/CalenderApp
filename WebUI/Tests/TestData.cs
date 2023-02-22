@@ -8,6 +8,7 @@ namespace Tests
     {
         internal static IEnumerable<SubscriptionDto> GetSubscriptionDtos()
         {
+            var dateTime = new DateTime(2023, 6, 1, 12, 0, 0);
             return new List<SubscriptionDto>
             {
                 new()
@@ -27,8 +28,8 @@ namespace Tests
                     SubscriptionId = Guid.NewGuid(),
                     Notifications = new List<NotificationDto>
                     {
-                        new() { NotificationTime = NotificationTime.InTime },
-                        new() { NotificationTime = NotificationTime.For30in },
+                        new() { NotificationTime = dateTime },
+                        new() { NotificationTime = dateTime.AddHours(1) },
                     }
                 }
             };

@@ -51,7 +51,7 @@ namespace Infrastructure.Repositories
 
             toUpdate.UserName = subscription.UserName;
             toUpdate.UserEmail = subscription.UserEmail;
-            
+
             await _context.SaveChangesAsync();
             return toUpdate;
         }

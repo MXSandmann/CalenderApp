@@ -1,10 +1,10 @@
-﻿using ApplicationCore.Models.Entities;
+﻿using ApplicationCore.Factories;
+using ApplicationCore.Models.Dtos;
+using ApplicationCore.Models.Entities;
 using ApplicationCore.Services.Contracts;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using ApplicationCore.Models.Dtos;
 using Newtonsoft.Json;
-using ApplicationCore.Factories;
 using Quartz;
 
 namespace WebAPI.Controllers
@@ -27,15 +27,20 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(NotificationDto notificationDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> Add([FromBody] NotificationDto notificationDto, CancellationToken cancellationToken)
         {
             var newNotification = await _subscriptionService.AddNotification(_mapper.Map<Notification>(notificationDto));
             var subscription = await _subscriptionService.GetSubscriptionById(newNotification.SubscriptionId);
 
-            await NotificationsFactory.ScheduleEmail(_scheduler, subscription.UserEmail, subscription.UserName, DateTime.Now.AddSeconds(5), cancellationToken);
+            // Get the difference between local time and utc time
+            var timeDif = DateTime.Now - DateTime.UtcNow;
+            // Add the offset
+            var fireTime = newNotification.NotificationTime.Add(-timeDif);
 
-            _logger.LogInformation("--> Created Notification: {not}", JsonConvert.SerializeObject(newNotification));
-            return Ok(_mapper.Map<NotificationDto>(newNotification));           
-        }       
+            await NotificationsFactory.ScheduleEmail(_scheduler, subscription.UserEmail, subscription.UserName, fireTime, newNotification.Id, cancellationToken);
+            var dto = _mapper.Map<NotificationDto>(newNotification);
+            _logger.LogInformation("--> Created Notification: {not}", JsonConvert.SerializeObject(dto));
+            return Ok(dto);
+        }
     }
 }

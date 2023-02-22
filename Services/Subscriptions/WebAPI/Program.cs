@@ -1,3 +1,4 @@
+using ApplicationCore.Jobs;
 using ApplicationCore.Profiles;
 using ApplicationCore.Repositories;
 using ApplicationCore.Services;
@@ -47,10 +48,13 @@ IScheduler CofigureQuartz()
 {
     var props = new NameValueCollection
     {
-        {"quartz.serializer.type", "binary" } 
+        {"quartz.serializer.type", "binary" }
     };
     var factory = new StdSchedulerFactory(props);
     var scheduler = factory.GetScheduler().Result;
     scheduler.Start().Wait();
+    scheduler.ListenerManager.AddTriggerListener(new SendEmailTriggerListener());
+    scheduler.ListenerManager.AddJobListener(new SendEmailJobListener());
+    scheduler.ListenerManager.AddSchedulerListener(new SendEmailSchedulerListener());
     return scheduler;
 }

@@ -1,7 +1,6 @@
 ﻿using ApplicationCore.Models.Dtos;
 using ApplicationCore.Models.Entities;
 using AutoMapper;
-using System.Runtime.CompilerServices;
 
 namespace ApplicationCore.Profiles
 {
@@ -12,6 +11,6 @@ namespace ApplicationCore.Profiles
             CreateMap<Subscription, SubscriptionDto>()
                 .ForMember(dest => dest.SubscriptionId, opt => opt.MapFrom(src => src.Id)).ReverseMap();
             CreateMap<Notification, NotificationDto>().ReverseMap();
-        }   
+        }
     }
 }
