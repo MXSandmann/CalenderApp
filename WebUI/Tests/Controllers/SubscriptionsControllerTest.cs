@@ -71,5 +71,53 @@ namespace Tests.Controllers
             var valueString = JsonConvert.SerializeObject(badRequestResult.Value);
             valueString.ShouldContain("'User Email' is not a valid email address.");
         }
+
+        [Fact]
+        public async Task CreateNotification_ShouldReturnsRedirectToAction_WhenResultValidInput()
+        {
+            // Arrange
+            var subscriptionId = Guid.NewGuid();
+            var notificationViewModel = new CreateNotificationViewModel
+            {
+                SubscriptionId = subscriptionId,
+                NotificationTimeSpan = TimeSpan.FromMinutes(10),
+                // Set other properties as needed
+            };
+
+            var subscrDto = TestData.GetSubscriptionDtos().First();
+            _mockSubscriptionsClient.Setup(x => x.GetSubscriptionById(subscriptionId)).ReturnsAsync(subscrDto);
+            _mockSubscriptionsClient.Setup(x => x.AddNotification(It.IsAny<NotificationDto>())).Verifiable();
+
+            _mockEventClient.Setup(x => x.GetUserEventById(subscrDto.EventId)).ReturnsAsync(TestData.GetUserEventDtos().First());            
+            
+
+            // Act
+            var result = await _sut.CreateNotification(notificationViewModel) as RedirectToActionResult;
+
+            // Assert
+            Assert.NotNull(result);            
+            Assert.Equal(nameof(SubscriptionsController.SubscriptionsOverview), result.ActionName);
+        }
+
+        [Fact]
+        public async Task Edit_ShouldShouldReturnsRedirectToAction_WhenAllOk()
+        {
+            // Arrange
+            _mockSubscriptionsClient.Setup(x => x.UpdateSubscription(It.IsAny<SubscriptionDto>()))
+                .Verifiable();
+            var id = Guid.NewGuid();
+            var viewModel = new CreateSubscriptionViewModel
+            {
+                UserEmail = "blala@dfdf.es",
+                UserName = "Gggg"                
+            };
+
+            // Act
+            var result = await _sut.Edit(viewModel, id) as RedirectToActionResult;
+
+            // Assert
+            Assert.NotNull(result);            
+            Assert.Equal(nameof(SubscriptionsController.SubscriptionsOverview), result.ActionName);
+        }
     }
 }

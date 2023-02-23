@@ -6,6 +6,16 @@ namespace Tests
 {
     internal static class TestData
     {
+        internal static NotificationDto GetNotificationDto()
+        {
+            var dateTime = new DateTime(2023, 6, 1, 12, 0, 0);
+            return new NotificationDto
+            {
+                NotificationTime = dateTime,
+                EventName = "Test",
+                SubscriptionId = Guid.NewGuid(),
+            };
+        }
         internal static IEnumerable<SubscriptionDto> GetSubscriptionDtos()
         {
             var dateTime = new DateTime(2023, 6, 1, 12, 0, 0);
@@ -34,6 +44,19 @@ namespace Tests
                 }
             };
         }
+
+        internal static SubscriptionDto GetSubscriptionDtoWithGivenEventId(Guid id)
+        {
+            
+            return new SubscriptionDto
+            {            
+                EventId = id,                
+                UserEmail = "mda@gfg",
+                UserName = "Mjuj",
+                SubscriptionId = Guid.NewGuid()
+            };
+        }
+
         internal static IEnumerable<UserEventDto> GetUserEventDtos()
         {
             var dateTime = new DateTime(2023, 6, 1, 12, 0, 0);

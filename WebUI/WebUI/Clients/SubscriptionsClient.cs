@@ -49,7 +49,6 @@ namespace WebUI.Clients
             var subscriptions = await _httpClient.GetFromJsonAsync<IEnumerable<SubscriptionDto>>("Subscriptions");
             if(subscriptions == null || !subscriptions.Any()) return Enumerable.Empty<SubscriptionDto>();
             return subscriptions;
-
         }
 
         public async Task<SubscriptionDto> GetSubscriptionById(Guid id)

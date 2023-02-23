@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System.Net.Http.Json;
 using WebUI.Clients.Contracts;
 using WebUI.Models;
 using WebUI.Models.Dtos;

@@ -4,7 +4,6 @@ using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
 using Shouldly;
 using System.Net;
-using System.Runtime.CompilerServices;
 using WebUI.Clients;
 using WebUI.Clients.Contracts;
 using WebUI.Models;
@@ -15,21 +14,18 @@ namespace Tests.Clients
 {
     public class EventsClientTest
     {
-        private readonly HttpClient _mockClient;
         private readonly MockHttpMessageHandler _mockHttpHandler;
-        private readonly Mock<ILogger<IEventsClient>> _mockLogger;
-
         private readonly IEventsClient _sut;
 
         public EventsClientTest()
         {
             _mockHttpHandler = new MockHttpMessageHandler();
-            _mockClient = new HttpClient(_mockHttpHandler)
+            var mockClient = new HttpClient(_mockHttpHandler)
             {
                 BaseAddress = new Uri("http://random")
             };
-            _mockLogger = new Mock<ILogger<IEventsClient>>();
-            _sut = new EventsClient(_mockClient, _mockLogger.Object);
+            var mockLogger = new Mock<ILogger<IEventsClient>>();
+            _sut = new EventsClient(mockClient, mockLogger.Object);
         }
 
         [Fact]
@@ -211,6 +207,29 @@ namespace Tests.Clients
 
             // Assert
             await act.ShouldThrowAsync<HttpRequestException>();
+        }
+
+        [Fact]
+        public async Task AddUserEventNamesForSubscriptions_ShouldMergeNames_WhenAllOk()
+        {
+            // Arrange
+            var id1 = Guid.NewGuid();
+            var id2 = Guid.NewGuid();
+            var subsciptionsDto1 = TestData.GetSubscriptionDtoWithGivenEventId(id1);
+            var subsciptionsDto2 = TestData.GetSubscriptionDtoWithGivenEventId(id2);
+            var list = new List<SubscriptionDto> { subsciptionsDto1, subsciptionsDto2 };
+            var dict = new Dictionary<Guid, string>()
+            {
+                { id1, "Sport" },
+                { id2, "Music" }
+            };
+            _mockHttpHandler.When("/Events/EventNames")
+                .Respond(HttpStatusCode.OK, new StringContent(JsonConvert.SerializeObject(dict)));
+            // Act
+            await _sut.AddUserEventNamesForSubscriptions(list);
+
+            // Assert
+            list.ForEach(x => x.EventName.ShouldNotBeNullOrWhiteSpace());
         }
 
         private static void CheckOrderByCategory(IEnumerable<UserEventDto> results)
