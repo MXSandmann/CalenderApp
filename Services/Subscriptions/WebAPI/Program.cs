@@ -12,6 +12,7 @@ using Quartz;
 using System.Collections.Specialized;
 using ApplicationCore.Factories;
 using ApplicationCore.Jobs;
+using WebAPI.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,6 +47,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UpdateDatabase();
 
 app.Run();
 
