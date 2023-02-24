@@ -1,0 +1,41 @@
+﻿@model CreateSubscriptionViewModel
+
+<form method="post">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm">
+                <h3>Create a Subscription</h3>
+                <div>
+                    <label class="form-label">Name</label>
+                    <input class="form-control"
+                           data-val="true"
+                           data-val-required="The Name is required"
+                           asp-for="UserName" />
+                </div>
+                <div>
+                    <label class="form-label">Email</label>
+                    <input class="form-control"
+                           data-val="true"
+                           data-val-required="The Name is required"
+                           asp-for="UserEmail" />
+                </div>                           
+            </div>
+            <div class="col-sm">
+            @if (Model != null && Model.Notifications.Any())
+            {
+                <h4>Send notifications</h4>
+                @foreach (var notification in Model.Notifications)
+                {              
+                    <p>@notification.NotificationTime</p>
+                }                
+            }
+            </div>
+        </div>        
+    </div>
+    
+    <div>
+        <button class="btn btn-primary" type="submit">Submit</button>
+    </div>
+</form>
+

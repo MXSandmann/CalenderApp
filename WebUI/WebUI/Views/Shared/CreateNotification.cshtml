@@ -1,0 +1,23 @@
+﻿@using WebUI.Models.Enums;
+@model CreateNotificationViewModel
+
+<form method="post">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm">
+                <h3>Create a Notification</h3>
+                <div>
+                <label class="form-label">Notify me before</label>
+                    <input class="form-control"
+                    data-val="true"
+                    data-val-required="The time is required"
+                    asp-for="NotificationTimeSpan" />
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div>
+        <button class="btn btn-primary" type="submit">Submit</button>
+    </div>
+</form>
