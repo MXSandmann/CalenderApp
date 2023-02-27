@@ -1,0 +1,86 @@
+version: '3.4'
+
+networks:
+  dev:
+    driver: bridge
+
+services:
+  eventingwebsite:
+    container_name: EventingWebsite
+    image: eventingwebsite
+    build:
+      context: .
+      dockerfile: WebUI/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+5000
+    ports:
+      - 5000:5000      
+    depends_on:
+      - postgresql
+    networks:
+      - dev
+
+  apigetaway:    
+    container_name: ApiGetaway
+    image: ocelotgateway
+    build:
+      context: .
+      dockerfile: ApiGateway/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+5010
+    ports:
+      - 5010:5010     
+    depends_on:
+      - postgresql
+    networks:
+      - dev
+
+  events:    
+    container_name: EventsService
+    image: eventsservice
+    build:
+      context: .
+      dockerfile: Services/Events/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+5020
+    ports:
+      - 5020:5020      
+    depends_on:
+      - postgresql
+    networks:
+      - dev
+
+  subscriptions:    
+    container_name: SubscriptionsService
+    image: subscriptionsservice
+    build:
+      context: .
+      dockerfile: Services/Subscriptions/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+5030
+    ports:
+      - 5030:5030      
+    depends_on:
+      - postgresql
+    networks:
+      - dev
+
+  postgresql:
+    container_name: PostgreSQL
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - dev
+
+volumes:
+  db-data:
