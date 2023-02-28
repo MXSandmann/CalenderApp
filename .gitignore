@@ -453,3 +453,11 @@ $RECYCLE.BIN/
 !.vscode/launch.json
 !.vscode/extensions.json
 .env
+.vscode/launch.json
+.vscode/tasks.json
+Services/Events/.vscode/launch.json
+Services/Events/.vscode/tasks.json
+Services/Subscriptions/.vscode/launch.json
+Services/Subscriptions/.vscode/tasks.json
+WebUI/WebUI/.vscode/launch.json
+WebUI/WebUI/.vscode/tasks.json
