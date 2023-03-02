@@ -1,5 +1,6 @@
 ﻿using ApplicationCore.Extensions;
 using ApplicationCore.Models;
+using ApplicationCore.Models.Dtos;
 using ApplicationCore.Models.Entities;
 using ApplicationCore.Models.Enums;
 using ApplicationCore.Repositories.Contracts;
@@ -199,6 +200,13 @@ namespace ApplicationCore.Services
         public async Task<Dictionary<Guid, string>> GetEventNames(IEnumerable<Guid> eventIds)
         {
             return await _userEventRepository.GetEventNames(eventIds);
+        }
+
+        public async Task<PaginationResponse<UserEventDto>> SearchUserEvents(string entry, int limit, int offset)
+        {
+            var (results, count) =  await _userEventRepository.SearchUserEvents(entry, limit, offset);
+            var resultDtos = _mapper.Map<IEnumerable<UserEventDto>>(results);
+            return new PaginationResponse<UserEventDto>(resultDtos, count);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ApplicationCore.Models.Entities;
+using System.Collections.Generic;
 
 namespace ApplicationCore.Repositories.Contracts
 {
@@ -12,5 +13,6 @@ namespace ApplicationCore.Repositories.Contracts
         Task Remove(UserEvent userEvent);
         Task<UserEvent> Update(UserEvent userEvent);
         Task<Dictionary<Guid, string>> GetEventNames(IEnumerable<Guid> eventIds);
+        Task<(IEnumerable<UserEvent>, int)> SearchUserEvents(string entry, int limit, int offset);
     }
 }

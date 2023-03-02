@@ -1,9 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿
+using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Newtonsoft.Json;
 using Shouldly;
 using WebUI.Clients.Contracts;
 using WebUI.Controllers;
+using WebUI.Profiles;
 
 namespace Tests.Controllers
 {
@@ -17,7 +21,11 @@ namespace Tests.Controllers
         public HomeControllerTest()
         {
             _mockEventsClient= new Mock<IEventsClient>();
-            _sut = new HomeController(_mockEventsClient.Object);
+            var _mockLogger = new Mock<ILogger<HomeController>>();
+            var profile = new AutomapperProfile();
+            var config = new MapperConfiguration(cfg => cfg.AddProfile(profile));
+            var mapper = new Mapper(config);
+            _sut = new HomeController(_mockEventsClient.Object, _mockLogger.Object, mapper);
         }
 
         [Fact]

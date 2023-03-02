@@ -3,13 +3,101 @@
 <h3>Search for event</h3>
 <p>Events will be searched by name, description & place</p>
 <form method="post">
-    <div>        
+    <div>
+        <label class="form-label">Search for:</label>
         <input class="form-control"
                 data-val="true"
                 data-val-required="The search field entry is required"
                 asp-for="Entry" />
+        <label class="form-label">Show results on the page:</label>
+        <input class="form-control"                
+                asp-for="Limit" />
+        <label class="form-label">Skip results:</label>
+        <input class="form-control"
+               asp-for="Offset" />
     </div>
     <div>
-        <button class="btn btn-primary" type="submit">Submit</button>
+        <button class="btn btn-primary" type="submit">Submit</button>        
     </div>
 </form>
+
+<h3>Results:</h3>
+<p>Found events: @Model?.Count</p>
+<table class="table">
+    <tr>
+        <th>
+            Name
+        </th>
+        <th>
+            Category
+        </th>
+        <th>
+            Description
+        </th>
+        <th>
+            Place
+        </th>
+        <th>
+            Start Time
+        </th>
+        <th>
+            End Time
+        </th>
+        <th>
+            Date
+        </th>
+        <th>
+            Last Date
+        </th>
+        <th>
+            AdditionalInfo
+        </th>
+        <th>
+            ImageUrl
+        </th>
+        <th>
+            Recurrency
+        </th>
+    </tr>
+    @if(Model?.UserEvents != null)
+    {
+        @foreach (var item in Model.UserEvents)
+        {
+            <tr>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    @item.Category
+                </td>
+                <td>
+                    @item.Description
+                </td>
+                <td>
+                    @item.Place
+                </td>
+                <td>
+                    @item.StartTime.ToShortTimeString()
+                </td>
+                <td>
+                    @item.EndTime.ToShortTimeString()
+                </td>
+                <td>
+                    @item.Date.ToShortDateString()
+                </td>
+                <td>
+                    @item.LastDate?.ToShortDateString()
+                </td>
+                <td>
+                    @item.AdditionalInfo
+                </td>
+                <td>
+                    @item.ImageUrl
+                </td>
+                <td>
+                    @item.Recurrency
+                </td>            
+            </tr>
+        }        
+    }
+</table>

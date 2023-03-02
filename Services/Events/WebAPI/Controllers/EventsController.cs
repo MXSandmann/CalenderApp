@@ -71,5 +71,14 @@ namespace WebAPI.Controllers
             _logger.LogInformation("--> Found following event names: {dict}", JsonConvert.SerializeObject(dict));
             return Ok(dict);
         }
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> Search([FromQuery] string entry, int limit, int offset)
+        {
+            _logger.LogInformation("--> Searching for entry \"{value1}\", with limit {value2} with offset {value3}", entry, limit, offset);
+            var results = await _service.SearchUserEvents(entry, limit, offset);
+            _logger.LogInformation("--> Search result with entry \"{value1}\": {value2}", entry, JsonConvert.SerializeObject(results));
+            return Ok(results);
+        }
     }
 }

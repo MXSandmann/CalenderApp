@@ -2,6 +2,8 @@
 using ApplicationCore.Repositories.Contracts;
 using Infrastructure.DataContext;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace Infrastructure.Repositories
@@ -62,6 +64,39 @@ namespace Infrastructure.Repositories
         public async Task<Dictionary<Guid, string>> GetEventNames(IEnumerable<Guid> eventIds)
         {
             return await _context.UserEvents.Where(ue => eventIds.Contains(ue.Id)).ToDictionaryAsync(ue => ue.Id, ue => ue.Name);
+        }
+
+        public async Task<(IEnumerable<UserEvent>, int)> SearchUserEvents(string entry, int limit, int offset)
+        {
+            var query = _context.UserEvents.Where(x => x.Name.Contains(entry)
+            || x.Place.Contains(entry)
+            || x.Description.Contains(entry));
+
+            var count = await query.CountAsync();
+
+            var results = await query.Skip(offset)
+                .Take(limit)
+                .ToListAsync();
+
+
+            //var count = await _context.UserEvents.Where(CreateCriterium(entry))
+            //    .AsQueryable()
+            //    .CountAsync();
+
+            //var results = await _context.UserEvents.Where(CreateCriterium(entry))
+            //    .AsQueryable()
+            //    .Skip(offset)
+            //    .Take(limit)
+            //    .ToListAsync();
+
+            return (results, count);
+        }
+
+        private static Func<UserEvent, bool> CreateCriterium(string entry)
+        {
+            return userEvent => userEvent.Name.Contains(entry)
+            || userEvent.Place.Contains(entry)
+            || userEvent.Description.Contains(entry);
         }
     }
 }
