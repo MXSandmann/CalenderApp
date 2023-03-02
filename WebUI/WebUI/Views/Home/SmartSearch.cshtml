@@ -1,0 +1,15 @@
+﻿@model SmartSearchViewModel
+
+<h3>Search for event</h3>
+<p>Events will be searched by name, description & place</p>
+<form method="post">
+    <div>        
+        <input class="form-control"
+                data-val="true"
+                data-val-required="The search field entry is required"
+                asp-for="Entry" />
+    </div>
+    <div>
+        <button class="btn btn-primary" type="submit">Submit</button>
+    </div>
+</form>
