@@ -42,7 +42,8 @@ services:
       context: .
       dockerfile: Services/Events/WebAPI/Dockerfile
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development      
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionString=${CONNECTION_STRING_EVENTS}  
     ports:
       - 5020:5020
     depends_on:
@@ -57,7 +58,8 @@ services:
       context: .
       dockerfile: Services/Subscriptions/WebAPI/Dockerfile
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development      
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionString=${CONNECTION_STRING_SUBSCRIPTIONS}    
     ports:
       - 5030:5030
     depends_on:
@@ -72,7 +74,7 @@ services:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - db-data:/var/lib/postgresql/data
     networks:

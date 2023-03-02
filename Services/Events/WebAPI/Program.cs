@@ -1,11 +1,10 @@
+using ApplicationCore.Profiles;
 using ApplicationCore.Repositories.Contracts;
-using ApplicationCore.Services.Contracts;
 using ApplicationCore.Services;
+using ApplicationCore.Services.Contracts;
 using Infrastructure.DataContext;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection;
-using ApplicationCore.Profiles;
 using WebAPI.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,7 +15,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<UserEventDataContext>(opt => opt.UseNpgsql(builder.Configuration.GetConnectionString("Postgresql")));
+builder.Services.AddDbContext<UserEventDataContext>(opt => opt.UseNpgsql(builder.Configuration.GetValue<string>("ConnectionString")));
 builder.Services.AddScoped<IUserEventRepository, UserEventRepository>();
 builder.Services.AddScoped<IRecurrencyRuleRepository, RecurrencyRuleRepository>();
 builder.Services.AddScoped<IUserEventService, UserEventService>();
