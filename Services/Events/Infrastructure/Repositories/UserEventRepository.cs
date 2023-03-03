@@ -2,9 +2,6 @@
 using ApplicationCore.Repositories.Contracts;
 using Infrastructure.DataContext;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
 
 namespace Infrastructure.Repositories
 {
@@ -76,27 +73,9 @@ namespace Infrastructure.Repositories
 
             var results = await query.Skip(offset)
                 .Take(limit)
-                .ToListAsync();
-
-
-            //var count = await _context.UserEvents.Where(CreateCriterium(entry))
-            //    .AsQueryable()
-            //    .CountAsync();
-
-            //var results = await _context.UserEvents.Where(CreateCriterium(entry))
-            //    .AsQueryable()
-            //    .Skip(offset)
-            //    .Take(limit)
-            //    .ToListAsync();
+                .ToListAsync();           
 
             return (results, count);
-        }
-
-        private static Func<UserEvent, bool> CreateCriterium(string entry)
-        {
-            return userEvent => userEvent.Name.Contains(entry)
-            || userEvent.Place.Contains(entry)
-            || userEvent.Description.Contains(entry);
-        }
+        }        
     }
 }
