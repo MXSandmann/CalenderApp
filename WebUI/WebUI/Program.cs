@@ -4,6 +4,8 @@ using WebUI.Clients;
 using WebUI.Clients.Contracts;
 using WebUI.Models;
 using WebUI.Validators;
+using OpenTelemetry.Trace;
+using OpenTelemetry.Resources;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +21,21 @@ builder.Services.AddHttpClient<IEventsClient, EventsClient>((client) =>
 builder.Services.AddHttpClient<ISubscriptionsClient, SubscriptionsClient>((client) =>
 {
     client.BaseAddress = new Uri(builder.Configuration.GetValue<string>("Services:Gateway") + "/s/");
+});
+
+var serviceName = "EventingWebsite";
+var serviceVersion = "1.0.0";
+
+builder.Services.AddOpenTelemetry().WithTracing(tracerProviderBuilder =>
+{
+    tracerProviderBuilder
+    .AddConsoleExporter()
+    .AddSource(serviceName)
+    .SetResourceBuilder(ResourceBuilder.CreateDefault()
+        .AddService(serviceName: serviceName, serviceVersion: serviceVersion))
+    .AddHttpClientInstrumentation()
+    .AddAspNetCoreInstrumentation()
+    .AddSqlClientInstrumentation();
 });
 
 

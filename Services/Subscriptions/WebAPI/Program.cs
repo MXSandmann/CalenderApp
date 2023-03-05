@@ -1,4 +1,5 @@
-using ApplicationCore.Extensions;
+using ApplicationCore.Factories;
+using ApplicationCore.Jobs;
 using ApplicationCore.Jobs.Listeners;
 using ApplicationCore.Profiles;
 using ApplicationCore.Repositories;
@@ -7,11 +8,12 @@ using ApplicationCore.Services.Contracts;
 using Infrastructure.DataContext;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Quartz.Impl;
+using Npgsql;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using Quartz;
+using Quartz.Impl;
 using System.Collections.Specialized;
-using ApplicationCore.Factories;
-using ApplicationCore.Jobs;
 using WebAPI.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,7 +33,25 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddTransient<SendEmailJob>();
 var quartz = ConfigureQuartz();
 builder.Services.AddSingleton(p => quartz);
-//builder.Services.AddQuartzScheduler();
+
+var serviceName = "Subscriptions Service";
+var serviceVersion = "1.0.0";
+
+builder.Services.AddOpenTelemetry().WithTracing(tracerProviderBuilder =>
+{
+    tracerProviderBuilder
+    .AddConsoleExporter()
+    .AddSource(serviceName)
+    .SetResourceBuilder(ResourceBuilder.CreateDefault()
+        .AddService(serviceName: serviceName, serviceVersion: serviceVersion))
+    .AddHttpClientInstrumentation()
+    .AddAspNetCoreInstrumentation()
+    .AddSqlClientInstrumentation()
+    .AddEntityFrameworkCoreInstrumentation()
+    .AddNpgsql()
+    .AddQuartzInstrumentation();
+});
+
 var app = builder.Build();
 
 

@@ -5,6 +5,9 @@ using ApplicationCore.Services.Contracts;
 using Infrastructure.DataContext;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using WebAPI.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +23,23 @@ builder.Services.AddScoped<IUserEventRepository, UserEventRepository>();
 builder.Services.AddScoped<IRecurrencyRuleRepository, RecurrencyRuleRepository>();
 builder.Services.AddScoped<IUserEventService, UserEventService>();
 builder.Services.AddAutoMapper(typeof(AutomapperProfile).Assembly);
+
+var serviceName = "Events Service";
+var serviceVersion = "1.0.0";
+
+builder.Services.AddOpenTelemetry().WithTracing(tracerProviderBuilder =>
+{
+    tracerProviderBuilder
+    .AddConsoleExporter()
+    .AddSource(serviceName)
+    .SetResourceBuilder(ResourceBuilder.CreateDefault()
+        .AddService(serviceName: serviceName, serviceVersion: serviceVersion))
+    .AddHttpClientInstrumentation()
+    .AddAspNetCoreInstrumentation()
+    .AddSqlClientInstrumentation()
+    .AddEntityFrameworkCoreInstrumentation()
+    .AddNpgsql();
+});
 
 var app = builder.Build();
 
