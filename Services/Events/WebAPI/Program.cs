@@ -15,7 +15,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<UserEventDataContext>(opt => opt.UseNpgsql(builder.Configuration.GetValue<string>("ConnectionString")));
+builder.Services.AddDbContext<UserEventDataContext>(opt => opt.UseNpgsql(builder.Configuration.GetConnectionString("Postgresql")));
 builder.Services.AddScoped<IUserEventRepository, UserEventRepository>();
 builder.Services.AddScoped<IRecurrencyRuleRepository, RecurrencyRuleRepository>();
 builder.Services.AddScoped<IUserEventService, UserEventService>();

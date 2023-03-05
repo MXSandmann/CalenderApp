@@ -1,0 +1,7 @@
+version: '3.4'
+
+services:
+  events:
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/appuser/.microsoft/usersecrets:ro      
+      - ${APPDATA}/ASP.NET/Https:/home/appuser/.aspnet/https:ro

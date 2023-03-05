@@ -42,14 +42,17 @@ services:
       context: .
       dockerfile: Services/Events/WebAPI/Dockerfile
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionString=${CONNECTION_STRING_EVENTS}  
+      - ASPNETCORE_ENVIRONMENT=Development      
     ports:
       - 5020:5020
     depends_on:
       - postgresql
     networks:
       - dev
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/appuser/.microsoft/usersecrets:ro      
+      - ${APPDATA}/ASP.NET/Https:/home/appuser/.aspnet/https:ro
+    
 
   subscriptions:    
     container_name: SubscriptionsService
@@ -58,14 +61,16 @@ services:
       context: .
       dockerfile: Services/Subscriptions/WebAPI/Dockerfile
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionString=${CONNECTION_STRING_SUBSCRIPTIONS}    
+      - ASPNETCORE_ENVIRONMENT=Development      
     ports:
       - 5030:5030
     depends_on:
       - postgresql
     networks:
       - dev
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/appuser/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/appuser/.aspnet/https:ro
 
   postgresql:
     container_name: PostgreSQL
