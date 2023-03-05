@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System.Collections.Generic;
 using System.Diagnostics;
 using WebUI.Clients.Contracts;
 using WebUI.Models;
@@ -25,6 +24,7 @@ public class HomeController : Controller
     public async Task<IActionResult> Index()
     {
         var events = await _eventsClient.GetCalendarEvents();
+        _logger.LogInformation("Received events: {events}", JsonConvert.SerializeObject(events));
         ViewData["Events"] = JsonConvert.SerializeObject(events);
         return View();
     }
