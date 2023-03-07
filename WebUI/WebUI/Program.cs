@@ -36,7 +36,13 @@ builder.Services.AddOpenTelemetry().WithTracing(tracerProviderBuilder =>
         .AddService(serviceName: serviceName, serviceVersion: serviceVersion))
     .AddHttpClientInstrumentation()
     .AddAspNetCoreInstrumentation()
-    .AddSqlClientInstrumentation();
+    .AddSqlClientInstrumentation()
+    .AddHoneycomb(opt =>
+    {
+        opt.ServiceName = serviceName;
+        opt.Dataset = ".net next course";
+        opt.ApiKey = builder.Configuration.GetValue<string>("Honeycomb:ApiKey");
+    });
 });
 builder.Services.AddSingleton(new ActivitySource(serviceName));
 

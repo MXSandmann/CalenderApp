@@ -19,6 +19,9 @@ services:
       - postgresql
     networks:
       - dev
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/appuser/.microsoft/usersecrets:ro      
+      - ${APPDATA}/ASP.NET/Https:/home/appuser/.aspnet/https:ro
 
   apigetaway:    
     container_name: ApiGetaway
@@ -34,6 +37,9 @@ services:
       - postgresql
     networks:
       - dev
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/appuser/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/appuser/.aspnet/https:ro
 
   events:    
     container_name: EventsService

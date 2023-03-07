@@ -49,7 +49,13 @@ builder.Services.AddOpenTelemetry().WithTracing(tracerProviderBuilder =>
     .AddSqlClientInstrumentation()
     .AddEntityFrameworkCoreInstrumentation()
     .AddNpgsql()
-    .AddQuartzInstrumentation();
+    .AddQuartzInstrumentation()
+    .AddHoneycomb(opt =>
+    {
+        opt.ServiceName = serviceName;
+        opt.Dataset = ".net next course";
+        opt.ApiKey = builder.Configuration.GetValue<string>("Honeycomb:ApiKey");
+    });
 });
 
 var app = builder.Build();

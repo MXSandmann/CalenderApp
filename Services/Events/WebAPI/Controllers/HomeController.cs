@@ -22,10 +22,8 @@ namespace WebAPI.Controllers
         public async Task<IActionResult> Index()
         {
             using var activity = _activitySource.StartActivity("HomeController Activity");
-            var calendarEvents = await _service.GetCalendarEvents();
-            activity?.SetBaggage("calendar_events", JsonConvert.SerializeObject(calendarEvents));
-            Baggage.SetBaggage("calendar_events", JsonConvert.SerializeObject(calendarEvents));            
-            
+            var calendarEvents = await _service.GetCalendarEvents();            
+            Baggage.SetBaggage("calendar_events", JsonConvert.SerializeObject(calendarEvents));                        
             return Ok(calendarEvents);
         }
     }
