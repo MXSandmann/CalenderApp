@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Newtonsoft.Json;
 using Shouldly;
+using System.Diagnostics;
 using WebUI.Clients.Contracts;
 using WebUI.Controllers;
 using WebUI.Profiles;
@@ -21,11 +22,12 @@ namespace Tests.Controllers
         public HomeControllerTest()
         {
             _mockEventsClient= new Mock<IEventsClient>();
-            var _mockLogger = new Mock<ILogger<HomeController>>();
+            var mockLogger = new Mock<ILogger<HomeController>>();
             var profile = new AutomapperProfile();
             var config = new MapperConfiguration(cfg => cfg.AddProfile(profile));
             var mapper = new Mapper(config);
-            _sut = new HomeController(_mockEventsClient.Object, _mockLogger.Object, mapper);
+            var mockActivitySourse = new ActivitySource("test");
+            _sut = new HomeController(_mockEventsClient.Object, mockLogger.Object, mapper, mockActivitySourse);
         }
 
         [Fact]
