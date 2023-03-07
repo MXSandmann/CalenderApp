@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using System.Diagnostics;
 using WebAPI.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -40,6 +41,7 @@ builder.Services.AddOpenTelemetry().WithTracing(tracerProviderBuilder =>
     .AddEntityFrameworkCoreInstrumentation()
     .AddNpgsql();
 });
+builder.Services.AddSingleton(new ActivitySource(serviceName));
 
 var app = builder.Build();
 

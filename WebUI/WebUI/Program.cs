@@ -6,6 +6,7 @@ using WebUI.Models;
 using WebUI.Validators;
 using OpenTelemetry.Trace;
 using OpenTelemetry.Resources;
+using System.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,8 +38,7 @@ builder.Services.AddOpenTelemetry().WithTracing(tracerProviderBuilder =>
     .AddAspNetCoreInstrumentation()
     .AddSqlClientInstrumentation();
 });
-
-
+builder.Services.AddSingleton(new ActivitySource(serviceName));
 
 
 var app = builder.Build();
