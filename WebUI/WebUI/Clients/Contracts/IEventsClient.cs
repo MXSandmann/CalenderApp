@@ -12,6 +12,7 @@ namespace WebUI.Clients.Contracts
         Task<UserEventDto> UpdateUserEvent(UserEventDto userEventDto, RecurrencyRuleDto recurrencyRuleDto);
         Task RemoveUserEvent(Guid id);
         Task AddUserEventNamesForSubscriptions(IEnumerable<SubscriptionDto> subscriptions);
+        Task<(IEnumerable<UserEventDto>, int)> GetSearchResults(SearchUserEventsDto searchDto);
 
     }
 }

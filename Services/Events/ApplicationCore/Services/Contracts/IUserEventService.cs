@@ -1,4 +1,5 @@
 ﻿using ApplicationCore.Models;
+using ApplicationCore.Models.Dtos;
 using ApplicationCore.Models.Entities;
 
 namespace ApplicationCore.Services.Contracts
@@ -12,5 +13,6 @@ namespace ApplicationCore.Services.Contracts
         Task<UserEvent> GetUserEventById(Guid id);
         Task<IEnumerable<CalendarEvent>> GetCalendarEvents();
         Task<Dictionary<Guid, string>> GetEventNames(IEnumerable<Guid> eventIds);
+        Task<PaginationResponse<UserEventDto>> SearchUserEvents(string entry, int limit, int offset);
     }
 }

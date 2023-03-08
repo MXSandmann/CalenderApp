@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using ApplicationCore.Models;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
@@ -230,6 +232,68 @@ namespace Tests.Clients
 
             // Assert
             list.ForEach(x => x.EventName.ShouldNotBeNullOrWhiteSpace());
+        }
+
+        [Fact]
+        public async Task GetSearchResults_ShouldProvideResults_WhenAllOk()
+        {
+            // Arrange
+            var entry = "ttt";
+            var limit = 10;
+            var offset = 0;
+            var queryDict = new Dictionary<string, string>
+            {
+                { "entry", entry },
+                { "limit", limit.ToString() },
+                { "offset", offset.ToString() }
+            };
+
+            var url = QueryHelpers.AddQueryString("/Events/Search", queryDict!);
+            _mockHttpHandler.When(url)
+                .Respond(HttpStatusCode.OK, 
+                new StringContent(JsonConvert.SerializeObject(TestData.GetPaginationResponse())));
+
+            // Act
+            var (result, count) = await _sut.GetSearchResults(new SearchUserEventsDto
+            {
+                Entry = entry,
+                Limit = limit,
+                Offset = offset,
+            });
+
+            // Assert
+            result.ShouldNotBeNull();            
+            count.ShouldBe(result.Count());
+        }
+
+        [Fact]
+        public async Task GetSearchResults_ShouldProvideEmptyResults_WhenNoMatches()
+        {
+            // Arrange
+            var entry = "ttt";
+            var limit = 10;
+            var offset = 0;
+            var queryDict = new Dictionary<string, string>
+            {
+                { "entry", entry },
+                { "limit", limit.ToString() },
+                { "offset", offset.ToString() }
+            };
+
+            var url = QueryHelpers.AddQueryString("/Events/Search", queryDict!);
+            _mockHttpHandler.When(url)
+                .Respond(HttpStatusCode.OK, new StringContent(JsonConvert.SerializeObject(new PaginationResponse<UserEventDto>(null!, 0))));
+
+            // Act
+            var (result, count) = await _sut.GetSearchResults(new SearchUserEventsDto
+            {
+                Entry = entry,
+                Limit = limit,
+                Offset = offset,
+            });
+
+            // Assert            
+            result.ShouldBeEmpty();
         }
 
         private static void CheckOrderByCategory(IEnumerable<UserEventDto> results)

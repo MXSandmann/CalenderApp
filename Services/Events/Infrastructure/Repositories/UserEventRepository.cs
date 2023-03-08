@@ -2,7 +2,6 @@
 using ApplicationCore.Repositories.Contracts;
 using Infrastructure.DataContext;
 using Microsoft.EntityFrameworkCore;
-using System.Runtime.CompilerServices;
 
 namespace Infrastructure.Repositories
 {
@@ -63,5 +62,20 @@ namespace Infrastructure.Repositories
         {
             return await _context.UserEvents.Where(ue => eventIds.Contains(ue.Id)).ToDictionaryAsync(ue => ue.Id, ue => ue.Name);
         }
+
+        public async Task<(IEnumerable<UserEvent>, int)> SearchUserEvents(string entry, int limit, int offset)
+        {
+            var query = _context.UserEvents.Where(x => x.Name.Contains(entry)
+            || x.Place.Contains(entry)
+            || x.Description.Contains(entry));
+
+            var count = await query.CountAsync();
+
+            var results = await query.Skip(offset)
+                .Take(limit)
+                .ToListAsync();           
+
+            return (results, count);
+        }        
     }
 }

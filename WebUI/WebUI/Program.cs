@@ -4,6 +4,9 @@ using WebUI.Clients;
 using WebUI.Clients.Contracts;
 using WebUI.Models;
 using WebUI.Validators;
+using OpenTelemetry.Trace;
+using OpenTelemetry.Resources;
+using System.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +24,27 @@ builder.Services.AddHttpClient<ISubscriptionsClient, SubscriptionsClient>((clien
     client.BaseAddress = new Uri(builder.Configuration.GetValue<string>("Services:Gateway") + "/s/");
 });
 
+var serviceName = "EventingWebsite";
+var serviceVersion = "1.0.0";
 
+builder.Services.AddOpenTelemetry().WithTracing(tracerProviderBuilder =>
+{
+    tracerProviderBuilder
+    .AddConsoleExporter()
+    .AddSource(serviceName)
+    .SetResourceBuilder(ResourceBuilder.CreateDefault()
+        .AddService(serviceName: serviceName, serviceVersion: serviceVersion))
+    .AddHttpClientInstrumentation()
+    .AddAspNetCoreInstrumentation()
+    .AddSqlClientInstrumentation()
+    .AddHoneycomb(opt =>
+    {
+        opt.ServiceName = serviceName;
+        opt.Dataset = ".net next course";
+        opt.ApiKey = builder.Configuration.GetValue<string>("Honeycomb:ApiKey");
+    });
+});
+builder.Services.AddSingleton(new ActivitySource(serviceName));
 
 
 var app = builder.Build();

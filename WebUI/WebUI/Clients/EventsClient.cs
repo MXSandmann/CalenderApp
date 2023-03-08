@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using ApplicationCore.Models;
+using Microsoft.AspNetCore.WebUtilities;
+using Newtonsoft.Json;
 using WebUI.Clients.Contracts;
 using WebUI.Models;
 using WebUI.Models.Dtos;
@@ -115,6 +117,27 @@ namespace WebUI.Clients
             var newUserEvent = JsonConvert.DeserializeObject<UserEventDto>(content);
             ArgumentNullException.ThrowIfNull(newUserEvent);
             return newUserEvent;
+        }
+
+        public async Task<(IEnumerable<UserEventDto>, int)> GetSearchResults(SearchUserEventsDto searchDto)
+        {            
+            var queryDict = new Dictionary<string, string>
+            {
+                { "entry", searchDto.Entry },
+                { "limit", searchDto.Limit.ToString() },
+                { "offset", searchDto.Offset.ToString() }
+            };
+
+            var url = QueryHelpers.AddQueryString("Events/Search", queryDict!);
+
+            var result = await _httpClient.GetFromJsonAsync<PaginationResponse<UserEventDto>>(url);
+
+            _logger.LogInformation("Received search results: {value}", JsonConvert.SerializeObject(result));
+
+            if(result?.Data == null)
+                return (Enumerable.Empty<UserEventDto>(), 0);
+
+            return (result.Data, result.Count);
         }
     }
 }

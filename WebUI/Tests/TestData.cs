@@ -1,11 +1,26 @@
-﻿using WebUI.Models;
+﻿using ApplicationCore.Models;
+using AutoBogus;
+using WebUI.Models;
 using WebUI.Models.Dtos;
 using WebUI.Models.Enums;
 
 namespace Tests
-{
+{    
     internal static class TestData
     {
+        internal static PaginationResponse<UserEventDto> GetPaginationResponse()
+        {
+            var events = new List<UserEventDto>();
+            var faker = AutoFaker.Create();
+            for (int i = 0; i < 10; i++)
+            {
+                var _event = faker.Generate<UserEventDto>();
+                events.Add(_event);
+            }
+            var response = new PaginationResponse<UserEventDto>(events, events.Count);
+            return response;
+        }
+
         internal static NotificationDto GetNotificationDto()
         {
             var dateTime = new DateTime(2023, 6, 1, 12, 0, 0);
