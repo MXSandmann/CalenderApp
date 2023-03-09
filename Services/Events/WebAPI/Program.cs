@@ -9,6 +9,7 @@ using Npgsql;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using System.Diagnostics;
+using System.Reflection;
 using WebAPI.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,7 +20,11 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<UserEventDataContext>(opt => opt.UseNpgsql(builder.Configuration.GetConnectionString("Postgresql")));
+
+var conString = bool.Parse(Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") ?? "false") 
+    ? builder.Configuration.GetConnectionString("Postgresql") 
+    : builder.Configuration.GetConnectionString("PostgresqlLocal");
+builder.Services.AddDbContext<UserEventDataContext>(opt => opt.UseNpgsql(conString));
 builder.Services.AddScoped<IUserEventRepository, UserEventRepository>();
 builder.Services.AddScoped<IRecurrencyRuleRepository, RecurrencyRuleRepository>();
 builder.Services.AddScoped<IUserEventService, UserEventService>();
@@ -48,6 +53,8 @@ builder.Services.AddOpenTelemetry().WithTracing(tracerProviderBuilder =>
     });
 });
 builder.Services.AddSingleton(new ActivitySource(serviceName));
+builder.Services.AddMediatR(c =>
+    c.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
 
 var app = builder.Build();
 
