@@ -2,6 +2,7 @@ using ApplicationCore.Profiles;
 using ApplicationCore.Repositories.Contracts;
 using ApplicationCore.Services;
 using ApplicationCore.Services.Contracts;
+using Infrastructure.Configurations;
 using Infrastructure.DataContext;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -9,8 +10,8 @@ using Npgsql;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using System.Diagnostics;
-using System.Reflection;
 using WebAPI.Extensions;
+using ApplicationCore.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,6 +56,9 @@ builder.Services.AddOpenTelemetry().WithTracing(tracerProviderBuilder =>
 builder.Services.AddSingleton(new ActivitySource(serviceName));
 builder.Services.AddMediatR(c =>
     c.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
+builder.Services.Configure<NoSqlSettings>(builder.Configuration.GetSection("MongoDB"));
+builder.Services.AddScoped<IUserActivityService, UserActivityService>();
+builder.Services.AddScoped<IUserActivityRepository, UserActivityRepository>();
 
 var app = builder.Build();
 

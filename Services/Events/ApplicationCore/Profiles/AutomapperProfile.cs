@@ -1,7 +1,10 @@
 ﻿using ApplicationCore.Models;
+using ApplicationCore.Models.Documents;
 using ApplicationCore.Models.Dtos;
 using ApplicationCore.Models.Entities;
+using ApplicationCore.Models.Notifications;
 using AutoMapper;
+using System.Reflection.Metadata;
 
 namespace ApplicationCore.Profiles
 {
@@ -17,7 +20,10 @@ namespace ApplicationCore.Profiles
             CreateMap<UserEvent, UserEventDto>();
             CreateMap<UserEventDto, UserEvent>()
                 .ForMember(dest => dest.RecurrencyRule, opt => opt.Ignore());
-            CreateMap<RecurrencyRule, RecurrencyRuleDto>().ReverseMap();            
+            CreateMap<RecurrencyRule, RecurrencyRuleDto>().ReverseMap();
+
+            CreateMap<OnCreateNotification, UserActivityRecord>()
+                .ForMember(dest => dest.UserAction, opt => opt.MapFrom(src => src.UserActionOnEvent.ToString()));
         }        
     }
 }
