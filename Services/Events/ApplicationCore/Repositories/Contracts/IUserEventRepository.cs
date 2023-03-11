@@ -1,5 +1,4 @@
 ﻿using ApplicationCore.Models.Entities;
-using System.Collections.Generic;
 
 namespace ApplicationCore.Repositories.Contracts
 {

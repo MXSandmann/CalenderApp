@@ -8,10 +8,10 @@ namespace Infrastructure.DataContext
 {
     public class UserEventDataContext : DbContext
     {
-        private readonly IMediator _mediator;
+        private readonly IMediator _mediator;        
         public UserEventDataContext(DbContextOptions<UserEventDataContext> options, IMediator mediator) : base(options)
         {
-            _mediator = mediator;
+            _mediator = mediator;            
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -24,15 +24,18 @@ namespace Infrastructure.DataContext
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
+            var user = "User";            
             var entries = ChangeTracker.Entries<UserEvent>();
             foreach (var entry in entries)
             {
                 if (entry.State is EntityState.Added)
-                    await _mediator.Publish(new OnCreateNotification(UserActionOnEvent.Created, "Boris", "Boris created an event"), cancellationToken);
+                    await _mediator.Publish(new OnUserActionNotification(UserActionOnEvent.Created, user, $"{user} created an event"), cancellationToken);
+                if (entry.State is EntityState.Modified)
+                    await _mediator.Publish(new OnUserActionNotification(UserActionOnEvent.Updated, user, $"{user} updated an event"), cancellationToken);
+                if (entry.State is EntityState.Deleted)
+                    await _mediator.Publish(new OnUserActionNotification(UserActionOnEvent.Deleted, user, $"{user} deleted an event"), cancellationToken);
             }
-
             return await base.SaveChangesAsync(cancellationToken);
         }
-
     }
 }

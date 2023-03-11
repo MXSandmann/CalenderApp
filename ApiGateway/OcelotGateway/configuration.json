@@ -99,6 +99,18 @@
       ],
       "UpstreamPathTemplate": "/s/notifications",
       "UpstreamHttpMethod": [ "POST", "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Activities",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "events",
+          "Port": 5020
+        }
+      ],
+      "UpstreamPathTemplate": "/e/activities",
+      "UpstreamHttpMethod": [ "POST", "PUT", "GET" ]
     }
   ]
 }

@@ -3,7 +3,7 @@
     public enum UserActionOnEvent
     {
         Created,
-        Edited,
+        Updated,
         Deleted,
         Subscribed
     }

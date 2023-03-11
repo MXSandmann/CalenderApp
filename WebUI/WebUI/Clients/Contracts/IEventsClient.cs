@@ -13,6 +13,7 @@ namespace WebUI.Clients.Contracts
         Task RemoveUserEvent(Guid id);
         Task AddUserEventNamesForSubscriptions(IEnumerable<SubscriptionDto> subscriptions);
         Task<(IEnumerable<UserEventDto>, int)> GetSearchResults(SearchUserEventsDto searchDto);
+        Task<IEnumerable<UserActivityRecordDto>> GetAllActivities();
 
     }
 }

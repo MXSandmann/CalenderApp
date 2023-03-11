@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using WebUI.Extensions;
 using WebUI.Models.Dtos;
 
 namespace WebUI.Models

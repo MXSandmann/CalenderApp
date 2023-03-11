@@ -34,12 +34,12 @@ namespace ApplicationCore.Services
                 recurrencyRule.UserEventId = newUserEventId;
                 await _recurrencyRuleRepository.Add(recurrencyRule);
             }
-            return await _userEventRepository.GetById(newUserEventId);                        
+            return await _userEventRepository.GetById(newUserEventId);
         }
 
         public async Task<UserEvent> GetUserEventById(Guid id)
         {
-            return await _userEventRepository.GetById(id);            
+            return await _userEventRepository.GetById(id);
         }
 
         public async Task<IEnumerable<UserEvent>> GetUserEvents()
@@ -49,7 +49,7 @@ namespace ApplicationCore.Services
 
         public async Task RemoveUserEvent(Guid id)
         {
-            var userEventToDelete = await _userEventRepository.GetById(id);            
+            var userEventToDelete = await _userEventRepository.GetById(id);
             await _userEventRepository.Remove(userEventToDelete);
         }
 
@@ -113,7 +113,7 @@ namespace ApplicationCore.Services
         {
             var calendarEvents = new List<CalendarEvent>();
             var events = CompleteEventsForPeriod(userEvent, recurrency, mapper);
-            calendarEvents.AddRange(events);            
+            calendarEvents.AddRange(events);
             return calendarEvents;
         }
 
@@ -141,7 +141,7 @@ namespace ApplicationCore.Services
             nextCalendarEvent.End = dateOfNextEvent;
             return nextCalendarEvent;
         }
-              
+
         private static IEnumerable<CalendarEvent> CreateCalendarEventsWithCertainDays(UserEvent userEvent, CertainDays days, WeekOfTheMonth weekOfTheMonth, IMapper mapper)
         {
             var firstCalendarEvent = mapper.Map<CalendarEvent>(userEvent);
@@ -204,7 +204,7 @@ namespace ApplicationCore.Services
 
         public async Task<PaginationResponse<UserEventDto>> SearchUserEvents(string entry, int limit, int offset)
         {
-            var (results, count) =  await _userEventRepository.SearchUserEvents(entry, limit, offset);
+            var (results, count) = await _userEventRepository.SearchUserEvents(entry, limit, offset);
             var resultDtos = _mapper.Map<IEnumerable<UserEventDto>>(results);
             return new PaginationResponse<UserEventDto>(resultDtos, count);
         }

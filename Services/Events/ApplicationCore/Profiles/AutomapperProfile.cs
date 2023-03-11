@@ -4,14 +4,13 @@ using ApplicationCore.Models.Dtos;
 using ApplicationCore.Models.Entities;
 using ApplicationCore.Models.Notifications;
 using AutoMapper;
-using System.Reflection.Metadata;
 
 namespace ApplicationCore.Profiles
 {
     public class AutomapperProfile : Profile
     {
         public AutomapperProfile()
-        {           
+        {
 
             CreateMap<UserEvent, CalendarEvent>()
                 .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Name))
@@ -22,8 +21,10 @@ namespace ApplicationCore.Profiles
                 .ForMember(dest => dest.RecurrencyRule, opt => opt.Ignore());
             CreateMap<RecurrencyRule, RecurrencyRuleDto>().ReverseMap();
 
-            CreateMap<OnCreateNotification, UserActivityRecord>()
+            CreateMap<OnUserActionNotification, UserActivityRecord>()
                 .ForMember(dest => dest.UserAction, opt => opt.MapFrom(src => src.UserActionOnEvent.ToString()));
-        }        
+
+            CreateMap<UserActivityRecord, UserActivityRecordDto>();
+        }
     }
 }

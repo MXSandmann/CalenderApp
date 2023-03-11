@@ -1,6 +1,6 @@
-﻿using ApplicationCore.Models;
-using Microsoft.AspNetCore.WebUtilities;
+﻿using Microsoft.AspNetCore.WebUtilities;
 using Newtonsoft.Json;
+using System.Collections;
 using WebUI.Clients.Contracts;
 using WebUI.Models;
 using WebUI.Models.Dtos;
@@ -138,6 +138,14 @@ namespace WebUI.Clients
                 return (Enumerable.Empty<UserEventDto>(), 0);
 
             return (result.Data, result.Count);
+        }
+
+        public async Task<IEnumerable<UserActivityRecordDto>> GetAllActivities()
+        {
+            var results = await _httpClient.GetFromJsonAsync<IEnumerable<UserActivityRecordDto>>("Activities");
+            if(results == null)
+                return Enumerable.Empty<UserActivityRecordDto>();
+            return results;
         }
     }
 }

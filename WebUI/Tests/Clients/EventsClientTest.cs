@@ -1,5 +1,4 @@
-﻿using ApplicationCore.Models;
-using Microsoft.AspNetCore.WebUtilities;
+﻿using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Newtonsoft.Json;

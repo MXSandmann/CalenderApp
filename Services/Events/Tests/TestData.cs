@@ -42,7 +42,7 @@ namespace Tests
                 }
             };
         }
-              
+
         internal static RecurrencyRule GetRecurrencyRule(Recurrency recurrency)
         {
             return new RecurrencyRule

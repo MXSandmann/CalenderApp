@@ -7,7 +7,7 @@ namespace Infrastructure.Configurations
     public class UserEventConfiguration : IEntityTypeConfiguration<UserEvent>
     {
         public void Configure(EntityTypeBuilder<UserEvent> builder)
-        {   
+        {
             builder.Property(x => x.HasRecurrency).HasColumnType("boolean");
             builder.Property(x => x.StartTime).HasConversion(x => DateTime.SpecifyKind(x, DateTimeKind.Utc), x => x);
             builder.Property(x => x.EndTime).HasConversion(x => DateTime.SpecifyKind(x, DateTimeKind.Utc), x => x);

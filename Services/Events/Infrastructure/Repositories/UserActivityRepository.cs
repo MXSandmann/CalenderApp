@@ -17,9 +17,9 @@ namespace Infrastructure.Repositories
             _collection = mongoDb.GetCollection<UserActivityRecord>(settings.Value.CollectionName);
         }
 
-        public Task<UserActivityRecord> Create(UserActivityRecord record)
+        public async Task Create(UserActivityRecord record)
         {
-            throw new NotImplementedException();
+            await _collection.InsertOneAsync(record);
         }
 
         public async Task<IEnumerable<UserActivityRecord>> GetAll()

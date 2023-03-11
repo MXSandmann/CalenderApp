@@ -1,8 +1,8 @@
+using ApplicationCore.Options;
 using ApplicationCore.Profiles;
 using ApplicationCore.Repositories.Contracts;
 using ApplicationCore.Services;
 using ApplicationCore.Services.Contracts;
-using Infrastructure.Configurations;
 using Infrastructure.DataContext;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +11,6 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using System.Diagnostics;
 using WebAPI.Extensions;
-using ApplicationCore.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,8 +21,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var conString = bool.Parse(Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") ?? "false") 
-    ? builder.Configuration.GetConnectionString("Postgresql") 
+var conString = bool.Parse(Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") ?? "false")
+    ? builder.Configuration.GetConnectionString("Postgresql")
     : builder.Configuration.GetConnectionString("PostgresqlLocal");
 builder.Services.AddDbContext<UserEventDataContext>(opt => opt.UseNpgsql(conString));
 builder.Services.AddScoped<IUserEventRepository, UserEventRepository>();

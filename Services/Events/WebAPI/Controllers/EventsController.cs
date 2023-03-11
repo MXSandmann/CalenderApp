@@ -60,7 +60,7 @@ namespace WebAPI.Controllers
         [HttpDelete("[action]/{id:guid}")]
         public async Task<IActionResult> Remove(Guid id)
         {
-            await _service.RemoveUserEvent(id);            
+            await _service.RemoveUserEvent(id);
             return Ok();
         }
 

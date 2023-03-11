@@ -1,5 +1,4 @@
-﻿using ApplicationCore.Models;
-using AutoBogus;
+﻿using AutoBogus;
 using WebUI.Models;
 using WebUI.Models.Dtos;
 using WebUI.Models.Enums;
