@@ -44,6 +44,14 @@ namespace WebUI.Clients
             return newSubscription;
         }
 
+        public async Task<IEnumerable<UserActivityRecordDto>> GetAllActivities()
+        {
+            var results = await _httpClient.GetFromJsonAsync<IEnumerable<UserActivityRecordDto>>("Activities");
+            if (results == null)
+                return Enumerable.Empty<UserActivityRecordDto>();
+            return results;
+        }
+
         public async Task<IEnumerable<SubscriptionDto>> GetAllSubscriptions()
         {
             var subscriptions = await _httpClient.GetFromJsonAsync<IEnumerable<SubscriptionDto>>("Subscriptions");

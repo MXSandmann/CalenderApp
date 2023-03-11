@@ -10,5 +10,6 @@ namespace WebUI.Clients.Contracts
         Task RemoveSubscription(Guid id);
         Task<NotificationDto> AddNotification(NotificationDto notificationDto);
         Task<IEnumerable<SubscriptionDto>> GetAllSubscriptions();
+        Task<IEnumerable<UserActivityRecordDto>> GetAllActivities();
     }
 }

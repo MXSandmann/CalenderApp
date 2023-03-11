@@ -56,8 +56,7 @@ namespace WebUI.Profiles
             CreateMap<SubscriptionDto, GetSubscriptionViewModel>()
                 .ForMember(dest => dest.Notifications, opt => opt.MapFrom(src => GetSubscriptionViewModel.NotificationsToString(src.Notifications!)));
 
-            CreateMap<SmartSearchViewModel, SearchUserEventsDto>().ReverseMap();
-
+            CreateMap<SmartSearchViewModel, SearchUserEventsDto>().ReverseMap();           
         }
 
         private static CertainDays ComputeCertainDays(CreateUpdateUserEventViewModel model)

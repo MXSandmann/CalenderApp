@@ -22,7 +22,7 @@ namespace ApplicationCore.Jobs
             var userEmail = dataMap.GetString("UserEmail");
             var eventName = dataMap.GetString("EventName");
             _logger.LogInformation("--> Sending email to {userName}, {userEmail}", userName, userEmail);
-            await _emailService.SendEmail(userName!, userEmail!, eventName!);            
+            await _emailService.SendEmail(userName!, userEmail!, eventName!);
         }
     }
 }

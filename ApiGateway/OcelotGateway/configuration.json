@@ -111,6 +111,18 @@
       ],
       "UpstreamPathTemplate": "/e/activities",
       "UpstreamHttpMethod": [ "POST", "PUT", "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Activities",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "subscriptions",
+          "Port": 5030
+        }
+      ],
+      "UpstreamPathTemplate": "/s/activities",
+      "UpstreamHttpMethod": [ "POST", "PUT", "GET" ]
     }
   ]
 }

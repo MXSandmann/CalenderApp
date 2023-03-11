@@ -13,7 +13,7 @@ using WebAPI.Controllers;
 namespace Tests.Controllers;
 
 public class NotificationsControllerTest
-{    
+{
     private readonly NotificationsController _sut;
     private readonly Mock<ISubscriptionService> _mockService;
     private readonly IMapper _mapper;
@@ -49,4 +49,3 @@ public class NotificationsControllerTest
         Assert.Equal(JsonConvert.SerializeObject(notificationDto), JsonConvert.SerializeObject(returnedDto));
     }
 }
- 

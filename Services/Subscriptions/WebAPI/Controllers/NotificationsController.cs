@@ -36,7 +36,7 @@ namespace WebAPI.Controllers
             var timeDif = DateTime.Now - DateTime.UtcNow;
             // Add the offset
             var fireTime = newNotification.NotificationTime.Add(-timeDif);
-            
+
             await NotificationsFactory.ScheduleEmail(_scheduler, subscription.UserEmail, subscription.UserName, notificationDto.EventName, fireTime, newNotification.Id, cancellationToken);
             var dto = _mapper.Map<NotificationDto>(newNotification);
             _logger.LogInformation("--> Created Notification: {not}", JsonConvert.SerializeObject(dto));

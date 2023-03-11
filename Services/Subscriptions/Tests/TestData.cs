@@ -28,7 +28,7 @@ namespace Tests
             var dateTime = new DateTime(2023, 6, 1, 12, 0, 0);
             return new NotificationDto
             {
-                NotificationTime = dateTime,                
+                NotificationTime = dateTime,
                 SubscriptionId = Guid.NewGuid(),
             };
         }

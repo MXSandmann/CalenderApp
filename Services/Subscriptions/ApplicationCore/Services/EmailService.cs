@@ -9,7 +9,7 @@ namespace ApplicationCore.Services
 {
     public class EmailService : IEmailService
     {
-        private readonly IConfiguration _configuration;        
+        private readonly IConfiguration _configuration;
 
         public EmailService(IConfiguration configuration)
         {
