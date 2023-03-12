@@ -6,6 +6,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Quartz;
+using System.Diagnostics;
 
 namespace WebAPI.Controllers
 {
@@ -17,18 +18,21 @@ namespace WebAPI.Controllers
         private readonly IMapper _mapper;
         private readonly ILogger<NotificationsController> _logger;
         private readonly IScheduler _scheduler;
+        private readonly ActivitySource _activitySource;
 
-        public NotificationsController(ISubscriptionService subscriptionService, IMapper mapper, ILogger<NotificationsController> logger, IScheduler scheduler)
+        public NotificationsController(ISubscriptionService subscriptionService, IMapper mapper, ILogger<NotificationsController> logger, IScheduler scheduler, ActivitySource activitySource)
         {
             _subscriptionService = subscriptionService;
             _mapper = mapper;
             _logger = logger;
             _scheduler = scheduler;
+            _activitySource = activitySource;
         }
 
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] NotificationDto notificationDto, CancellationToken cancellationToken)
         {
+            using var activity = _activitySource.StartActivity($"{nameof(NotificationsController)}: {nameof(Add)} action");
             var newNotification = await _subscriptionService.AddNotification(_mapper.Map<Notification>(notificationDto));
             var subscription = await _subscriptionService.GetSubscriptionById(newNotification.SubscriptionId);
 
