@@ -50,7 +50,7 @@ builder.Services.AddOpenTelemetry().WithTracing(tracerProviderBuilder =>
     .AddSqlClientInstrumentation()
     .AddEntityFrameworkCoreInstrumentation()
     .AddNpgsql()
-    .AddQuartzInstrumentation()
+    .AddQuartzInstrumentation()    
     .AddHoneycomb(opt =>
     {
         opt.ServiceName = serviceName;
