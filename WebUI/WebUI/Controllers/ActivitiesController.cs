@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using WebUI.Clients.Contracts;
+using WebUI.Models;
 
 namespace WebUI.Controllers
 {
@@ -7,11 +9,13 @@ namespace WebUI.Controllers
     {
         private readonly IEventsClient _eventsClient;
         private readonly ISubscriptionsClient _subscriptionsClient;
+        private readonly IMapper _mapper;
 
-        public ActivitiesController(IEventsClient eventsClient, ISubscriptionsClient subscriptionsClient)
+        public ActivitiesController(IEventsClient eventsClient, ISubscriptionsClient subscriptionsClient, IMapper mapper)
         {
             _eventsClient = eventsClient;
             _subscriptionsClient = subscriptionsClient;
+            _mapper = mapper;
         }
 
         [HttpGet("[action]")]        
@@ -23,9 +27,9 @@ namespace WebUI.Controllers
 
             var activitiesEvents = await taskEvents;
             var activitiesSubscriptions = await taskSubscriptions;
-            activitiesEvents.ToList().AddRange(activitiesSubscriptions);
+            var joined = activitiesEvents.Concat(activitiesSubscriptions);
 
-            return View(activitiesEvents);
+            return View(_mapper.Map<IEnumerable<ActivitiesOverviewViewModel>>(joined));
         }
     }
 }
