@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Newtonsoft.Json;
 using Quartz;
+using System.Diagnostics;
 using WebAPI.Controllers;
 
 namespace Tests.Controllers;
@@ -26,7 +27,8 @@ public class NotificationsControllerTest
         var profile = new AutomapperProfile();
         var config = new MapperConfiguration(cfg => cfg.AddProfile(profile));
         _mapper = new Mapper(config);
-        _sut = new NotificationsController(_mockService.Object, _mapper, mockLogger.Object, mockScheduler.Object);
+        var activitySource = new ActivitySource("test");
+        _sut = new NotificationsController(_mockService.Object, _mapper, mockLogger.Object, mockScheduler.Object, activitySource);
     }
 
     [Fact]

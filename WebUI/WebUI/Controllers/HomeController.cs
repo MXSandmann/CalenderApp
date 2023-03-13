@@ -32,16 +32,16 @@ public class HomeController : Controller
             activity?.AddEvent(new ActivityEvent("Start pulling all user events"));
         }
         var events = await _eventsClient.GetCalendarEvents();
-        
+
         using (var activity = _activitySource.StartActivity("Received Activity"))
         {
             var items = activity?.GetBaggageItem("calendar_events");
             var items2 = Activity.Current?.GetBaggageItem("calendar_events");
             var _items = Baggage.GetBaggage("calendar_events");
 
-            
 
-            
+
+
             Console.WriteLine($"--> items: {items}, {_items}, {items2}");
             activity?.SetTag("calendar_events", items);
         }

@@ -1,7 +1,7 @@
-﻿using ApplicationCore.Models.Documents;
-using ApplicationCore.Options;
+﻿using ApplicationCore.ConfigConstants;
+using ApplicationCore.Models.Documents;
 using ApplicationCore.Repositories.Contracts;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
 
 namespace Infrastructure.Repositories
@@ -10,11 +10,11 @@ namespace Infrastructure.Repositories
     {
         private readonly IMongoCollection<UserActivityRecord> _collection;
 
-        public UserActivityRepository(IOptions<NoSqlSettings> settings)
+        public UserActivityRepository(IConfiguration configuration)
         {
-            var mongoClient = new MongoClient(settings.Value.ConnectionString);
-            var mongoDb = mongoClient.GetDatabase(settings.Value.DatabaseName);
-            _collection = mongoDb.GetCollection<UserActivityRecord>(settings.Value.CollectionName);
+            var mongoClient = new MongoClient(configuration.GetValue<string>(Config.MongoDB.ConnectionString));
+            var mongoDb = mongoClient.GetDatabase(configuration.GetValue<string>(Config.MongoDB.DatabaseName));
+            _collection = mongoDb.GetCollection<UserActivityRecord>(configuration.GetValue<string>(Config.MongoDB.CollectionName));
         }
 
         public async Task Create(UserActivityRecord record)

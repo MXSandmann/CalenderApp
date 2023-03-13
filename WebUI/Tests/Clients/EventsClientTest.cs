@@ -35,7 +35,7 @@ namespace Tests.Clients
             // Arrange
             var userEventDto = TestData.GetUserEventDtos().First();
             var recurrencyRuleDto = TestData.GetRecurrencyRuleDto(Recurrency.None);
-            _mockHttpHandler.When(HttpMethod.Post, "/Events/Create").Respond(HttpStatusCode.OK, new StringContent(GetSingleUserEventDtoOkContent()));            
+            _mockHttpHandler.When(HttpMethod.Post, "/Events/Create").Respond(HttpStatusCode.OK, new StringContent(GetSingleUserEventDtoOkContent()));
 
             // Act
             var dto = await _sut.AddNewUserEvent(userEventDto, recurrencyRuleDto);
@@ -58,7 +58,7 @@ namespace Tests.Clients
             var func = async () => await _sut.AddNewUserEvent(userEventDto, recurrencyRuleDto);
 
             // Assert
-            await func.ShouldThrowAsync<HttpRequestException>();            
+            await func.ShouldThrowAsync<HttpRequestException>();
         }
 
         [Fact]
@@ -116,7 +116,7 @@ namespace Tests.Clients
             var func = async () => await _sut.GetUserEventById(id);
 
             // Assert
-            await func.ShouldThrowAsync<ArgumentNullException>();            
+            await func.ShouldThrowAsync<ArgumentNullException>();
         }
 
         [Theory]
@@ -249,7 +249,7 @@ namespace Tests.Clients
 
             var url = QueryHelpers.AddQueryString("/Events/Search", queryDict!);
             _mockHttpHandler.When(url)
-                .Respond(HttpStatusCode.OK, 
+                .Respond(HttpStatusCode.OK,
                 new StringContent(JsonConvert.SerializeObject(TestData.GetPaginationResponse())));
 
             // Act
@@ -261,7 +261,7 @@ namespace Tests.Clients
             });
 
             // Assert
-            result.ShouldNotBeNull();            
+            result.ShouldNotBeNull();
             count.ShouldBe(result.Count());
         }
 
@@ -332,18 +332,18 @@ namespace Tests.Clients
 
         private static string GetUserEventDtosOkContent()
         {
-            var content = TestData.GetUserEventDtos();            
+            var content = TestData.GetUserEventDtos();
             return JsonConvert.SerializeObject(content);
         }
         private static string GetUserEventDtoNullContent()
         {
-            var content = new { Id = Guid.Empty };                
+            var content = new { Id = Guid.Empty };
             return JsonConvert.SerializeObject(content);
         }
 
         private static string GetCalendarEventsOkContent()
         {
-            var content = TestData.GetCalendarEvents();          
+            var content = TestData.GetCalendarEvents();
             return JsonConvert.SerializeObject(content);
         }
 

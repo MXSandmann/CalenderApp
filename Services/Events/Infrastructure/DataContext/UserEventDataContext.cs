@@ -8,10 +8,10 @@ namespace Infrastructure.DataContext
 {
     public class UserEventDataContext : DbContext
     {
-        private readonly IMediator _mediator;        
+        private readonly IMediator _mediator;
         public UserEventDataContext(DbContextOptions<UserEventDataContext> options, IMediator mediator) : base(options)
         {
-            _mediator = mediator;            
+            _mediator = mediator;
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -24,7 +24,7 @@ namespace Infrastructure.DataContext
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            var user = "User";            
+            var user = "User";
             var entries = ChangeTracker.Entries<UserEvent>();
             foreach (var entry in entries)
             {

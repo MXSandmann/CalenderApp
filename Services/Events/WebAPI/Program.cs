@@ -1,4 +1,3 @@
-using ApplicationCore.Options;
 using ApplicationCore.Profiles;
 using ApplicationCore.Repositories.Contracts;
 using ApplicationCore.Services;
@@ -20,11 +19,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-var conString = bool.Parse(Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") ?? "false")
-    ? builder.Configuration.GetConnectionString("Postgresql")
-    : builder.Configuration.GetConnectionString("PostgresqlLocal");
-builder.Services.AddDbContext<UserEventDataContext>(opt => opt.UseNpgsql(conString));
+builder.Services.AddDbContext<UserEventDataContext>(opt => opt.UseNpgsql(builder.Configuration.GetConnectionString("Postgresql")));
 builder.Services.AddScoped<IUserEventRepository, UserEventRepository>();
 builder.Services.AddScoped<IRecurrencyRuleRepository, RecurrencyRuleRepository>();
 builder.Services.AddScoped<IUserEventService, UserEventService>();
@@ -55,7 +50,6 @@ builder.Services.AddOpenTelemetry().WithTracing(tracerProviderBuilder =>
 builder.Services.AddSingleton(new ActivitySource(serviceName));
 builder.Services.AddMediatR(c =>
     c.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
-builder.Services.Configure<NoSqlSettings>(builder.Configuration.GetSection("MongoDB"));
 builder.Services.AddScoped<IUserActivityService, UserActivityService>();
 builder.Services.AddScoped<IUserActivityRepository, UserActivityRepository>();
 

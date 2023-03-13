@@ -29,7 +29,7 @@ namespace WebUI.Controllers
         [HttpGet("[action]")]
         public async Task<IActionResult> SubscriptionsOverview()
         {
-            var subscriptions = await _subscriptionsClient.GetAllSubscriptions();                       
+            var subscriptions = await _subscriptionsClient.GetAllSubscriptions();
             _logger.LogInformation("--> Recieved subscriptions: {subscription}", JsonConvert.SerializeObject(subscriptions));
 
             await _eventClient.AddUserEventNamesForSubscriptions(subscriptions);
@@ -47,11 +47,11 @@ namespace WebUI.Controllers
         }
 
         [HttpPost("[action]/{eventId:guid}")]
-        public async Task<IActionResult> Create(CreateSubscriptionViewModel createSubscriptionViewModel,[FromRoute] Guid eventId)
+        public async Task<IActionResult> Create(CreateSubscriptionViewModel createSubscriptionViewModel, [FromRoute] Guid eventId)
         {
             var validationResult = _validator.Validate(createSubscriptionViewModel);
-            if (!ModelState.IsValid)            
-                return BadRequest(ModelState);            
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
             var subscriptionDto = _mapper.Map<SubscriptionDto>(createSubscriptionViewModel);
@@ -73,7 +73,7 @@ namespace WebUI.Controllers
         {
             // Request some data
             var subscription = await _subscriptionsClient.GetSubscriptionById(notificationViewModel.SubscriptionId);
-            var userEvent = await _eventClient.GetUserEventById(subscription.EventId);            
+            var userEvent = await _eventClient.GetUserEventById(subscription.EventId);
 
             var notificationDto = _mapper.Map<NotificationDto>(notificationViewModel);
             notificationDto.NotificationTime = CalculateNotificationTime(notificationViewModel.NotificationTimeSpan, userEvent);
@@ -85,7 +85,7 @@ namespace WebUI.Controllers
         }
 
         private static DateTime CalculateNotificationTime(TimeSpan notificationTimeSpan, UserEventDto userEvent)
-        {            
+        {
             var time = userEvent.StartTime.TimeOfDay;
             var date = userEvent.Date.Date.Add(time).Add(-notificationTimeSpan);
             return date;
@@ -109,8 +109,8 @@ namespace WebUI.Controllers
         public async Task<IActionResult> Edit(CreateSubscriptionViewModel model, [FromRoute] Guid id)
         {
             var validationResult = _validator.Validate(model);
-            if (!ModelState.IsValid)            
-                return BadRequest(ModelState);            
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
             model.SubscriptionId = id;

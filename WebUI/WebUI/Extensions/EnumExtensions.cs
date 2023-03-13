@@ -11,7 +11,7 @@ namespace WebUI.Extensions
                 .GetMember(enumValue.ToString())
                 .Single()
                 .GetCustomAttribute<DisplayAttribute>()?
-                .Name ?? string.Empty;                        
+                .Name ?? string.Empty;
         }
     }
 }

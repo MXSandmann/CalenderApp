@@ -13,5 +13,5 @@ namespace WebUI.Models
         public List<NotificationDto> Notifications { get; set; } = new();
         public Guid EventId { get; set; }
         public string EventName { get; set; } = string.Empty;
-    }    
+    }
 }

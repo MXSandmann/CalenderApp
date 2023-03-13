@@ -1,7 +1,6 @@
 using ApplicationCore.Factories;
 using ApplicationCore.Jobs;
 using ApplicationCore.Jobs.Listeners;
-using ApplicationCore.Options;
 using ApplicationCore.Profiles;
 using ApplicationCore.Repositories.Contracts;
 using ApplicationCore.Services;
@@ -50,7 +49,7 @@ builder.Services.AddOpenTelemetry().WithTracing(tracerProviderBuilder =>
     .AddSqlClientInstrumentation()
     .AddEntityFrameworkCoreInstrumentation()
     .AddNpgsql()
-    .AddQuartzInstrumentation()    
+    .AddQuartzInstrumentation()
     .AddHoneycomb(opt =>
     {
         opt.ServiceName = serviceName;
@@ -60,7 +59,6 @@ builder.Services.AddOpenTelemetry().WithTracing(tracerProviderBuilder =>
 });
 builder.Services.AddMediatR(c =>
     c.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
-builder.Services.Configure<NoSqlSettings>(builder.Configuration.GetSection("MongoDB"));
 builder.Services.AddScoped<IUserActivityService, UserActivityService>();
 builder.Services.AddScoped<IUserActivityRepository, UserActivityRepository>();
 

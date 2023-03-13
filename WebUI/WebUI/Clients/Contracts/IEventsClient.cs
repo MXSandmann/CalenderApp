@@ -1,5 +1,5 @@
-﻿using WebUI.Models.Dtos;
-using WebUI.Models;
+﻿using WebUI.Models;
+using WebUI.Models.Dtos;
 
 namespace WebUI.Clients.Contracts
 {

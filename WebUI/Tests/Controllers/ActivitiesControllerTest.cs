@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Shouldly;
-using System.Runtime.CompilerServices;
 using WebUI.Clients.Contracts;
 using WebUI.Controllers;
 using WebUI.Models;
@@ -12,18 +11,17 @@ namespace Tests.Controllers
 {
     public class ActivitiesControllerTest
     {
-        private readonly Mock<IEventsClient> _mockEventsClient;
-        private readonly Mock<ISubscriptionsClient> _mockSubscriptionsClient;
+        private readonly Mock<IEventsClient> _mockEventsClient;        
         private readonly ActivitiesController _sut;
 
         public ActivitiesControllerTest()
         {
-            _mockEventsClient = new Mock<IEventsClient>();
-            _mockSubscriptionsClient = new Mock<ISubscriptionsClient>();
+            _mockEventsClient = new Mock<IEventsClient>();            
             var profile = new AutomapperProfile();
             var config = new MapperConfiguration(cfg => cfg.AddProfile(profile));
             var mapper = new Mapper(config);
-            _sut = new(_mockEventsClient.Object, _mockSubscriptionsClient.Object, mapper);
+            
+            _sut = new(_mockEventsClient.Object, mapper);
         }
 
         [Fact]
@@ -31,9 +29,7 @@ namespace Tests.Controllers
         {
             // Arrange
             _mockEventsClient.Setup(x => x.GetAllActivities())
-                .ReturnsAsync(TestData.GetUserActivityRecords(5));
-            _mockSubscriptionsClient.Setup(x => x.GetAllActivities())
-                .ReturnsAsync(TestData.GetUserActivityRecords(6));
+                .ReturnsAsync(TestData.GetUserActivityRecords(5));            
 
             // Act
             var result = await _sut.Activities();
@@ -41,7 +37,7 @@ namespace Tests.Controllers
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
             var model = Assert.IsAssignableFrom<IEnumerable<ActivitiesOverviewViewModel>>(viewResult.ViewData.Model);
-            model.Count().ShouldBe(11);
+            model.Count().ShouldBe(5);
         }
 
     }

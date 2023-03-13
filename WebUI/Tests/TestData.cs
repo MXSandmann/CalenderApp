@@ -1,11 +1,10 @@
 ﻿using AutoBogus;
-using System.Collections;
 using WebUI.Models;
 using WebUI.Models.Dtos;
 using WebUI.Models.Enums;
 
 namespace Tests
-{    
+{
     internal static class TestData
     {
         internal static IEnumerable<UserActivityRecordDto> GetUserActivityRecords(int count)
@@ -74,10 +73,10 @@ namespace Tests
 
         internal static SubscriptionDto GetSubscriptionDtoWithGivenEventId(Guid id)
         {
-            
+
             return new SubscriptionDto
-            {            
-                EventId = id,                
+            {
+                EventId = id,
                 UserEmail = "mda@gfg",
                 UserName = "Mjuj",
                 SubscriptionId = Guid.NewGuid()

@@ -7,29 +7,22 @@ namespace WebUI.Controllers
 {
     public class ActivitiesController : Controller
     {
-        private readonly IEventsClient _eventsClient;
-        private readonly ISubscriptionsClient _subscriptionsClient;
-        private readonly IMapper _mapper;
+        private readonly IEventsClient _eventsClient;        
+        private readonly IMapper _mapper;        
 
-        public ActivitiesController(IEventsClient eventsClient, ISubscriptionsClient subscriptionsClient, IMapper mapper)
+        public ActivitiesController(IEventsClient eventsClient, IMapper mapper)
         {
-            _eventsClient = eventsClient;
-            _subscriptionsClient = subscriptionsClient;
-            _mapper = mapper;
+            _eventsClient = eventsClient;            
+            _mapper = mapper;            
         }
 
-        [HttpGet("[action]")]        
+        [HttpGet("[action]")]
         public async Task<IActionResult> Activities()
         {
-            var taskEvents = _eventsClient.GetAllActivities();
-            var taskSubscriptions = _subscriptionsClient.GetAllActivities();
-            await Task.WhenAll(taskEvents, taskSubscriptions);
-
-            var activitiesEvents = await taskEvents;
-            var activitiesSubscriptions = await taskSubscriptions;
-            var joined = activitiesEvents.Concat(activitiesSubscriptions);
-
-            return View(_mapper.Map<IEnumerable<ActivitiesOverviewViewModel>>(joined));
+            // Get all activities from for example EventService
+            // Events and Subscription share one mongo database
+            var records = await _eventsClient.GetAllActivities();                                     
+            return View(_mapper.Map<IEnumerable<ActivitiesOverviewViewModel>>(records.OrderByDescending(x => x.TimeOfAction)));
         }
     }
 }

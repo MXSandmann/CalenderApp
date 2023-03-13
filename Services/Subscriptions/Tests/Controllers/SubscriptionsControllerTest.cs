@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Newtonsoft.Json;
+using System.Diagnostics;
 using WebAPI.Controllers;
 
 namespace Tests.Controllers
@@ -25,7 +26,8 @@ namespace Tests.Controllers
             var profile = new AutomapperProfile();
             var config = new MapperConfiguration(cfg => cfg.AddProfile(profile));
             _mapper = new Mapper(config);
-            _sut = new SubscriptionsController(_mockLogger.Object, _mockService.Object, _mapper);
+            var activitySource = new ActivitySource("test");
+            _sut = new SubscriptionsController(_mockLogger.Object, _mockService.Object, _mapper, activitySource);
         }
 
         [Fact]

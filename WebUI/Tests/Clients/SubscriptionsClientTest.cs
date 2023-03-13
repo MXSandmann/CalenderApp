@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Moq;
 using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
@@ -7,7 +6,6 @@ using Shouldly;
 using System.Net;
 using WebUI.Clients;
 using WebUI.Clients.Contracts;
-using WebUI.Models;
 using WebUI.Models.Dtos;
 
 namespace Tests.Clients
@@ -19,7 +17,7 @@ namespace Tests.Clients
 
         public SubscriptionsClientTest()
         {
-            _mockHttpHandler= new MockHttpMessageHandler();
+            _mockHttpHandler = new MockHttpMessageHandler();
             var mockClient = new HttpClient(_mockHttpHandler)
             {
                 BaseAddress = new Uri("http://random")
@@ -35,7 +33,7 @@ namespace Tests.Clients
             var dto = TestData.GetNotificationDto();
             _mockHttpHandler.When("/Notifications")
                 .Respond(HttpStatusCode.OK, new StringContent(JsonConvert.SerializeObject(dto)));
-            
+
             // Act
             var result = await _sut.AddNotification(dto);
 
@@ -119,7 +117,7 @@ namespace Tests.Clients
 
             // Assert
             results.ShouldBeAssignableTo<IEnumerable<SubscriptionDto>>();
-            results.ShouldBeEmpty();            
+            results.ShouldBeEmpty();
         }
 
 
@@ -137,7 +135,7 @@ namespace Tests.Clients
 
             // Assert
             results.ShouldBeAssignableTo<SubscriptionDto>();
-            results.ShouldNotBeNull();            
+            results.ShouldNotBeNull();
         }
 
         [Fact]
@@ -181,7 +179,7 @@ namespace Tests.Clients
             var func = async () => await _sut.UpdateSubscription(new SubscriptionDto());
 
             // Assert
-            await func.ShouldThrowAsync<HttpRequestException>();            
+            await func.ShouldThrowAsync<HttpRequestException>();
         }
     }
 }
