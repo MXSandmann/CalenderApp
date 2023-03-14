@@ -1,4 +1,4 @@
-﻿namespace ApplicationCore.Models
+﻿namespace WebUI.Models
 {
     public class PaginationResponse<T>
     {

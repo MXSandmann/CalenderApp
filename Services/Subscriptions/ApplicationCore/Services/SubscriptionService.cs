@@ -1,5 +1,5 @@
 ﻿using ApplicationCore.Models.Entities;
-using ApplicationCore.Repositories;
+using ApplicationCore.Repositories.Contracts;
 using ApplicationCore.Services.Contracts;
 
 namespace ApplicationCore.Services

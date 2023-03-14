@@ -33,7 +33,7 @@ namespace WebUI.Clients
         public async Task<SubscriptionDto> AddSubscription(SubscriptionDto subscriptionDto)
         {
             var response = await _httpClient.PostAsJsonAsync("Subscriptions", subscriptionDto);
-            if(!response.IsSuccessStatusCode)
+            if (!response.IsSuccessStatusCode)
             {
                 _logger.LogInformation("--> Http request on SubsciptionsService unsuccessful, status code: {responseMessage.StatusCode}", response.StatusCode);
                 throw new HttpRequestException($"Error during creating an event: {response.StatusCode}");
@@ -44,10 +44,18 @@ namespace WebUI.Clients
             return newSubscription;
         }
 
+        public async Task<IEnumerable<UserActivityRecordDto>> GetAllActivities()
+        {
+            var results = await _httpClient.GetFromJsonAsync<IEnumerable<UserActivityRecordDto>>("Activities");
+            if (results == null)
+                return Enumerable.Empty<UserActivityRecordDto>();
+            return results;
+        }
+
         public async Task<IEnumerable<SubscriptionDto>> GetAllSubscriptions()
         {
             var subscriptions = await _httpClient.GetFromJsonAsync<IEnumerable<SubscriptionDto>>("Subscriptions");
-            if(subscriptions == null || !subscriptions.Any()) return Enumerable.Empty<SubscriptionDto>();
+            if (subscriptions == null || !subscriptions.Any()) return Enumerable.Empty<SubscriptionDto>();
             return subscriptions;
         }
 

@@ -1,13 +1,24 @@
-﻿using ApplicationCore.Models;
-using AutoBogus;
+﻿using AutoBogus;
 using WebUI.Models;
 using WebUI.Models.Dtos;
 using WebUI.Models.Enums;
 
 namespace Tests
-{    
+{
     internal static class TestData
     {
+        internal static IEnumerable<UserActivityRecordDto> GetUserActivityRecords(int count)
+        {
+            var records = new List<UserActivityRecordDto>();
+            var faker = AutoFaker.Create();
+            for (int i = 0; i < count; i++)
+            {
+                var record = faker.Generate<UserActivityRecordDto>();
+                records.Add(record);
+            }
+            return records;
+        }
+
         internal static PaginationResponse<UserEventDto> GetPaginationResponse()
         {
             var events = new List<UserEventDto>();
@@ -62,10 +73,10 @@ namespace Tests
 
         internal static SubscriptionDto GetSubscriptionDtoWithGivenEventId(Guid id)
         {
-            
+
             return new SubscriptionDto
-            {            
-                EventId = id,                
+            {
+                EventId = id,
                 UserEmail = "mda@gfg",
                 UserName = "Mjuj",
                 SubscriptionId = Guid.NewGuid()

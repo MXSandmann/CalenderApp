@@ -50,5 +50,5 @@ namespace WebUI.Models
                 && certainDays.HasFlag(CertainDays.Thursday)
                 && certainDays.HasFlag(CertainDays.Friday);
         }
-    }    
+    }
 }

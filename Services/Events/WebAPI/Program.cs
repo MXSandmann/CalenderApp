@@ -48,6 +48,10 @@ builder.Services.AddOpenTelemetry().WithTracing(tracerProviderBuilder =>
     });
 });
 builder.Services.AddSingleton(new ActivitySource(serviceName));
+builder.Services.AddMediatR(c =>
+    c.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
+builder.Services.AddScoped<IUserActivityService, UserActivityService>();
+builder.Services.AddScoped<IUserActivityRepository, UserActivityRepository>();
 
 var app = builder.Build();
 

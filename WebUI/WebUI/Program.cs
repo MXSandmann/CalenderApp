@@ -1,12 +1,12 @@
 using FluentValidation;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
+using System.Diagnostics;
 using System.Reflection;
 using WebUI.Clients;
 using WebUI.Clients.Contracts;
 using WebUI.Models;
 using WebUI.Validators;
-using OpenTelemetry.Trace;
-using OpenTelemetry.Resources;
-using System.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 

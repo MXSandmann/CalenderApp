@@ -1,5 +1,4 @@
-﻿using ApplicationCore.Models;
-using Microsoft.AspNetCore.WebUtilities;
+﻿using Microsoft.AspNetCore.WebUtilities;
 using Newtonsoft.Json;
 using WebUI.Clients.Contracts;
 using WebUI.Models;
@@ -21,7 +20,7 @@ namespace WebUI.Clients
 
         public async Task<UserEventDto> AddNewUserEvent(UserEventDto userEventDto, RecurrencyRuleDto recurrencyRuleDto)
         {
-            if(userEventDto.HasRecurrency)
+            if (userEventDto.HasRecurrency)
                 userEventDto.RecurrencyRule = recurrencyRuleDto;
 
             var responseMessage = await _httpClient.PostAsJsonAsync("Events/Create", userEventDto);
@@ -30,8 +29,8 @@ namespace WebUI.Clients
                 _logger.LogInformation("--> Http request on EventsService unsuccessful, status code: {responseMessage.StatusCode}", responseMessage.StatusCode);
                 throw new HttpRequestException($"Error during creating an event: {responseMessage.StatusCode}");
             }
-                
-            var content =  await responseMessage.Content.ReadAsStringAsync();
+
+            var content = await responseMessage.Content.ReadAsStringAsync();
             var newUserEvent = JsonConvert.DeserializeObject<UserEventDto>(content);
             ArgumentNullException.ThrowIfNull(newUserEvent);
             return newUserEvent;
@@ -40,7 +39,7 @@ namespace WebUI.Clients
         public async Task<IEnumerable<CalendarEvent>> GetCalendarEvents()
         {
             var calendarEvents = await _httpClient.GetFromJsonAsync<IEnumerable<CalendarEvent>>("Home");
-            if(calendarEvents == null
+            if (calendarEvents == null
                 || !calendarEvents.Any())
                 return Enumerable.Empty<CalendarEvent>();
             return calendarEvents;
@@ -61,31 +60,31 @@ namespace WebUI.Clients
             var content = await responseMessage.Content.ReadAsStringAsync();
             var dict = JsonConvert.DeserializeObject<Dictionary<Guid, string>>(content);
             ArgumentNullException.ThrowIfNull(dict);
-            MergeSubscriptionsWithEventNames(dict, subscriptions);            
+            MergeSubscriptionsWithEventNames(dict, subscriptions);
         }
 
         private static void MergeSubscriptionsWithEventNames(Dictionary<Guid, string> dict, IEnumerable<SubscriptionDto> subscriptions)
         {
             foreach (var subscr in subscriptions)
             {
-                if(!dict.TryGetValue(subscr.EventId, out var eventName)) continue;
+                if (!dict.TryGetValue(subscr.EventId, out var eventName)) continue;
                 subscr.EventName = eventName;
-            }            
+            }
         }
 
         public async Task<IEnumerable<UserEventDto>> GetUserEvents(string sortBy)
         {
             var events = await _httpClient.GetFromJsonAsync<IEnumerable<UserEventDto>>("Events");
-            if(events == null || !events.Any())
+            if (events == null || !events.Any())
                 return Enumerable.Empty<UserEventDto>();
 
             // Sort items according to the parameter sortBy
-            if(events == null)
+            if (events == null)
                 return Enumerable.Empty<UserEventDto>();
             if (sortBy != null
                 && sortBy.Equals("Place"))
                 return events.OrderBy(x => x.Place);
-            if(sortBy != null
+            if (sortBy != null
                 && sortBy.Equals("Category"))
                 return events.OrderBy(x => x.Category);
             return events.OrderBy(x => x.Date).ThenBy(x => x.StartTime);
@@ -94,7 +93,7 @@ namespace WebUI.Clients
         public async Task RemoveUserEvent(Guid id)
         {
             var response = await _httpClient.DeleteAsync($"Events/Remove/{id}");
-            if(!response.IsSuccessStatusCode)
+            if (!response.IsSuccessStatusCode)
             {
                 _logger.LogInformation("--> Http request on EventsService unsuccessful, status code: {responseMessage.StatusCode}", response.StatusCode);
                 throw new HttpRequestException($"Error during removing an event: {response.StatusCode}");
@@ -120,7 +119,7 @@ namespace WebUI.Clients
         }
 
         public async Task<(IEnumerable<UserEventDto>, int)> GetSearchResults(SearchUserEventsDto searchDto)
-        {            
+        {
             var queryDict = new Dictionary<string, string>
             {
                 { "entry", searchDto.Entry },
@@ -134,10 +133,18 @@ namespace WebUI.Clients
 
             _logger.LogInformation("Received search results: {value}", JsonConvert.SerializeObject(result));
 
-            if(result?.Data == null)
+            if (result?.Data == null)
                 return (Enumerable.Empty<UserEventDto>(), 0);
 
             return (result.Data, result.Count);
+        }
+
+        public async Task<IEnumerable<UserActivityRecordDto>> GetAllActivities()
+        {
+            var results = await _httpClient.GetFromJsonAsync<IEnumerable<UserActivityRecordDto>>("Activities");
+            if (results == null)
+                return Enumerable.Empty<UserActivityRecordDto>();
+            return results;
         }
     }
 }

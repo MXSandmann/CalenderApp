@@ -1,0 +1,38 @@
+﻿@{
+    ViewData["Title"] = "User Activities Overview";
+}
+
+<h1>Activities Overview</h1>
+<table class="table">
+    <tr>
+        <th>
+            Action
+        </th>
+        <th>
+            User
+        </th>
+        <th>
+            Synopsis
+        </th>
+        <th>
+            Timestamp
+        </th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @item.UserAction
+            </td>   
+            <td>
+                @item.UserName
+            </td>
+            <td>
+                @item.Synopsis
+            </td>
+            <td>
+                @item.TimeOfAction.ToString();
+            </td>
+        </tr>
+    }
+</table>

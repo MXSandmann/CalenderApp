@@ -1,19 +1,19 @@
 ﻿using ApplicationCore.Models.Entities;
 using ApplicationCore.Models.Enums;
+using ApplicationCore.Profiles;
 using ApplicationCore.Repositories.Contracts;
 using ApplicationCore.Services;
 using ApplicationCore.Services.Contracts;
 using AutoMapper;
 using Moq;
 using Shouldly;
-using ApplicationCore.Profiles;
 
 namespace Tests.Services
 {
     public class UserEventServiceTest
     {
         private readonly Mock<IUserEventRepository> _userEventRepoMock;
-        private readonly Mock<IRecurrencyRuleRepository> _recRuleRepoMock;        
+        private readonly Mock<IRecurrencyRuleRepository> _recRuleRepoMock;
 
         // System under test
         private readonly IUserEventService _sut;
@@ -57,7 +57,7 @@ namespace Tests.Services
             results.Count().ShouldBe(2);
             results.ToList().ForEach(x => x.ShouldBeOfType<UserEvent>());
         }
-              
+
         [Fact]
         public async Task GetById_ShouldReturnEvent_WhenFound()
         {
@@ -77,7 +77,7 @@ namespace Tests.Services
             result.ShouldNotBeNull();
             result.ShouldBeOfType<UserEvent>();
         }
-               
+
         [Theory]
         [MemberData(nameof(ProvideTestData))]
         public async Task GetCalendarEvents_ShouldReturnManyEvents_WhenIsRecurring(UserEvent userEvent, int createdEventsCount)

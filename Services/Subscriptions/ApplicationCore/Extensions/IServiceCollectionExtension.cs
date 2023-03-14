@@ -1,5 +1,4 @@
-﻿using ApplicationCore.Factories;
-using ApplicationCore.Jobs.Listeners;
+﻿using ApplicationCore.Jobs.Listeners;
 using Microsoft.Extensions.DependencyInjection;
 using Quartz;
 using Quartz.Impl;
@@ -28,8 +27,8 @@ namespace ApplicationCore.Extensions
             scheduler.Start().Wait();
             scheduler.ListenerManager.AddTriggerListener(new SendEmailTriggerListener());
             scheduler.ListenerManager.AddJobListener(new SendEmailJobListener());
-            scheduler.ListenerManager.AddSchedulerListener(new SendEmailSchedulerListener());            
+            scheduler.ListenerManager.AddSchedulerListener(new SendEmailSchedulerListener());
             return scheduler;
-        }       
+        }
     }
 }

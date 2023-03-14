@@ -88,14 +88,14 @@ namespace Tests.Controllers
             _mockSubscriptionsClient.Setup(x => x.GetSubscriptionById(subscriptionId)).ReturnsAsync(subscrDto);
             _mockSubscriptionsClient.Setup(x => x.AddNotification(It.IsAny<NotificationDto>())).Verifiable();
 
-            _mockEventClient.Setup(x => x.GetUserEventById(subscrDto.EventId)).ReturnsAsync(TestData.GetUserEventDtos().First());            
-            
+            _mockEventClient.Setup(x => x.GetUserEventById(subscrDto.EventId)).ReturnsAsync(TestData.GetUserEventDtos().First());
+
 
             // Act
             var result = await _sut.CreateNotification(notificationViewModel) as RedirectToActionResult;
 
             // Assert
-            Assert.NotNull(result);            
+            Assert.NotNull(result);
             Assert.Equal(nameof(SubscriptionsController.SubscriptionsOverview), result.ActionName);
         }
 
@@ -109,14 +109,14 @@ namespace Tests.Controllers
             var viewModel = new CreateSubscriptionViewModel
             {
                 UserEmail = "blala@dfdf.es",
-                UserName = "Gggg"                
+                UserName = "Gggg"
             };
 
             // Act
             var result = await _sut.Edit(viewModel, id) as RedirectToActionResult;
 
             // Assert
-            Assert.NotNull(result);            
+            Assert.NotNull(result);
             Assert.Equal(nameof(SubscriptionsController.SubscriptionsOverview), result.ActionName);
         }
     }

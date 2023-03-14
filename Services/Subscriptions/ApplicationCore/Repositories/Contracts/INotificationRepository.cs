@@ -1,6 +1,6 @@
 ﻿using ApplicationCore.Models.Entities;
 
-namespace ApplicationCore.Repositories
+namespace ApplicationCore.Repositories.Contracts
 {
     public interface INotificationRepository
     {

@@ -14,7 +14,7 @@ namespace WebUI.Controllers
         private readonly IMapper _mapper;
 
         public EventsOverviewController(IValidator<CreateUpdateUserEventViewModel> validator, IMapper mapper, IEventsClient eventsClient)
-        {            
+        {
             _validator = validator;
             _mapper = mapper;
             _eventsClient = eventsClient;
@@ -28,7 +28,7 @@ namespace WebUI.Controllers
             ViewBag.SortCategoryParameter = "Category";
             ViewBag.SortPlaceParameter = "Place";
             var userEvents = await _eventsClient.GetUserEvents(sortBy);
-            var userEventViewModels = _mapper.Map<IEnumerable<GetUserEventViewModel>>(userEvents);            
+            var userEventViewModels = _mapper.Map<IEnumerable<GetUserEventViewModel>>(userEvents);
             return View("EventsOverview", userEventViewModels);
         }
 
@@ -42,19 +42,19 @@ namespace WebUI.Controllers
         public async Task<IActionResult> Create(CreateUpdateUserEventViewModel newModel)
         {
             var validationResult = _validator.Validate(newModel);
-            if (!ModelState.IsValid)            
-                return BadRequest(ModelState);            
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
             if (!validationResult.IsValid)
-                return BadRequest(validationResult.Errors);                      
+                return BadRequest(validationResult.Errors);
 
-            await _eventsClient.AddNewUserEvent(_mapper.Map<UserEventDto>(newModel), _mapper.Map<RecurrencyRuleDto>(newModel));            
+            await _eventsClient.AddNewUserEvent(_mapper.Map<UserEventDto>(newModel), _mapper.Map<RecurrencyRuleDto>(newModel));
             return RedirectToAction(nameof(Events));
         }
 
         [HttpGet("[action]/{id:guid}")]
         public async Task<IActionResult> Edit(Guid id)
-        {            
-            var eventToUpdate = await _eventsClient.GetUserEventById(id);         
+        {
+            var eventToUpdate = await _eventsClient.GetUserEventById(id);
             return View(nameof(Create), _mapper.Map<CreateUpdateUserEventViewModel>(eventToUpdate));
         }
 
@@ -62,8 +62,8 @@ namespace WebUI.Controllers
         public async Task<IActionResult> Edit(CreateUpdateUserEventViewModel model)
         {
             var validationResult = _validator.Validate(model);
-            if (!ModelState.IsValid)           
-                return BadRequest(ModelState);            
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
 

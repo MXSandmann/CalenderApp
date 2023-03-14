@@ -58,6 +58,7 @@ namespace WebUI.Profiles
 
             CreateMap<SmartSearchViewModel, SearchUserEventsDto>().ReverseMap();
 
+            CreateMap<UserActivityRecordDto, ActivitiesOverviewViewModel>();
         }
 
         private static CertainDays ComputeCertainDays(CreateUpdateUserEventViewModel model)

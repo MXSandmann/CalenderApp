@@ -21,7 +21,7 @@ namespace Tests.Controllers
 
         public HomeControllerTest()
         {
-            _mockEventsClient= new Mock<IEventsClient>();
+            _mockEventsClient = new Mock<IEventsClient>();
             var mockLogger = new Mock<ILogger<HomeController>>();
             var profile = new AutomapperProfile();
             var config = new MapperConfiguration(cfg => cfg.AddProfile(profile));

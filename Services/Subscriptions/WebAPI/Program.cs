@@ -2,7 +2,7 @@ using ApplicationCore.Factories;
 using ApplicationCore.Jobs;
 using ApplicationCore.Jobs.Listeners;
 using ApplicationCore.Profiles;
-using ApplicationCore.Repositories;
+using ApplicationCore.Repositories.Contracts;
 using ApplicationCore.Services;
 using ApplicationCore.Services.Contracts;
 using Infrastructure.DataContext;
@@ -57,6 +57,10 @@ builder.Services.AddOpenTelemetry().WithTracing(tracerProviderBuilder =>
         opt.ApiKey = builder.Configuration.GetValue<string>("Honeycomb:ApiKey");
     });
 });
+builder.Services.AddMediatR(c =>
+    c.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
+builder.Services.AddScoped<IUserActivityService, UserActivityService>();
+builder.Services.AddScoped<IUserActivityRepository, UserActivityRepository>();
 
 var app = builder.Build();
 

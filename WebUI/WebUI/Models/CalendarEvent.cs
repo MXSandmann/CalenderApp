@@ -15,6 +15,6 @@ namespace WebUI.Models
         [JsonProperty("startTime")]
         public DateTime StartTime { get; set; }
         [JsonProperty("endTime")]
-        public DateTime EndTime { get; set; }        
+        public DateTime EndTime { get; set; }
     }
 }
