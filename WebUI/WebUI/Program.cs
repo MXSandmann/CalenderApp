@@ -20,9 +20,14 @@ builder.Services.AddHttpClient<IEventsClient, EventsClient>((client) =>
         client.BaseAddress = new Uri(builder.Configuration.GetValue<string>("Services:Gateway") + "/e/");
     });
 builder.Services.AddHttpClient<ISubscriptionsClient, SubscriptionsClient>((client) =>
-{
-    client.BaseAddress = new Uri(builder.Configuration.GetValue<string>("Services:Gateway") + "/s/");
-});
+    {
+        client.BaseAddress = new Uri(builder.Configuration.GetValue<string>("Services:Gateway") + "/s/");
+    });
+builder.Services.AddHttpClient<IAuthenticationClient, AuthenticationClient>((client) =>
+    {
+        client.BaseAddress = new Uri(builder.Configuration.GetValue<string>("Services:Gateway") + "/au/");
+    
+    });
 
 var serviceName = "EventingWebsite";
 var serviceVersion = "1.0.0";

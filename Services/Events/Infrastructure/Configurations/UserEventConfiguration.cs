@@ -29,7 +29,6 @@ namespace Infrastructure.Configurations
                 ImageUrl = "test image url from seed",
                 HasRecurrency = true
             });
-
         }
     }
 }

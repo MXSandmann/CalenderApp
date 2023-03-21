@@ -1,7 +1,9 @@
-﻿using AutoMapper;
+﻿using ApplicationCore.Models.Dtos;
+using AutoMapper;
 using WebUI.Models;
 using WebUI.Models.Dtos;
 using WebUI.Models.Enums;
+using WebUI.Models.ViewModels;
 
 namespace WebUI.Profiles
 {
@@ -59,6 +61,8 @@ namespace WebUI.Profiles
             CreateMap<SmartSearchViewModel, SearchUserEventsDto>().ReverseMap();
 
             CreateMap<UserActivityRecordDto, ActivitiesOverviewViewModel>();
+
+            CreateMap<UserDto, LoginViewModel>().ReverseMap();
         }
 
         private static CertainDays ComputeCertainDays(CreateUpdateUserEventViewModel model)
