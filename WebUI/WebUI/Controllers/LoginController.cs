@@ -8,8 +8,7 @@ using WebUI.Models.ViewModels;
 using WebUI.Models.Dtos;
 
 namespace WebUI.Controllers
-{
-    [Route("[controller]")]
+{    
     public class LoginController : Controller
     {
         private readonly IAuthenticationClient _client;
@@ -23,13 +22,13 @@ namespace WebUI.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
+        [HttpGet("[action]")]
         public IActionResult Login()
         {
             return View();
         }
 
-        [HttpPost]
+        [HttpPost("[action]")]
         public async Task<IActionResult> Login(LoginViewModel loginViewModel)
         {
             _logger.LogInformation("--> login action started: {value}", JsonConvert.SerializeObject(loginViewModel));
@@ -40,6 +39,13 @@ namespace WebUI.Controllers
 
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claims);
 
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index", "Home");
         }
     }
