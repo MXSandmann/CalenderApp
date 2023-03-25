@@ -1,5 +1,4 @@
-﻿using ApplicationCore.Models.Dtos;
-using AutoMapper;
+﻿using AutoMapper;
 using WebUI.Models;
 using WebUI.Models.Dtos;
 using WebUI.Models.Enums;

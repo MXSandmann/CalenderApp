@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebUI.Clients.Contracts;
 using WebUI.Models;
@@ -7,6 +8,7 @@ using WebUI.Models.Dtos;
 
 namespace WebUI.Controllers
 {
+    [Authorize(Roles = "User")]
     public class EventsOverviewController : Controller
     {
         private readonly IEventsClient _eventsClient;

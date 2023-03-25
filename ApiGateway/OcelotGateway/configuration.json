@@ -134,7 +134,7 @@
         }
       ],
       "UpstreamPathTemplate": "/au/login",
-      "UpstreamHttpMethod": [ "POST", "PUT", "GET" ]
+      "UpstreamHttpMethod": [ "GET" ]
     }
   ]
 }

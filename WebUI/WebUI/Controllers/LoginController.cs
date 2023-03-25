@@ -1,9 +1,11 @@
-﻿using ApplicationCore.Models.Dtos;
-using AutoMapper;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using WebUI.Clients.Contracts;
 using WebUI.Models.ViewModels;
+using WebUI.Models.Dtos;
 
 namespace WebUI.Controllers
 {
@@ -32,12 +34,12 @@ namespace WebUI.Controllers
         {
             _logger.LogInformation("--> login action started: {value}", JsonConvert.SerializeObject(loginViewModel));
             if(!ModelState.IsValid)
-            {
-                _logger.LogInformation("--> view model invalid");
-                return BadRequest(ModelState);
-            }
-            _logger.LogInformation("--> getting token");
-            var token = await _client.LoginUser(_mapper.Map<UserDto>(loginViewModel));            
+                return BadRequest(ModelState);            
+            
+            var claims = await _client.LoginUser(_mapper.Map<UserDto>(loginViewModel));
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claims);
+
             return RedirectToAction("Index", "Home");
         }
     }

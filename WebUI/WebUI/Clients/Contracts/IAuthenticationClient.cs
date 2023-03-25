@@ -1,9 +1,10 @@
-﻿using ApplicationCore.Models.Dtos;
+﻿using System.Security.Claims;
+using WebUI.Models.Dtos;
 
 namespace WebUI.Clients.Contracts
 {
     public interface IAuthenticationClient
     {
-        Task<string> LoginUser(UserDto userDto);
+        Task<ClaimsPrincipal> LoginUser(UserDto userDto);
     }
 }

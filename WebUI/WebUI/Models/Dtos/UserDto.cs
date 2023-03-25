@@ -1,4 +1,4 @@
-﻿namespace ApplicationCore.Models.Dtos
+﻿namespace WebUI.Models.Dtos
 {
     public class UserDto
     {

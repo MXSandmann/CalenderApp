@@ -1,4 +1,5 @@
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using System.Diagnostics;
@@ -7,6 +8,9 @@ using WebUI.Clients;
 using WebUI.Clients.Contracts;
 using WebUI.Models;
 using WebUI.Validators;
+using WebUI.Jwt;
+using WebUI.Jwt.Contracts;
+using WebUI.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,7 +30,8 @@ builder.Services.AddHttpClient<ISubscriptionsClient, SubscriptionsClient>((clien
 builder.Services.AddHttpClient<IAuthenticationClient, AuthenticationClient>((client) =>
     {
         client.BaseAddress = new Uri(builder.Configuration.GetValue<string>("Services:Gateway") + "/au/");
-    
+        //client.BaseAddress = new Uri("http://localhost:5193/api/");
+
     });
 
 var serviceName = "EventingWebsite";
@@ -50,6 +55,10 @@ builder.Services.AddOpenTelemetry().WithTracing(tracerProviderBuilder =>
     });
 });
 builder.Services.AddSingleton(new ActivitySource(serviceName));
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie();
+builder.Services.Configure<AuthenticationOptions>(builder.Configuration.GetSection("Authentication"));
+builder.Services.AddScoped<IJwtValidator, JwtValidator>();
 
 
 var app = builder.Build();
@@ -63,9 +72,12 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
