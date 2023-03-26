@@ -14,7 +14,7 @@ namespace WebUI.Jwt
 
         public JwtValidator(IOptions<AuthenticationOptions> authenticationOptions)
         {
-            
+
             _authenticationOptions = authenticationOptions.Value;
         }
 

@@ -6,11 +6,13 @@ using System.Diagnostics;
 using System.Reflection;
 using WebUI.Clients;
 using WebUI.Clients.Contracts;
-using WebUI.Models;
-using WebUI.Validators;
 using WebUI.Jwt;
 using WebUI.Jwt.Contracts;
+using WebUI.Models;
 using WebUI.Options;
+using WebUI.Services;
+using WebUI.Services.Contracts;
+using WebUI.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -59,6 +61,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     .AddCookie();
 builder.Services.Configure<AuthenticationOptions>(builder.Configuration.GetSection("Authentication"));
 builder.Services.AddScoped<IJwtValidator, JwtValidator>();
+builder.Services.AddTransient<IPasswordHasher, Sha512PasswordHasher>();
 
 
 var app = builder.Build();

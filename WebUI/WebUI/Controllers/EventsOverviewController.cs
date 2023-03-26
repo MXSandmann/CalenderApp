@@ -8,7 +8,7 @@ using WebUI.Models.Dtos;
 
 namespace WebUI.Controllers
 {
-    [Authorize(Roles = "User")]
+    [Authorize]
     public class EventsOverviewController : Controller
     {
         private readonly IEventsClient _eventsClient;
