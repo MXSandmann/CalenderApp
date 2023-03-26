@@ -1,6 +1,13 @@
 using ApplicationCore.Options;
 using ApplicationCore.Providers;
 using ApplicationCore.Providers.Contracts;
+using ApplicationCore.Repositories.Contracts;
+using ApplicationCore.Services;
+using ApplicationCore.Services.Contracts;
+using Infrastructure.DataContext;
+using Infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore;
+using WebAPI.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +19,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.Configure<AuthenticationOptions>(builder.Configuration.GetSection("Authentication"));
 builder.Services.AddScoped<IJwtProvider, JwtProvider>();
+builder.Services.AddDbContext<UserDataContext>(opt => opt.UseNpgsql(builder.Configuration.GetConnectionString("Postgresql")));
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 
@@ -27,5 +37,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+await app.UpdateDatabase(builder.Configuration);
 
 app.Run();

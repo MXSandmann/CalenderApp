@@ -14,7 +14,7 @@ namespace ApplicationCore.Providers
 
         public JwtProvider(IOptions<AuthenticationOptions> authenticationOptions)
         {
-            
+
             _authenticationOptions = authenticationOptions.Value;
         }
 
