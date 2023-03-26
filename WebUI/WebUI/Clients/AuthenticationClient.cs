@@ -33,11 +33,21 @@ namespace WebUI.Clients
             var url = QueryHelpers.AddQueryString("Login", queryParams);
             var responseMessage = await _httpClient.GetAsync(url);
             if (!responseMessage.IsSuccessStatusCode)
-                throw new BadHttpRequestException($"Unpossible to login user {userDto.UserName}");
+                throw new BadHttpRequestException($"Unable to login user {userDto.UserName}");
 
             var content = await responseMessage.Content.ReadAsStringAsync();
             var claimsPrincipal = _jwtValidator.ValidateToken(content);
             return claimsPrincipal;
+        }
+
+        public async Task RegisterNewUser(UserRegistrationDto userRegistrationDto)
+        {
+            var hashedPassword = _passwordHasher.HashPassword(userRegistrationDto.Password);
+            userRegistrationDto.Password = hashedPassword;
+            var responseMessage = await _httpClient.PostAsJsonAsync("Register", userRegistrationDto);
+            if (!responseMessage.IsSuccessStatusCode)
+                throw new BadHttpRequestException($"Unable to register user {userRegistrationDto.UserName}");
+            return;
         }
     }
 }

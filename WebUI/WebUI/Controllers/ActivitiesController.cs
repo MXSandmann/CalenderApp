@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using WebUI.Clients.Contracts;
-using WebUI.Models;
+using WebUI.Models.ViewModels;
 
 namespace WebUI.Controllers
 {

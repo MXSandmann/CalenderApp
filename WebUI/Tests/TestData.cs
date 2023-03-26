@@ -2,6 +2,7 @@
 using WebUI.Models;
 using WebUI.Models.Dtos;
 using WebUI.Models.Enums;
+using WebUI.Models.ViewModels;
 
 namespace Tests
 {

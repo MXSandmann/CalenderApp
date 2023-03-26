@@ -4,7 +4,7 @@ using Moq;
 using Shouldly;
 using WebUI.Clients.Contracts;
 using WebUI.Controllers;
-using WebUI.Models;
+using WebUI.Models.ViewModels;
 using WebUI.Profiles;
 
 namespace Tests.Controllers

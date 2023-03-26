@@ -6,7 +6,7 @@ using WebUI.Models.Dtos;
 using WebUI.Models.Enums;
 using RecurrencyEnum = WebUI.Models.Enums.Recurrency;
 
-namespace WebUI.Models
+namespace WebUI.Models.ViewModels
 {
     public class GetUserEventViewModel
     {

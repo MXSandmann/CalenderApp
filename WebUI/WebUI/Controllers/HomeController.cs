@@ -4,8 +4,8 @@ using Newtonsoft.Json;
 using OpenTelemetry;
 using System.Diagnostics;
 using WebUI.Clients.Contracts;
-using WebUI.Models;
 using WebUI.Models.Dtos;
+using WebUI.Models.ViewModels;
 
 namespace WebUI.Controllers;
 

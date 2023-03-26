@@ -8,7 +8,7 @@ using WebUI.Clients;
 using WebUI.Clients.Contracts;
 using WebUI.Jwt;
 using WebUI.Jwt.Contracts;
-using WebUI.Models;
+using WebUI.Models.ViewModels;
 using WebUI.Options;
 using WebUI.Services;
 using WebUI.Services.Contracts;
@@ -20,6 +20,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IValidator<CreateUpdateUserEventViewModel>, DateValidator>();
 builder.Services.AddScoped<IValidator<CreateSubscriptionViewModel>, SubscriptionValidator>();
+builder.Services.AddScoped<IValidator<RegisterViewModel>, RegisterValidator>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddHttpClient<IEventsClient, EventsClient>((client) =>
     {

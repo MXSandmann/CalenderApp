@@ -125,7 +125,7 @@
       "UpstreamHttpMethod": [ "POST", "PUT", "GET" ]
     },
     {
-      "DownstreamPathTemplate": "/api/Login",
+      "DownstreamPathTemplate": "/api/Account/Login",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -135,6 +135,18 @@
       ],
       "UpstreamPathTemplate": "/au/login",
       "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Account/Register",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "authentication",
+          "Port": 5050
+        }
+      ],
+      "UpstreamPathTemplate": "/au/register",
+      "UpstreamHttpMethod": [ "POST" ]
     }
   ]
 }

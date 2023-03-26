@@ -1,4 +1,4 @@
-﻿namespace WebUI.Models
+﻿namespace WebUI.Models.ViewModels
 {
     public class SmartSearchViewModel
     {

@@ -1,4 +1,6 @@
-﻿using ApplicationCore.Providers.Contracts;
+﻿using ApplicationCore.Models.Entities;
+using ApplicationCore.Models.Enums;
+using ApplicationCore.Providers.Contracts;
 using ApplicationCore.Repositories.Contracts;
 using ApplicationCore.Services.Contracts;
 using System.Security.Claims;
@@ -16,9 +18,17 @@ namespace ApplicationCore.Services
             _jwtProvider = jwtProvider;
         }
 
-        public Task CreateUser(string username, string password)
+        public async Task<User> CreateUser(string username, string password, string email)
         {
-            throw new NotImplementedException();
+            var newUser = new User
+            {
+                UserName = username,
+                Password = password,
+                Email = email,
+                Role = Role.User
+            };
+            var user = await _userRepository.AddNewUser(newUser);
+            return user;
         }
 
         public async Task<string> LoginUser(string username, string password)

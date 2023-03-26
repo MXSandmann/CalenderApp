@@ -2,7 +2,7 @@
 {
     public enum Role
     {
-        Guest,
+        None,
         User,
         Instructor,
         Admin

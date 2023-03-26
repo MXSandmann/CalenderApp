@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using WebUI.Clients.Contracts;
+using WebUI.Models;
 using WebUI.Models.Dtos;
 using WebUI.Models.ViewModels;
 
@@ -15,12 +17,14 @@ namespace WebUI.Controllers
         private readonly IAuthenticationClient _client;
         private readonly ILogger<AccountController> _logger;
         private readonly IMapper _mapper;
+        private readonly IValidator<RegisterViewModel> _registerValidator;
 
-        public AccountController(IAuthenticationClient client, IMapper mapper, ILogger<AccountController> logger)
+        public AccountController(IAuthenticationClient client, IMapper mapper, ILogger<AccountController> logger, IValidator<RegisterViewModel> registerValidator)
         {
             _client = client;
             _mapper = mapper;
             _logger = logger;
+            _registerValidator = registerValidator;
         }
 
         [HttpGet("[action]")]
@@ -57,6 +61,22 @@ namespace WebUI.Controllers
         public IActionResult Register()
         {
             return View();
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Register(RegisterViewModel registerViewModel)
+        {
+            _logger.LogInformation("--> Registrating new user: {value}", JsonConvert.SerializeObject(registerViewModel));
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var validationResult = _registerValidator.Validate(registerViewModel);
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
+
+            await _client.RegisterNewUser(_mapper.Map<UserRegistrationDto>(registerViewModel));
+
+            return RedirectToAction("Index", "Home");
         }
     }
 }

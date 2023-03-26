@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using WebUI.Models;
+using WebUI.Models.ViewModels;
 
 namespace WebUI.Validators
 {

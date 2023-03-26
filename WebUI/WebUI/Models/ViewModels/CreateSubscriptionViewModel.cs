@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using WebUI.Models.Dtos;
 
-namespace WebUI.Models
+namespace WebUI.Models.ViewModels
 {
     public class CreateSubscriptionViewModel
     {

@@ -3,8 +3,8 @@ using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebUI.Clients.Contracts;
-using WebUI.Models;
 using WebUI.Models.Dtos;
+using WebUI.Models.ViewModels;
 
 namespace WebUI.Controllers
 {
@@ -35,12 +35,14 @@ namespace WebUI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(CreateUpdateUserEventViewModel newModel)
         {
             var validationResult = _validator.Validate(newModel);
@@ -54,6 +56,7 @@ namespace WebUI.Controllers
         }
 
         [HttpGet("[action]/{id:guid}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(Guid id)
         {
             var eventToUpdate = await _eventsClient.GetUserEventById(id);
@@ -61,6 +64,7 @@ namespace WebUI.Controllers
         }
 
         [HttpPost("[action]/{id:guid?}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(CreateUpdateUserEventViewModel model)
         {
             var validationResult = _validator.Validate(model);
@@ -76,6 +80,7 @@ namespace WebUI.Controllers
         }
 
         [HttpGet("[action]/{id:guid}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(Guid id)
         {
             await _eventsClient.RemoveUserEvent(id);
