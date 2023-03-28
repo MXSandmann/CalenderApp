@@ -1,3 +1,5 @@
+using ApplicationCore.FileGenerators;
+using ApplicationCore.FileGenerators.Contracts;
 using ApplicationCore.Profiles;
 using ApplicationCore.Repositories.Contracts;
 using ApplicationCore.Services;
@@ -6,6 +8,7 @@ using Infrastructure.DataContext;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
+using OcelotGateway.Middleware;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using System.Diagnostics;
@@ -52,6 +55,7 @@ builder.Services.AddMediatR(c =>
     c.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
 builder.Services.AddScoped<IUserActivityService, UserActivityService>();
 builder.Services.AddScoped<IUserActivityRepository, UserActivityRepository>();
+builder.Services.AddTransient<IIcsFileGenerator, IcsFileGenerator>();
 
 var app = builder.Build();
 
@@ -61,6 +65,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<TraceHandler>(serviceName);
 
 app.UseHttpsRedirection();
 

@@ -86,5 +86,19 @@ namespace WebUI.Controllers
             await _eventsClient.RemoveUserEvent(id);
             return RedirectToAction(nameof(Events));
         }
+
+        [HttpGet("[action]/{id:guid}")]
+        [Authorize(Roles = "Admin, User")]
+        public async Task<IActionResult> Download(Guid id)
+        {
+            var fileDto = await _eventsClient.DownloadEventAsFile(id);
+            if (fileDto == null)
+                return BadRequest("Unable to generate the .ics file");
+
+            return new FileStreamResult(fileDto.ContentStream, fileDto.ContentType)
+            {
+                FileDownloadName = fileDto.FileName
+            };
+        }
     }
 }

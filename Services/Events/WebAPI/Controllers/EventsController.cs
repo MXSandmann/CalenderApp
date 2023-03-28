@@ -5,6 +5,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using System.Text;
 
 namespace WebAPI.Controllers
 {
@@ -89,6 +90,20 @@ namespace WebAPI.Controllers
             var results = await _service.SearchUserEvents(entry, limit, offset);
             _logger.LogInformation("--> Search result with entry \"{value1}\": {value2}", entry, JsonConvert.SerializeObject(results));
             return Ok(results);
+        }
+
+        [HttpGet("[action]/{eventId:guid}")]
+        public async Task<IActionResult> Download(Guid eventId)
+        {
+            var icsFileString = await _service.DownloadICSFile(eventId);
+            var icsByteArray = Encoding.UTF8.GetBytes(icsFileString);
+
+            var memoryStream = new MemoryStream(icsByteArray);
+
+            return new FileStreamResult(memoryStream, "text/calendar")
+            {
+                FileDownloadName = "my-event.ics"
+            };
         }
     }
 }

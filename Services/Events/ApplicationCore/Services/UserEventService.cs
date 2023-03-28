@@ -6,6 +6,10 @@ using ApplicationCore.Models.Enums;
 using ApplicationCore.Repositories.Contracts;
 using ApplicationCore.Services.Contracts;
 using AutoMapper;
+using System.Net.Http.Headers;
+using System.Net;
+using System.Text;
+using ApplicationCore.FileGenerators.Contracts;
 
 namespace ApplicationCore.Services
 {
@@ -14,12 +18,14 @@ namespace ApplicationCore.Services
         private readonly IUserEventRepository _userEventRepository;
         private readonly IRecurrencyRuleRepository _recurrencyRuleRepository;
         private readonly IMapper _mapper;
+        private readonly IIcsFileGenerator _icsFileGenerator;
 
-        public UserEventService(IUserEventRepository repository, IRecurrencyRuleRepository recurrencyRuleRepository, IMapper mapper)
+        public UserEventService(IUserEventRepository repository, IRecurrencyRuleRepository recurrencyRuleRepository, IMapper mapper, IIcsFileGenerator icsFileGenerator)
         {
             _userEventRepository = repository;
             _recurrencyRuleRepository = recurrencyRuleRepository;
             _mapper = mapper;
+            _icsFileGenerator = icsFileGenerator;
         }
 
         public async Task<UserEvent> AddNewUserEvent(UserEvent userEvent, RecurrencyRule recurrencyRule)
@@ -207,6 +213,16 @@ namespace ApplicationCore.Services
             var (results, count) = await _userEventRepository.SearchUserEvents(entry, limit, offset);
             var resultDtos = _mapper.Map<IEnumerable<UserEventDto>>(results);
             return new PaginationResponse<UserEventDto>(resultDtos, count);
+        }
+
+        public async Task<string> DownloadICSFile(Guid eventId)
+        {
+            // Get the event first
+            var userEvent = await _userEventRepository.GetById(eventId);
+            ArgumentNullException.ThrowIfNull(userEvent);
+
+            var icsFileString = _icsFileGenerator.Generate(userEvent);            
+            return icsFileString;
         }
     }
 }

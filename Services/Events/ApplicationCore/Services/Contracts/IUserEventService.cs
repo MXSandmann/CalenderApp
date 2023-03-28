@@ -14,5 +14,6 @@ namespace ApplicationCore.Services.Contracts
         Task<IEnumerable<CalendarEvent>> GetCalendarEvents();
         Task<Dictionary<Guid, string>> GetEventNames(IEnumerable<Guid> eventIds);
         Task<PaginationResponse<UserEventDto>> SearchUserEvents(string entry, int limit, int offset);
+        Task<string> DownloadICSFile(Guid eventId);
     }
 }

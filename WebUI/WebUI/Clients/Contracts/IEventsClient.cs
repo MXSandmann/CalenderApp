@@ -14,6 +14,6 @@ namespace WebUI.Clients.Contracts
         Task AddUserEventNamesForSubscriptions(IEnumerable<SubscriptionDto> subscriptions);
         Task<(IEnumerable<UserEventDto>, int)> GetSearchResults(SearchUserEventsDto searchDto);
         Task<IEnumerable<UserActivityRecordDto>> GetAllActivities();
-
+        Task<FileDto?> DownloadEventAsFile(Guid eventId);
     }
 }

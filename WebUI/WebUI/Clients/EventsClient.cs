@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.WebUtilities;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using Newtonsoft.Json;
 using WebUI.Clients.Contracts;
 using WebUI.Models;
@@ -145,6 +146,26 @@ namespace WebUI.Clients
             if (results == null)
                 return Enumerable.Empty<UserActivityRecordDto>();
             return results;
+        }
+
+        public async Task<FileDto?> DownloadEventAsFile(Guid eventId)
+        {
+            var response = await _httpClient.GetAsync($"Events/Download/{eventId}");
+            if (!response.IsSuccessStatusCode)
+                return null;
+
+            var contentStream = await response.Content.ReadAsStreamAsync();
+            var contentType = response.Content.Headers.ContentType?.ToString();
+            ArgumentNullException.ThrowIfNull(contentType);
+            var fileName = response.Content.Headers.ContentDisposition?.FileName;
+            ArgumentNullException.ThrowIfNull(fileName);
+
+            return new FileDto
+            {
+                ContentStream = contentStream,
+                ContentType = contentType,
+                FileName = fileName
+            };   
         }
     }
 }

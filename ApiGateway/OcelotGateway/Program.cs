@@ -31,8 +31,9 @@ builder.Services.AddOpenTelemetry().WithTracing(tracerProviderBuilder =>
 var app = builder.Build();
 
 app.UseMiddleware<TraceHandler>();
-app.MapGet("/", () => "Hello World!");
+
 app.MapControllers();
+
 await app.UseOcelot();
 
 app.Run();
