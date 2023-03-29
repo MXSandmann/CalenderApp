@@ -33,8 +33,6 @@ builder.Services.AddHttpClient<ISubscriptionsClient, SubscriptionsClient>((clien
 builder.Services.AddHttpClient<IAuthenticationClient, AuthenticationClient>((client) =>
     {
         client.BaseAddress = new Uri(builder.Configuration.GetValue<string>("Services:Gateway") + "/au/");
-        //client.BaseAddress = new Uri("http://localhost:5193/api/");
-
     });
 
 var serviceName = "EventingWebsite";

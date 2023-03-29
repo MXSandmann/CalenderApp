@@ -34,7 +34,7 @@ public class AccountController : ControllerBase
     {
         _logger.LogInformation("--> Received registration dto", JsonConvert.SerializeObject(userRegistrationDto));
 
-        var newUser = await _userService.CreateUser(userRegistrationDto.UserName, userRegistrationDto.Password, userRegistrationDto.Email);
+        var newUser = await _userService.CreateUser(userRegistrationDto.UserName, userRegistrationDto.Password, userRegistrationDto.Email, userRegistrationDto.Role);
         if (newUser == null
             || newUser.Id == Guid.Empty)
             return BadRequest("Unable to create a new user");

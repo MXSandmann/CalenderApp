@@ -11,6 +11,6 @@ namespace ApplicationCore.Services.Contracts
         /// <param name="password"></param>
         /// <returns>token</returns>
         Task<string> LoginUser(string username, string password);
-        Task<User> CreateUser(string username, string password, string email);
+        Task<User> CreateUser(string username, string password, string email, string role);
     }
 }

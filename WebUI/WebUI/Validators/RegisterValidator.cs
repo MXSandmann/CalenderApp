@@ -12,7 +12,7 @@ namespace WebUI.Validators
 
             RuleFor(x => x.ConfirmPassword).NotEmpty()
                 .WithMessage("Plese confirm your password");
-            
+
             RuleFor(x => x.ConfirmPassword).Equal(x => x.Password)
                 .WithMessage("Passwords doesn't match");
 

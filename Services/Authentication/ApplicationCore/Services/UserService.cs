@@ -18,14 +18,14 @@ namespace ApplicationCore.Services
             _jwtProvider = jwtProvider;
         }
 
-        public async Task<User> CreateUser(string username, string password, string email)
+        public async Task<User> CreateUser(string username, string password, string email, string role)
         {
             var newUser = new User
             {
                 UserName = username,
                 Password = password,
                 Email = email,
-                Role = Role.User
+                Role = Enum.Parse<Role>(role)
             };
             var user = await _userRepository.AddNewUser(newUser);
             return user;

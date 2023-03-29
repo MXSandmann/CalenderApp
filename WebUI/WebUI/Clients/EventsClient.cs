@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.WebUtilities;
+﻿using Microsoft.AspNetCore.WebUtilities;
 using Newtonsoft.Json;
 using WebUI.Clients.Contracts;
 using WebUI.Models;
@@ -165,7 +164,7 @@ namespace WebUI.Clients
                 ContentStream = contentStream,
                 ContentType = contentType,
                 FileName = fileName
-            };   
+            };
         }
     }
 }

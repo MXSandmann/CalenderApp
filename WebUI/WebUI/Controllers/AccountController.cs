@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using WebUI.Clients.Contracts;
-using WebUI.Models;
 using WebUI.Models.Dtos;
+using WebUI.Models.Enums;
 using WebUI.Models.ViewModels;
 
 namespace WebUI.Controllers
@@ -60,6 +60,7 @@ namespace WebUI.Controllers
         [HttpGet("[action]")]
         public IActionResult Register()
         {
+            ViewData["Title"] = "Register new user";
             return View();
         }
 
@@ -74,8 +75,35 @@ namespace WebUI.Controllers
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
 
-            await _client.RegisterNewUser(_mapper.Map<UserRegistrationDto>(registerViewModel));
+            var dto = _mapper.Map<UserRegistrationDto>(registerViewModel);
+            dto.Role = Role.User.ToString();
 
+            await _client.RegisterNewUser(dto);
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet("[action]")]
+        public IActionResult RegisterInstructor()
+        {
+            ViewData["Title"] = "Register new instructor";
+            return View("Register");
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> RegisterInstructor(RegisterViewModel registerViewModel)
+        {
+            _logger.LogInformation("--> Registrating new instructor: {value}", JsonConvert.SerializeObject(registerViewModel));
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var validationResult = _registerValidator.Validate(registerViewModel);
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
+
+            var dto = _mapper.Map<UserRegistrationDto>(registerViewModel);
+            dto.Role = Role.Instructor.ToString();
+
+            await _client.RegisterNewUser(dto);
             return RedirectToAction("Index", "Home");
         }
     }

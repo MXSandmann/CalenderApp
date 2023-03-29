@@ -1,7 +1,13 @@
-﻿@{
+﻿@using System.Security.Claims;
+@{
     string GetUserName()
     {
         return User.Identities.First().Claims.FirstOrDefault(x => x.Type.Equals("UserName"))?.Value ?? string.Empty;
+    }
+
+    bool IsAdminLoggedIn()
+    {
+        return User.Identities.First().Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value == "Admin";
     }
 }
 <!DOCTYPE html>
@@ -57,6 +63,12 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Log out</a>
                             </li>
+                            @if (IsAdminLoggedIn())
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="RegisterInstructor">Register instructor</a>
+                                </li>                                
+                            }
                         </ul>
                     </div>
                 }

@@ -22,7 +22,7 @@ namespace ApplicationCore.FileGenerators
                 Location = userEvent.Place,
                 Start = new CalDateTime(userEvent.Date.Add(userEvent.StartTime.TimeOfDay)),
                 End = new CalDateTime(userEvent.LastDate.Add(userEvent.StartTime.TimeOfDay)),
-                Uid = userEvent.Id.ToString(),                
+                Uid = userEvent.Id.ToString()
             };
 
             // Add the event to the calendar
