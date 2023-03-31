@@ -1,4 +1,5 @@
 using ApplicationCore.Options;
+using ApplicationCore.Profiles;
 using ApplicationCore.Providers;
 using ApplicationCore.Providers.Contracts;
 using ApplicationCore.Repositories.Contracts;
@@ -7,6 +8,10 @@ using ApplicationCore.Services.Contracts;
 using Infrastructure.DataContext;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
+using System.Diagnostics;
 using WebAPI.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +27,30 @@ builder.Services.AddScoped<IJwtProvider, JwtProvider>();
 builder.Services.AddDbContext<UserDataContext>(opt => opt.UseNpgsql(builder.Configuration.GetConnectionString("Postgresql")));
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddAutoMapper(typeof(AutomapperProfile).Assembly);
+var serviceName = "Authentication Service";
+var serviceVersion = "1.0.0";
+
+builder.Services.AddOpenTelemetry().WithTracing(tracerProviderBuilder =>
+{
+    tracerProviderBuilder
+    .AddConsoleExporter()
+    .AddSource(serviceName)
+    .SetResourceBuilder(ResourceBuilder.CreateDefault()
+        .AddService(serviceName: serviceName, serviceVersion: serviceVersion))
+    .AddHttpClientInstrumentation()
+    .AddAspNetCoreInstrumentation()
+    .AddSqlClientInstrumentation()
+    .AddEntityFrameworkCoreInstrumentation()
+    .AddNpgsql()
+    .AddHoneycomb(opt =>
+    {
+        opt.ServiceName = serviceName;
+        opt.Dataset = ".net next course";
+        opt.ApiKey = builder.Configuration.GetValue<string>("Honeycomb:ApiKey");
+    });
+});
+builder.Services.AddSingleton(new ActivitySource(serviceName));
 
 var app = builder.Build();
 

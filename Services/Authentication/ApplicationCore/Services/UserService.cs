@@ -52,5 +52,10 @@ namespace ApplicationCore.Services
             var token = _jwtProvider.CreateToken(claims);
             return token;
         }
+
+        public async Task<IEnumerable<User>> GetAllInstructors()
+        {
+            return await _userRepository.GetAllInstructors();
+        }
     }
 }

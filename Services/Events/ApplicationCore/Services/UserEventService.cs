@@ -1,4 +1,5 @@
 ﻿using ApplicationCore.Extensions;
+using ApplicationCore.FileGenerators.Contracts;
 using ApplicationCore.Models;
 using ApplicationCore.Models.Dtos;
 using ApplicationCore.Models.Entities;
@@ -6,10 +7,6 @@ using ApplicationCore.Models.Enums;
 using ApplicationCore.Repositories.Contracts;
 using ApplicationCore.Services.Contracts;
 using AutoMapper;
-using System.Net.Http.Headers;
-using System.Net;
-using System.Text;
-using ApplicationCore.FileGenerators.Contracts;
 
 namespace ApplicationCore.Services
 {
@@ -223,6 +220,12 @@ namespace ApplicationCore.Services
 
             var icsFileString = _icsFileGenerator.Generate(userEvent);            
             return icsFileString;
+        }
+
+        public async Task<UserEvent> AssignInstructorToEvent(Guid eventId, Guid instructorId)
+        {
+            var userEvent = await _userEventRepository.AssignInstructor(eventId, instructorId);
+            return userEvent;
         }
     }
 }

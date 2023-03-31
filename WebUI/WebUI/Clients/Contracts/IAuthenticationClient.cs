@@ -7,6 +7,6 @@ namespace WebUI.Clients.Contracts
     {
         Task<ClaimsPrincipal> LoginUser(UserDto userDto);
         Task RegisterNewUser(UserRegistrationDto userRegistrationDto);
-
+        Task<IEnumerable<GetInstructorDto>> GetAllInstructors();
     }
 }

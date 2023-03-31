@@ -6,5 +6,6 @@ namespace ApplicationCore.Repositories.Contracts
     {
         Task<User?> GetUser(string username);
         Task<User> AddNewUser(User user);
+        Task<IEnumerable<User>> GetAllInstructors();
     }
 }

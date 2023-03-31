@@ -22,6 +22,7 @@ namespace WebUI.Models.Dtos
         public string ImageUrl { get; set; } = null!;
         public bool HasRecurrency { get; set; }
         public RecurrencyRuleDto? RecurrencyRule { get; set; }
+        public Guid? InstructorId { get; set; }
     }
 
     public class RecurrencyRuleDto

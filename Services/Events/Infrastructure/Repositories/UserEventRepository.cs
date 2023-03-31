@@ -77,5 +77,14 @@ namespace Infrastructure.Repositories
 
             return (results, count);
         }
+
+        public async Task<UserEvent> AssignInstructor(Guid eventId, Guid instructorId)
+        {
+            var userEvent = await _context.UserEvents.SingleOrDefaultAsync(x => x.Id == eventId);
+            ArgumentNullException.ThrowIfNull(userEvent);
+            userEvent.InstructorId = instructorId;
+            await _context.SaveChangesAsync();
+            return userEvent;
+        }
     }
 }

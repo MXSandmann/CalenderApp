@@ -37,12 +37,7 @@ public class HomeController : Controller
         {
             var items = activity?.GetBaggageItem("calendar_events");
             var items2 = Activity.Current?.GetBaggageItem("calendar_events");
-            var _items = Baggage.GetBaggage("calendar_events");
-
-
-
-
-            Console.WriteLine($"--> items: {items}, {_items}, {items2}");
+            var _items = Baggage.GetBaggage("calendar_events");            
             activity?.SetTag("calendar_events", items);
         }
         _logger.LogInformation("Received events: {events}", JsonConvert.SerializeObject(events));

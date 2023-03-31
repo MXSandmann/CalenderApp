@@ -15,5 +15,6 @@ namespace WebUI.Clients.Contracts
         Task<(IEnumerable<UserEventDto>, int)> GetSearchResults(SearchUserEventsDto searchDto);
         Task<IEnumerable<UserActivityRecordDto>> GetAllActivities();
         Task<FileDto?> DownloadEventAsFile(Guid eventId);
+        Task<UserEventDto> AssignInstructorToEvent(Guid eventId, Guid instructorId);
     }
 }

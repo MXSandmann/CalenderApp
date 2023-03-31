@@ -147,6 +147,18 @@
       ],
       "UpstreamPathTemplate": "/au/register",
       "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Account/Instructors",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "authentication",
+          "Port": 5050
+        }
+      ],
+      "UpstreamPathTemplate": "/au/instructors",
+      "UpstreamHttpMethod": [ "GET" ]
     }
   ]
 }

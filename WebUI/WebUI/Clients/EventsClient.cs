@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
 using Newtonsoft.Json;
+using System.Net.Mime;
 using WebUI.Clients.Contracts;
 using WebUI.Models;
 using WebUI.Models.Dtos;
@@ -165,6 +166,20 @@ namespace WebUI.Clients
                 ContentType = contentType,
                 FileName = fileName
             };
+        }
+
+        public async Task<UserEventDto> AssignInstructorToEvent(Guid eventId, Guid instructorId)
+        {
+            var dto = new AssignInstructorDto
+            {
+                EventId = eventId,
+                InstructorId = instructorId
+            };
+            var response = await _httpClient.PostAsJsonAsync("Events/AssignInstructor", dto);
+            var content = await response.Content.ReadAsStringAsync();
+            var userEvent = JsonConvert.DeserializeObject<UserEventDto>(content);
+            ArgumentNullException.ThrowIfNull(userEvent);
+            return userEvent;
         }
     }
 }

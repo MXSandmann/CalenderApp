@@ -12,5 +12,6 @@ namespace ApplicationCore.Services.Contracts
         /// <returns>token</returns>
         Task<string> LoginUser(string username, string password);
         Task<User> CreateUser(string username, string password, string email, string role);
+        Task<IEnumerable<User>> GetAllInstructors();
     }
 }

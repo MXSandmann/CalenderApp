@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Text;
+using WebUI.Models.Dtos;
 
 namespace WebAPI.Controllers
 {
@@ -104,6 +105,13 @@ namespace WebAPI.Controllers
             {
                 FileDownloadName = "my-event.ics"
             };
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> AssignInstructor([FromBody] AssignInstructorDto dto)
+        {
+            var userEvent = await _service.AssignInstructorToEvent(dto.EventId, dto.InstructorId);
+            return Ok(_mapper.Map<UserEventDto>(userEvent));
         }
     }
 }

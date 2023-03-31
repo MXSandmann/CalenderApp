@@ -1,4 +1,5 @@
 ﻿using ApplicationCore.Models.Entities;
+using ApplicationCore.Models.Enums;
 using ApplicationCore.Repositories.Contracts;
 using Infrastructure.DataContext;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,11 @@ namespace Infrastructure.Repositories
         public async Task<User?> GetUser(string username)
         {
             return await _context.Users.SingleOrDefaultAsync(x => x.UserName.Equals(username));
+        }
+
+        public async Task<IEnumerable<User>> GetAllInstructors()
+        {
+            return await _context.Users.Where(x => x.Role == Role.Instructor).ToListAsync();            
         }
     }
 }

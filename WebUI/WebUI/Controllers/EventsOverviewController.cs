@@ -2,6 +2,7 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using WebUI.Clients.Contracts;
 using WebUI.Models.Dtos;
 using WebUI.Models.ViewModels;
@@ -12,14 +13,18 @@ namespace WebUI.Controllers
     public class EventsOverviewController : Controller
     {
         private readonly IEventsClient _eventsClient;
+        private readonly IAuthenticationClient _authenticationClient;
         private readonly IValidator<CreateUpdateUserEventViewModel> _validator;
         private readonly IMapper _mapper;
+        private readonly ILogger<EventsOverviewController> _logger;
 
-        public EventsOverviewController(IValidator<CreateUpdateUserEventViewModel> validator, IMapper mapper, IEventsClient eventsClient)
+        public EventsOverviewController(IValidator<CreateUpdateUserEventViewModel> validator, IMapper mapper, IEventsClient eventsClient, IAuthenticationClient authenticationClient, ILogger<EventsOverviewController> logger)
         {
             _validator = validator;
             _mapper = mapper;
             _eventsClient = eventsClient;
+            _authenticationClient = authenticationClient;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -99,6 +104,45 @@ namespace WebUI.Controllers
             {
                 FileDownloadName = fileDto.FileName
             };
+        }
+
+        [HttpGet("[action]/{id:guid}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Assign()
+        {
+            var instructors = await _authenticationClient.GetAllInstructors();
+            _logger.LogInformation("--> Received instructors: {value}", JsonConvert.SerializeObject(instructors));
+            var viewModel = new AssignInstructorViewModel
+            {
+                Insructors = instructors.ToList(),
+            };
+            return View(viewModel);
+        }
+
+        [HttpPost("[action]/{eventId:guid}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Assign(AssignInstructorViewModel viewModel, Guid eventId)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            Guid? instructorId;
+            try
+            {
+                instructorId = viewModel.Insructors.FirstOrDefault(x => x.Name == viewModel.AssignedInstructor)?.Id;                
+                ArgumentNullException.ThrowIfNull(instructorId);
+                var userEvent = await _eventsClient.AssignInstructorToEvent(eventId, instructorId.Value);
+                if (userEvent.InstructorId == null 
+                    || userEvent.InstructorId.Value == Guid.Empty)
+                    throw new ArgumentException(nameof(userEvent));
+            }
+            catch
+            {
+                ViewData["Message"] = "Error during assigning instructor to event";
+                return View("AssignResult");
+            }
+            ViewData["Message"] = $"Instructor with id: {instructorId} has been successfuly assigned to event";
+            return View("AssignResult");
         }
     }
 }

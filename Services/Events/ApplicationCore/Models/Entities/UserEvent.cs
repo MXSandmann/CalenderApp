@@ -22,5 +22,6 @@ namespace ApplicationCore.Models.Entities
         public string ImageUrl { get; set; } = null!;
         public bool HasRecurrency { get; set; }
         public RecurrencyRule? RecurrencyRule { get; set; }
+        public Guid? InstructorId { get; set; }
     }
 }

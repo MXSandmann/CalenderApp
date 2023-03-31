@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
+using Newtonsoft.Json;
 using System.Security.Claims;
 using WebUI.Clients.Contracts;
 using WebUI.Jwt.Contracts;
@@ -12,13 +13,24 @@ namespace WebUI.Clients
         private readonly HttpClient _httpClient;
         private readonly IJwtValidator _jwtValidator;
         private readonly IPasswordHasher _passwordHasher;
+        private readonly ILogger<IAuthenticationClient> _logger;
 
 
-        public AuthenticationClient(HttpClient httpClient, IJwtValidator jwtValidator, IPasswordHasher passwordHasher)
+        public AuthenticationClient(HttpClient httpClient, IJwtValidator jwtValidator, IPasswordHasher passwordHasher, ILogger<IAuthenticationClient> logger)
         {
             _httpClient = httpClient;
             _jwtValidator = jwtValidator;
             _passwordHasher = passwordHasher;
+            _logger = logger;
+        }
+
+        public async Task<IEnumerable<GetInstructorDto>> GetAllInstructors()
+        {
+            var instructors = await _httpClient.GetFromJsonAsync<IEnumerable<GetInstructorDto>>("Instructors");            
+            if (instructors == null
+                || !instructors.Any())
+                return Enumerable.Empty<GetInstructorDto>();
+            return instructors;
         }
 
         public async Task<ClaimsPrincipal> LoginUser(UserDto userDto)
