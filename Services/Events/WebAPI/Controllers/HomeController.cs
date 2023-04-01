@@ -18,11 +18,11 @@ namespace WebAPI.Controllers
             _activitySource = activitySource;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Index()
+        [HttpGet("{userId:guid?}")]
+        public async Task<IActionResult> Index([FromRoute] Guid? userId)
         {
             using var activity = _activitySource.StartActivity("HomeController Activity");
-            var calendarEvents = await _service.GetCalendarEvents();
+            var calendarEvents = await _service.GetCalendarEvents(userId.GetValueOrDefault());
             Baggage.SetBaggage("calendar_events", JsonConvert.SerializeObject(calendarEvents));
             return Ok(calendarEvents);
         }

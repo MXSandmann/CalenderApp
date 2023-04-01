@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using OpenTelemetry;
 using System.Diagnostics;
 using WebUI.Clients.Contracts;
+using WebUI.Extensions;
 using WebUI.Models.Dtos;
 using WebUI.Models.ViewModels;
 
@@ -25,13 +26,16 @@ public class HomeController : Controller
     }
 
     public async Task<IActionResult> Index()
-    {
+    {        
         using (var activity = _activitySource.StartActivity("Request Activity"))
         {
             activity?.SetTag("Action_Name", nameof(Index));
             activity?.AddEvent(new ActivityEvent("Start pulling all user events"));
         }
-        var events = await _eventsClient.GetCalendarEvents();
+
+        var userId = User.GetIdFromClaims();
+
+        var events = await _eventsClient.GetCalendarEvents(userId);
 
         using (var activity = _activitySource.StartActivity("Received Activity"))
         {

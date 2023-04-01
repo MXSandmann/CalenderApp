@@ -11,7 +11,7 @@ namespace ApplicationCore.Services.Contracts
         Task<UserEvent> UpdateUserEvent(UserEvent userEvent, RecurrencyRule recurrencyRule);
         Task<IEnumerable<UserEvent>> GetUserEvents();
         Task<UserEvent> GetUserEventById(Guid id);
-        Task<IEnumerable<CalendarEvent>> GetCalendarEvents();
+        Task<IEnumerable<CalendarEvent>> GetCalendarEvents(Guid userId);
         Task<Dictionary<Guid, string>> GetEventNames(IEnumerable<Guid> eventIds);
         Task<PaginationResponse<UserEventDto>> SearchUserEvents(string entry, int limit, int offset);
         Task<string> DownloadICSFile(Guid eventId);

@@ -78,9 +78,9 @@ namespace ApplicationCore.Services
             return userEvent;
         }
 
-        public async Task<IEnumerable<CalendarEvent>> GetCalendarEvents()
+        public async Task<IEnumerable<CalendarEvent>> GetCalendarEvents(Guid userId)
         {
-            var userEvents = await _userEventRepository.GetAll();
+            var userEvents = await _userEventRepository.GetAll(userId);
 
             if (!userEvents.Any()) return Enumerable.Empty<CalendarEvent>();
 

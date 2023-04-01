@@ -5,6 +5,7 @@ namespace ApplicationCore.Repositories.Contracts
     public interface IUserEventRepository
     {
         Task<IEnumerable<UserEvent>> GetAll();
+        Task<IEnumerable<UserEvent>> GetAll(Guid userId);
         Task<UserEvent> GetById(Guid id);
         Task<Guid> Add(UserEvent userEvent);
         Task AddRange(IEnumerable<UserEvent> userEvents);

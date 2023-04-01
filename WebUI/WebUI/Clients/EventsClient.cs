@@ -36,10 +36,15 @@ namespace WebUI.Clients
             ArgumentNullException.ThrowIfNull(newUserEvent);
             return newUserEvent;
         }
-
-        public async Task<IEnumerable<CalendarEvent>> GetCalendarEvents()
+              
+        public async Task<IEnumerable<CalendarEvent>> GetCalendarEvents(Guid userId)
         {
-            var calendarEvents = await _httpClient.GetFromJsonAsync<IEnumerable<CalendarEvent>>("Home");
+            var url = "Home";
+            if (userId != Guid.Empty)
+                url += $"/{userId}";
+
+            var calendarEvents = await _httpClient.GetFromJsonAsync<IEnumerable<CalendarEvent>>(url);
+            
             if (calendarEvents == null
                 || !calendarEvents.Any())
                 return Enumerable.Empty<CalendarEvent>();
@@ -75,6 +80,10 @@ namespace WebUI.Clients
 
         public async Task<IEnumerable<UserEventDto>> GetUserEvents(string sortBy)
         {
+            //var url = "Events";
+            //if (userId != Guid.Empty)
+            //    url += $"/{userId}";
+
             var events = await _httpClient.GetFromJsonAsync<IEnumerable<UserEventDto>>("Events");
             if (events == null || !events.Any())
                 return Enumerable.Empty<UserEventDto>();

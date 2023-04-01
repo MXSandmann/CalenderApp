@@ -53,6 +53,18 @@
       "UpstreamHttpMethod": [ "GET" ]
     },
     {
+      "DownstreamPathTemplate": "/api/home/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "events",
+          "Port": 5020
+        }
+      ],
+      "UpstreamPathTemplate": "/e/home/{id}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
       "DownstreamPathTemplate": "/api/Subscriptions",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [

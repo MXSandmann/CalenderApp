@@ -18,6 +18,13 @@ namespace Infrastructure.Repositories
             return await _context.UserEvents.Include(x => x.RecurrencyRule).ToListAsync();
         }
 
+        public async Task<IEnumerable<UserEvent>> GetAll(Guid userId)
+        {
+            if (userId == Guid.Empty)
+                return await GetAll();
+            return await _context.UserEvents.Where(x => x.InstructorId == userId).Include(x => x.RecurrencyRule).ToListAsync();
+        }
+
         public async Task<UserEvent> GetById(Guid id)
         {
             var userEvent = await _context.UserEvents.Include(x => x.RecurrencyRule).FirstOrDefaultAsync(x => x.Id == id);
