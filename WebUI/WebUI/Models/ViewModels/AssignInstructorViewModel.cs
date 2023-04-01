@@ -1,12 +1,10 @@
-﻿using Microsoft.Build.Framework;
-using WebUI.Models.Dtos;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace WebUI.Models.ViewModels
 {
     public class AssignInstructorViewModel
-    {
-        public List<GetInstructorDto> Insructors { get; set; } = null!;
-        [Required]
-        public string AssignedInstructor { get; set; } = string.Empty;
+    {        
+        public Guid InstructorId { get; set; } = Guid.Empty;
+        public SelectList Instructors { get; set; } = null!;
     }
 }

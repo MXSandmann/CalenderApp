@@ -2,6 +2,7 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using WebUI.Clients.Contracts;
 using WebUI.Models.Dtos;
@@ -114,7 +115,7 @@ namespace WebUI.Controllers
             _logger.LogInformation("--> Received instructors: {value}", JsonConvert.SerializeObject(instructors));
             var viewModel = new AssignInstructorViewModel
             {
-                Insructors = instructors.ToList(),
+                Instructors = new SelectList(instructors, "Id", "Name")
             };
             return View(viewModel);
         }
@@ -123,15 +124,14 @@ namespace WebUI.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Assign(AssignInstructorViewModel viewModel, Guid eventId)
         {
+            _logger.LogInformation("--> view model: {value}", JsonConvert.SerializeObject(viewModel));
+            ModelState.Remove(nameof(viewModel.Instructors));
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-
-            Guid? instructorId;
+                        
             try
             {
-                instructorId = viewModel.Insructors.FirstOrDefault(x => x.Name == viewModel.AssignedInstructor)?.Id;                
-                ArgumentNullException.ThrowIfNull(instructorId);
-                var userEvent = await _eventsClient.AssignInstructorToEvent(eventId, instructorId.Value);
+                var userEvent = await _eventsClient.AssignInstructorToEvent(eventId, viewModel.InstructorId);
                 if (userEvent.InstructorId == null 
                     || userEvent.InstructorId.Value == Guid.Empty)
                     throw new ArgumentException(nameof(userEvent));
@@ -141,7 +141,7 @@ namespace WebUI.Controllers
                 ViewData["Message"] = "Error during assigning instructor to event";
                 return View("AssignResult");
             }
-            ViewData["Message"] = $"Instructor with id: {instructorId} has been successfuly assigned to event";
+            ViewData["Message"] = $"Instructor with id: {viewModel.InstructorId} has been successfuly assigned to event";
             return View("AssignResult");
         }
     }

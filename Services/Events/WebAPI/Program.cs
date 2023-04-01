@@ -34,7 +34,7 @@ var serviceVersion = "1.0.0";
 builder.Services.AddOpenTelemetry().WithTracing(tracerProviderBuilder =>
 {
     tracerProviderBuilder
-    .AddConsoleExporter()
+    //.AddConsoleExporter()
     .AddSource(serviceName)
     .SetResourceBuilder(ResourceBuilder.CreateDefault()
         .AddService(serviceName: serviceName, serviceVersion: serviceVersion))

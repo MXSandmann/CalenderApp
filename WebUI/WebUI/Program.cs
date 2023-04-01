@@ -25,6 +25,7 @@ builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddHttpClient<IEventsClient, EventsClient>((client) =>
     {
         client.BaseAddress = new Uri(builder.Configuration.GetValue<string>("Services:Gateway") + "/e/");
+        //client.BaseAddress = new Uri("http://localhost:5154/api/");
     });
 builder.Services.AddHttpClient<ISubscriptionsClient, SubscriptionsClient>((client) =>
     {
@@ -33,6 +34,7 @@ builder.Services.AddHttpClient<ISubscriptionsClient, SubscriptionsClient>((clien
 builder.Services.AddHttpClient<IAuthenticationClient, AuthenticationClient>((client) =>
     {
         client.BaseAddress = new Uri(builder.Configuration.GetValue<string>("Services:Gateway") + "/au/");
+        //client.BaseAddress = new Uri("http://localhost:5193/api/account/");
     });
 
 var serviceName = "EventingWebsite";
@@ -41,7 +43,7 @@ var serviceVersion = "1.0.0";
 builder.Services.AddOpenTelemetry().WithTracing(tracerProviderBuilder =>
 {
     tracerProviderBuilder
-    .AddConsoleExporter()
+    //.AddConsoleExporter()
     .AddSource(serviceName)
     .SetResourceBuilder(ResourceBuilder.CreateDefault()
         .AddService(serviceName: serviceName, serviceVersion: serviceVersion))
