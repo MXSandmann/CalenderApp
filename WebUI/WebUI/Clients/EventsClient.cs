@@ -78,13 +78,24 @@ namespace WebUI.Clients
             }
         }
 
-        public async Task<IEnumerable<UserEventDto>> GetUserEvents(string sortBy)
+        public async Task<IEnumerable<UserEventDto>> GetUserEvents(string sortBy, Guid userId)
         {
-            //var url = "Events";
-            //if (userId != Guid.Empty)
-            //    url += $"/{userId}";
+            var url = "Events";
 
-            var events = await _httpClient.GetFromJsonAsync<IEnumerable<UserEventDto>>("Events");
+            Dictionary<string, string?> queryDict;
+
+            if (userId != Guid.Empty)
+            {
+                queryDict = new()
+                {
+                    { "instructor", userId.ToString() }            
+                };
+                url = QueryHelpers.AddQueryString(url, queryDict);
+            }
+
+            _logger.LogInformation("--> requesting user events for instructor: {value}", url);
+
+            var events = await _httpClient.GetFromJsonAsync<IEnumerable<UserEventDto>>(url);
             if (events == null || !events.Any())
                 return Enumerable.Empty<UserEventDto>();
 

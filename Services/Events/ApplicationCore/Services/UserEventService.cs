@@ -45,9 +45,9 @@ namespace ApplicationCore.Services
             return await _userEventRepository.GetById(id);
         }
 
-        public async Task<IEnumerable<UserEvent>> GetUserEvents()
+        public async Task<IEnumerable<UserEvent>> GetUserEvents(Guid userId)
         {
-            return await _userEventRepository.GetAll();
+            return await _userEventRepository.GetAll(userId);
         }
 
         public async Task RemoveUserEvent(Guid id)

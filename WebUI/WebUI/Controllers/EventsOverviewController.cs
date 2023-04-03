@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using WebUI.Clients.Contracts;
+using WebUI.Extensions;
 using WebUI.Models.Dtos;
 using WebUI.Models.ViewModels;
 
@@ -35,7 +36,10 @@ namespace WebUI.Controllers
             ViewBag.SortTimeParameter = string.IsNullOrWhiteSpace(sortBy) ? "Time" : "";
             ViewBag.SortCategoryParameter = "Category";
             ViewBag.SortPlaceParameter = "Place";
-            var userEvents = await _eventsClient.GetUserEvents(sortBy);
+
+            var userId = User.GetIdFromClaims();
+
+            var userEvents = await _eventsClient.GetUserEvents(sortBy, userId);
             var userEventViewModels = _mapper.Map<IEnumerable<GetUserEventViewModel>>(userEvents);
             return View("EventsOverview", userEventViewModels);
         }

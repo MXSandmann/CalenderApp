@@ -5,7 +5,7 @@ namespace WebUI.Clients.Contracts
 {
     public interface IEventsClient
     {
-        Task<IEnumerable<UserEventDto>> GetUserEvents(string sortBy);
+        Task<IEnumerable<UserEventDto>> GetUserEvents(string sortBy, Guid userId);
         Task<UserEventDto> AddNewUserEvent(UserEventDto userEventDto, RecurrencyRuleDto recurrencyRuleDto);       
         Task<IEnumerable<CalendarEvent>> GetCalendarEvents(Guid userId);
         Task<UserEventDto> GetUserEventById(Guid id);

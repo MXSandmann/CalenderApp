@@ -27,10 +27,10 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get([FromQuery] Guid? instructor)
         {
             using var activity = _activitySource.StartActivity($"{nameof(EventsController)}: {nameof(Get)} action");
-            var userEvents = await _service.GetUserEvents();
+            var userEvents = await _service.GetUserEvents(instructor.GetValueOrDefault());
             var dtos = _mapper.Map<IEnumerable<UserEventDto>>(userEvents);
             _logger.LogInformation("--> Found user events: {ue}", JsonConvert.SerializeObject(dtos));
             return Ok(dtos);
