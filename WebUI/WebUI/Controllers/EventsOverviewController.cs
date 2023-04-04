@@ -37,7 +37,7 @@ namespace WebUI.Controllers
             ViewBag.SortCategoryParameter = "Category";
             ViewBag.SortPlaceParameter = "Place";
 
-            var userId = User.GetIdFromClaims();
+            var userId = User.GetInstructorIdFromClaims();
 
             var userEvents = await _eventsClient.GetUserEvents(sortBy, userId);
             var userEventViewModels = _mapper.Map<IEnumerable<GetUserEventViewModel>>(userEvents);
@@ -147,6 +147,13 @@ namespace WebUI.Controllers
             }
             ViewData["Message"] = $"Instructor with id: {viewModel.InstructorId} has been successfuly assigned to event";
             return View("AssignResult");
+        }
+
+        [HttpGet("[action]/{eventId:guid}")]
+        public async Task<IActionResult> MarkAsDone(Guid eventId)
+        {
+            _logger.LogInformation("--> Event with id: {value} has been marked as done", eventId);
+            return RedirectToAction(nameof(Events));
         }
     }
 }

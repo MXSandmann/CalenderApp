@@ -1,6 +1,18 @@
-﻿
+﻿@using System.Security.Claims;
+
 @{
     ViewData["Title"] = "Events Overview";
+
+    bool CanManipulateOnEvents()
+    {
+        return IsAdmin() || IsUser();
+    }
+
+    bool IsAdmin() => RoleIsLoggedIn("Admin");
+    bool IsUser() => RoleIsLoggedIn("User");
+    bool IsInstructor() => RoleIsLoggedIn("Instructor");
+
+    bool RoleIsLoggedIn(string role) => User.Identities.First().Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value == role;
 }
 
 <h1>EventsOverview</h1>
@@ -83,11 +95,18 @@
             </td>            
             <td>
                 <div class="btn-group">
-                    <a class="btn btn-success" asp-controller="Subscriptions" asp-action="create" asp-route-id="@item.Id">Subscribe</a>
-                    <a class="btn btn-dark" asp-action="Download" asp-route-id="@item.Id">Download as .ics</a>
-                    <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                    <a class="btn btn-primary" asp-action="Assign" asp-route-id="@item.Id">Assign to instructor</a>
+                    @if(CanManipulateOnEvents())
+                    {
+                        <a class="btn btn-success" asp-controller="Subscriptions" asp-action="create" asp-route-id="@item.Id">Subscribe</a>
+                        <a class="btn btn-dark" asp-action="Download" asp-route-id="@item.Id">Download as .ics</a>
+                        <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        <a class="btn btn-primary" asp-action="Assign" asp-route-id="@item.Id">Assign to instructor</a>
+                    }
+                    @if(IsInstructor())
+                    {
+                        <a class="btn btn-success" asp-action="MarkAsDone" asp-route-id="@item.Id">Mark as done</a>
+                    }
                 </div>
             </td>
         </tr>

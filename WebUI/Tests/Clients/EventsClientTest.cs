@@ -68,7 +68,7 @@ namespace Tests.Clients
             _mockHttpHandler.When("/Home").Respond(HttpStatusCode.OK, new StringContent(GetCalendarEventsOkContent()));
 
             // Act
-            var results = await _sut.GetCalendarEvents();
+            var results = await _sut.GetCalendarEvents(It.IsAny<Guid>());
 
             // Assert
             results.ShouldBeAssignableTo<IEnumerable<CalendarEvent>>();
@@ -83,7 +83,7 @@ namespace Tests.Clients
             _mockHttpHandler.When("/Home").Respond(HttpStatusCode.OK, new StringContent(GetEmptyCalendarEventsContent()));
 
             // Act
-            var results = await _sut.GetCalendarEvents();
+            var results = await _sut.GetCalendarEvents(It.IsAny<Guid>());
 
             // Assert
             results.ShouldBeAssignableTo<IEnumerable<CalendarEvent>>();
@@ -137,7 +137,7 @@ namespace Tests.Clients
             };
 
             // Act
-            var results = await _sut.GetUserEvents(sortBy);
+            var results = await _sut.GetUserEvents(sortBy, It.IsAny<Guid>());
 
             // Assert
             var act = dict[sortBy];
@@ -152,7 +152,7 @@ namespace Tests.Clients
             _mockHttpHandler.When("/Events").Respond(HttpStatusCode.OK, new StringContent(GetEmptyUserEventDtosContent()));
 
             // Act
-            var results = await _sut.GetUserEvents(string.Empty);
+            var results = await _sut.GetUserEvents(string.Empty, It.IsAny<Guid>());
 
             // Assert
             results.ShouldBeEmpty();
@@ -293,6 +293,7 @@ namespace Tests.Clients
 
             // Assert            
             result.ShouldBeEmpty();
+            count.ShouldBe(0);
         }
 
         private static void CheckOrderByCategory(IEnumerable<UserEventDto> results)

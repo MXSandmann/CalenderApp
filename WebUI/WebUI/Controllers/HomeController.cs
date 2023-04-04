@@ -33,7 +33,7 @@ public class HomeController : Controller
             activity?.AddEvent(new ActivityEvent("Start pulling all user events"));
         }
 
-        var userId = User.GetIdFromClaims();
+        var userId = User.GetInstructorIdFromClaims();
 
         var events = await _eventsClient.GetCalendarEvents(userId);
 

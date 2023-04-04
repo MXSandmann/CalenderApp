@@ -34,7 +34,7 @@ namespace Tests.Controllers
         public async Task IndexGet_ShouldReturnViewResult_WhenOk()
         {
             // Arrange            
-            _mockEventsClient.Setup(x => x.GetCalendarEvents()).ReturnsAsync(TestData.GetCalendarEvents());
+            _mockEventsClient.Setup(x => x.GetCalendarEvents(Guid.Empty)).ReturnsAsync(TestData.GetCalendarEvents());
 
             // Act
             var result = await _sut.Index();
