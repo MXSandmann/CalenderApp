@@ -218,14 +218,18 @@ namespace ApplicationCore.Services
             var userEvent = await _userEventRepository.GetById(eventId);
             ArgumentNullException.ThrowIfNull(userEvent);
 
-            var icsFileString = _icsFileGenerator.Generate(userEvent);            
+            var icsFileString = _icsFileGenerator.Generate(userEvent);
             return icsFileString;
         }
 
         public async Task<UserEvent> AssignInstructorToEvent(Guid eventId, Guid instructorId)
         {
-            var userEvent = await _userEventRepository.AssignInstructor(eventId, instructorId);
-            return userEvent;
+            return await _userEventRepository.AssignInstructor(eventId, instructorId);
+        }
+
+        public async Task<UserEvent> MarkAsDone(Guid id)
+        {
+            return await _userEventRepository.MarkAsDone(id);
         }
     }
 }

@@ -93,5 +93,14 @@ namespace Infrastructure.Repositories
             await _context.SaveChangesAsync();
             return userEvent;
         }
+
+        public async Task<UserEvent> MarkAsDone(Guid id)
+        {
+            var userEvent = await _context.UserEvents.SingleOrDefaultAsync(x => x.Id == id);
+            ArgumentNullException.ThrowIfNull(userEvent);
+            userEvent.Done = true;
+            await _context.SaveChangesAsync();
+            return userEvent;
+        }
     }
 }

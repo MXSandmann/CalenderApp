@@ -6,7 +6,7 @@ namespace WebUI.Clients.Contracts
     public interface IEventsClient
     {
         Task<IEnumerable<UserEventDto>> GetUserEvents(string sortBy, Guid userId);
-        Task<UserEventDto> AddNewUserEvent(UserEventDto userEventDto, RecurrencyRuleDto recurrencyRuleDto);       
+        Task<UserEventDto> AddNewUserEvent(UserEventDto userEventDto, RecurrencyRuleDto recurrencyRuleDto);
         Task<IEnumerable<CalendarEvent>> GetCalendarEvents(Guid userId);
         Task<UserEventDto> GetUserEventById(Guid id);
         Task<UserEventDto> UpdateUserEvent(UserEventDto userEventDto, RecurrencyRuleDto recurrencyRuleDto);
@@ -16,5 +16,6 @@ namespace WebUI.Clients.Contracts
         Task<IEnumerable<UserActivityRecordDto>> GetAllActivities();
         Task<FileDto?> DownloadEventAsFile(Guid eventId);
         Task<UserEventDto> AssignInstructorToEvent(Guid eventId, Guid instructorId);
+        Task<UserEventDto> MarkAsDone(Guid eventId);
     }
 }

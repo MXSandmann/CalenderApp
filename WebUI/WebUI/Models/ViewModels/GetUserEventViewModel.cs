@@ -26,6 +26,7 @@ namespace WebUI.Models.ViewModels
         public string AdditionalInfo { get; set; } = null!;
         public string ImageUrl { get; set; } = null!;
         public string Recurrency { get; set; } = null!;
+        public bool Done { get; set; }
 
         public static string GetRecurrencyDescription(RecurrencyRuleDto recurrencyRule)
         {

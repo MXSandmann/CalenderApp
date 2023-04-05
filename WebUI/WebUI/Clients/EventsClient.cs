@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
 using Newtonsoft.Json;
-using System.Net.Mime;
 using WebUI.Clients.Contracts;
 using WebUI.Models;
 using WebUI.Models.Dtos;
@@ -36,7 +35,7 @@ namespace WebUI.Clients
             ArgumentNullException.ThrowIfNull(newUserEvent);
             return newUserEvent;
         }
-              
+
         public async Task<IEnumerable<CalendarEvent>> GetCalendarEvents(Guid userId)
         {
             var url = "Home";
@@ -44,7 +43,7 @@ namespace WebUI.Clients
                 url += $"/{userId}";
 
             var calendarEvents = await _httpClient.GetFromJsonAsync<IEnumerable<CalendarEvent>>(url);
-            
+
             if (calendarEvents == null
                 || !calendarEvents.Any())
                 return Enumerable.Empty<CalendarEvent>();
@@ -88,7 +87,7 @@ namespace WebUI.Clients
             {
                 queryDict = new()
                 {
-                    { "instructor", userId.ToString() }            
+                    { "instructor", userId.ToString() }
                 };
                 url = QueryHelpers.AddQueryString(url, queryDict);
             }
@@ -196,6 +195,15 @@ namespace WebUI.Clients
                 InstructorId = instructorId
             };
             var response = await _httpClient.PostAsJsonAsync("Events/AssignInstructor", dto);
+            var content = await response.Content.ReadAsStringAsync();
+            var userEvent = JsonConvert.DeserializeObject<UserEventDto>(content);
+            ArgumentNullException.ThrowIfNull(userEvent);
+            return userEvent;
+        }
+
+        public async Task<UserEventDto> MarkAsDone(Guid eventId)
+        {
+            var response = await _httpClient.PostAsync($"Events/MarkAsDone/{eventId}", null);
             var content = await response.Content.ReadAsStringAsync();
             var userEvent = JsonConvert.DeserializeObject<UserEventDto>(content);
             ArgumentNullException.ThrowIfNull(userEvent);

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
-using Newtonsoft.Json;
 using System.Security.Claims;
 using WebUI.Clients.Contracts;
 using WebUI.Jwt.Contracts;
@@ -26,7 +25,7 @@ namespace WebUI.Clients
 
         public async Task<IEnumerable<GetInstructorDto>> GetAllInstructors()
         {
-            var instructors = await _httpClient.GetFromJsonAsync<IEnumerable<GetInstructorDto>>("Instructors");            
+            var instructors = await _httpClient.GetFromJsonAsync<IEnumerable<GetInstructorDto>>("Instructors");
             if (instructors == null
                 || !instructors.Any())
                 return Enumerable.Empty<GetInstructorDto>();

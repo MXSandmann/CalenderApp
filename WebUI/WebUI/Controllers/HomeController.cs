@@ -26,7 +26,7 @@ public class HomeController : Controller
     }
 
     public async Task<IActionResult> Index()
-    {        
+    {
         using (var activity = _activitySource.StartActivity("Request Activity"))
         {
             activity?.SetTag("Action_Name", nameof(Index));
@@ -41,7 +41,7 @@ public class HomeController : Controller
         {
             var items = activity?.GetBaggageItem("calendar_events");
             var items2 = Activity.Current?.GetBaggageItem("calendar_events");
-            var _items = Baggage.GetBaggage("calendar_events");            
+            var _items = Baggage.GetBaggage("calendar_events");
             activity?.SetTag("calendar_events", items);
         }
         _logger.LogInformation("Received events: {events}", JsonConvert.SerializeObject(events));

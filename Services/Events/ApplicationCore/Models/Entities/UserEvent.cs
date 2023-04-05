@@ -23,5 +23,6 @@ namespace ApplicationCore.Models.Entities
         public bool HasRecurrency { get; set; }
         public RecurrencyRule? RecurrencyRule { get; set; }
         public Guid? InstructorId { get; set; }
+        public bool Done { get; set; }
     }
 }

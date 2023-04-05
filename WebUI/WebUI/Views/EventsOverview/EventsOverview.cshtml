@@ -56,6 +56,9 @@
         <th>
             Recurrency
         </th>
+        <th>
+            Done
+        </th>
     </tr>
     @foreach (var item in Model)
     {
@@ -92,20 +95,23 @@
             </td>
             <td>
                 @item.Recurrency
-            </td>            
+            </td>
+            <td>
+                @item.Done
+            </td>
             <td>
                 <div class="btn-group">
                     @if(CanManipulateOnEvents())
                     {
                         <a class="btn btn-success" asp-controller="Subscriptions" asp-action="create" asp-route-id="@item.Id">Subscribe</a>
-                        <a class="btn btn-dark" asp-action="Download" asp-route-id="@item.Id">Download as .ics</a>
-                        <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                        <a class="btn btn-primary" asp-action="Assign" asp-route-id="@item.Id">Assign to instructor</a>
+                        <a class="btn btn-dark" asp-controller="EventsOverview" asp-action="Download" asp-route-id="@item.Id">Download as .ics</a>
+                        <a class="btn btn-warning" asp-controller="EventsOverview" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                        <a class="btn btn-danger" asp-controller="EventsOverview" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        <a class="btn btn-outline-primary" asp-controller="EventsOverview" asp-action="Assign" asp-route-id="@item.Id">Assign to instructor</a>                        
                     }
                     @if(IsInstructor())
                     {
-                        <a class="btn btn-success" asp-action="MarkAsDone" asp-route-id="@item.Id">Mark as done</a>
+                        <a class="btn btn-warning" asp-controller="EventsOverview" asp-action="Done" asp-route-id="@item.Id">Mark as done</a>                        
                     }
                 </div>
             </td>

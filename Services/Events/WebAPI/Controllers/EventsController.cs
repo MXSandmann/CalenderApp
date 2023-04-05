@@ -113,5 +113,12 @@ namespace WebAPI.Controllers
             var userEvent = await _service.AssignInstructorToEvent(dto.EventId, dto.InstructorId);
             return Ok(_mapper.Map<UserEventDto>(userEvent));
         }
+
+        [HttpPost("[action]/{eventId:guid}")]
+        public async Task<IActionResult> MarkAsDone([FromRoute] Guid eventId)
+        {
+            var userEvent = await _service.MarkAsDone(eventId);
+            return Ok(_mapper.Map<UserEventDto>(userEvent));
+        }
     }
 }

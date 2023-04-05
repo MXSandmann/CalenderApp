@@ -11,6 +11,7 @@ using WebUI.Models.ViewModels;
 
 namespace WebUI.Controllers
 {
+    [Route("[controller]")]
     [Authorize]
     public class EventsOverviewController : Controller
     {
@@ -44,14 +45,14 @@ namespace WebUI.Controllers
             return View("EventsOverview", userEventViewModels);
         }
 
-        [HttpGet]
+        [HttpGet("[action]")]
         [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
         }
 
-        [HttpPost]
+        [HttpPost("[action]")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(CreateUpdateUserEventViewModel newModel)
         {
@@ -132,11 +133,11 @@ namespace WebUI.Controllers
             ModelState.Remove(nameof(viewModel.Instructors));
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-                        
+
             try
             {
                 var userEvent = await _eventsClient.AssignInstructorToEvent(eventId, viewModel.InstructorId);
-                if (userEvent.InstructorId == null 
+                if (userEvent.InstructorId == null
                     || userEvent.InstructorId.Value == Guid.Empty)
                     throw new ArgumentException(nameof(userEvent));
             }
@@ -150,9 +151,12 @@ namespace WebUI.Controllers
         }
 
         [HttpGet("[action]/{eventId:guid}")]
-        public async Task<IActionResult> MarkAsDone(Guid eventId)
+        [Authorize(Roles = "Instructor")]
+        public async Task<IActionResult> Done(Guid eventId)
         {
-            _logger.LogInformation("--> Event with id: {value} has been marked as done", eventId);
+            var userEvent = await _eventsClient.MarkAsDone(eventId);
+            if (!userEvent.Done)
+                return BadRequest("Event couldn't be marked as done");
             return RedirectToAction(nameof(Events));
         }
     }

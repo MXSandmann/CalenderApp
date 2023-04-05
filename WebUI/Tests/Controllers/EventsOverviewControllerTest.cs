@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Newtonsoft.Json;
 using Shouldly;
-using System.Runtime.CompilerServices;
 using WebUI.Clients.Contracts;
 using WebUI.Controllers;
 using WebUI.Models.Dtos;
@@ -43,7 +42,7 @@ namespace Tests.Controllers
         {
             // Arrange
             _mockEventsClient.Setup(x => x.GetUserEvents(It.IsAny<string>(), It.IsAny<Guid>()))
-                .ReturnsAsync(TestData.GetUserEventDtos());            
+                .ReturnsAsync(TestData.GetUserEventDtos());
 
             // Act
             var result = await _sut.Events(string.Empty);

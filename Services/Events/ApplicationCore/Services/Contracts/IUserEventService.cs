@@ -16,5 +16,6 @@ namespace ApplicationCore.Services.Contracts
         Task<PaginationResponse<UserEventDto>> SearchUserEvents(string entry, int limit, int offset);
         Task<string> DownloadICSFile(Guid eventId);
         Task<UserEvent> AssignInstructorToEvent(Guid eventId, Guid instructorId);
+        Task<UserEvent> MarkAsDone(Guid id);
     }
 }

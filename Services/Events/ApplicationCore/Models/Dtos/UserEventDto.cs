@@ -23,6 +23,7 @@ namespace ApplicationCore.Models.Dtos
         public bool HasRecurrency { get; set; }
         public RecurrencyRuleDto? RecurrencyRule { get; set; }
         public Guid? InstructorId { get; set; }
+        public bool Done { get; set; }
     }
 
     public class RecurrencyRuleDto
