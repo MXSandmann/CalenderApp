@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.WebUtilities;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.WebUtilities;
 using Newtonsoft.Json;
+using System.Net.Http.Headers;
 using WebUI.Clients.Contracts;
 using WebUI.Models;
 using WebUI.Models.Dtos;
@@ -11,17 +13,19 @@ namespace WebUI.Clients
 
         private readonly HttpClient _httpClient;
         private readonly ILogger<IEventsClient> _logger;
+        private readonly IHttpContextAccessor _contextAccessor;
 
-        public EventsClient(HttpClient httpClient, ILogger<IEventsClient> logger)
+        public EventsClient(HttpClient httpClient, ILogger<IEventsClient> logger, IHttpContextAccessor contextAccessor)
         {
             _httpClient = httpClient;
             _logger = logger;
+            _contextAccessor = contextAccessor;
         }
 
         public async Task<UserEventDto> AddNewUserEvent(UserEventDto userEventDto, RecurrencyRuleDto recurrencyRuleDto)
         {
             if (userEventDto.HasRecurrency)
-                userEventDto.RecurrencyRule = recurrencyRuleDto;
+                userEventDto.RecurrencyRule = recurrencyRuleDto;     
 
             var responseMessage = await _httpClient.PostAsJsonAsync("Events/Create", userEventDto);
             if (!responseMessage.IsSuccessStatusCode)
@@ -79,6 +83,9 @@ namespace WebUI.Clients
 
         public async Task<IEnumerable<UserEventDto>> GetUserEvents(string sortBy, Guid userId)
         {
+            var token = _contextAccessor.HttpContext?.User.FindFirst("Jwt")?.Value ?? string.Empty;
+            Console.WriteLine($"--> GetUserEvents, token: {token}");
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var url = "Events";
 
             Dictionary<string, string?> queryDict;
@@ -92,7 +99,7 @@ namespace WebUI.Clients
                 url = QueryHelpers.AddQueryString(url, queryDict);
             }
 
-            _logger.LogInformation("--> requesting user events for instructor: {value}", url);
+            _logger.LogInformation("--> requesting user events: {value}", url);            
 
             var events = await _httpClient.GetFromJsonAsync<IEnumerable<UserEventDto>>(url);
             if (events == null || !events.Any())

@@ -1,18 +1,23 @@
 using FluentValidation;
+using IdentityModel.Client;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using System.Diagnostics;
+using System.Net.Http.Headers;
 using System.Reflection;
 using WebUI.Clients;
 using WebUI.Clients.Contracts;
 using WebUI.Jwt;
 using WebUI.Jwt.Contracts;
 using WebUI.Models.ViewModels;
-using WebUI.Options;
 using WebUI.Services;
 using WebUI.Services.Contracts;
 using WebUI.Validators;
+using AuthenticationOptions = WebUI.Options.AuthenticationOptions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,13 +27,22 @@ builder.Services.AddScoped<IValidator<CreateUpdateUserEventViewModel>, DateValid
 builder.Services.AddScoped<IValidator<CreateSubscriptionViewModel>, SubscriptionValidator>();
 builder.Services.AddScoped<IValidator<RegisterViewModel>, RegisterValidator>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
-builder.Services.AddHttpClient<IEventsClient, EventsClient>((client) =>
+builder.Services.AddHttpClient<IEventsClient, EventsClient>((provider, client) =>
     {
+        //var context = provider.GetRequiredService<IHttpContextAccessor>().HttpContext;        
+        //var token = context!.GetTokenAsync("access_token").GetAwaiter().GetResult();
+        //var token = context?.User.FindFirst("Jwt")?.Value ?? "null";
+        //Console.WriteLine($"--> token: {token}");
         client.BaseAddress = new Uri(builder.Configuration.GetValue<string>("Services:Gateway") + "/e/");
+        //client.SetBearerToken(token);
+        //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         //client.BaseAddress = new Uri("http://localhost:5154/api/");
     });
-builder.Services.AddHttpClient<ISubscriptionsClient, SubscriptionsClient>((client) =>
+builder.Services.AddHttpClient<ISubscriptionsClient, SubscriptionsClient>((provider, client) =>
     {
+        //var context = provider.GetRequiredService<IHttpContextAccessor>().HttpContext;
+        //var token = context!.GetTokenAsync("access_token").GetAwaiter().GetResult();
+        //client.SetBearerToken(token);
         client.BaseAddress = new Uri(builder.Configuration.GetValue<string>("Services:Gateway") + "/s/");
     });
 builder.Services.AddHttpClient<IAuthenticationClient, AuthenticationClient>((client) =>
@@ -63,6 +77,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 builder.Services.Configure<AuthenticationOptions>(builder.Configuration.GetSection("Authentication"));
 builder.Services.AddScoped<IJwtValidator, JwtValidator>();
 builder.Services.AddTransient<IPasswordHasher, Sha512PasswordHasher>();
+builder.Services.AddHttpContextAccessor();
 
 
 var app = builder.Build();
