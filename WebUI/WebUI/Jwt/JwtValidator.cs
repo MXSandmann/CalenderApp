@@ -11,14 +11,11 @@ namespace WebUI.Jwt
 {
     public class JwtValidator : IJwtValidator
     {
-        private readonly AuthenticationOptions _authenticationOptions;
-        private readonly ILogger<IJwtValidator> _logger;
+        private readonly AuthenticationOptions _authenticationOptions;        
 
-        public JwtValidator(IOptions<AuthenticationOptions> authenticationOptions, ILogger<IJwtValidator> logger)
+        public JwtValidator(IOptions<AuthenticationOptions> authenticationOptions)
         {
-
-            _authenticationOptions = authenticationOptions.Value;
-            _logger = logger;
+            _authenticationOptions = authenticationOptions.Value;            
         }
 
         public ClaimsPrincipal ValidateToken(string token)
@@ -49,13 +46,7 @@ namespace WebUI.Jwt
 
             var updatedClaims = claimsPrincipal.Claims.Append(new Claim("Jwt", token));
             var updatedIdentity = new ClaimsIdentity(updatedClaims, claimsPrincipal.Identity!.AuthenticationType);
-            var updatedClaimsPrincipal = new ClaimsPrincipal(updatedIdentity);
-
-
-            foreach (var claim in updatedClaimsPrincipal.Claims)
-            {
-                Console.WriteLine($"--> Claim type: {claim.Type}, Claim value: {claim.Value}");
-            }            
+            var updatedClaimsPrincipal = new ClaimsPrincipal(updatedIdentity);                      
             return updatedClaimsPrincipal;
         }
     }

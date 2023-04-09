@@ -1,9 +1,5 @@
 using FluentValidation;
-using IdentityModel.Client;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using System.Diagnostics;
@@ -29,21 +25,19 @@ builder.Services.AddScoped<IValidator<RegisterViewModel>, RegisterValidator>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddHttpClient<IEventsClient, EventsClient>((provider, client) =>
     {
-        //var context = provider.GetRequiredService<IHttpContextAccessor>().HttpContext;        
-        //var token = context!.GetTokenAsync("access_token").GetAwaiter().GetResult();
-        //var token = context?.User.FindFirst("Jwt")?.Value ?? "null";
-        //Console.WriteLine($"--> token: {token}");
+        var context = provider.GetRequiredService<IHttpContextAccessor>().HttpContext;
+        var token = context?.User.FindFirst("Jwt")?.Value ?? string.Empty;
+                
         client.BaseAddress = new Uri(builder.Configuration.GetValue<string>("Services:Gateway") + "/e/");
-        //client.SetBearerToken(token);
-        //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         //client.BaseAddress = new Uri("http://localhost:5154/api/");
     });
 builder.Services.AddHttpClient<ISubscriptionsClient, SubscriptionsClient>((provider, client) =>
     {
-        //var context = provider.GetRequiredService<IHttpContextAccessor>().HttpContext;
-        //var token = context!.GetTokenAsync("access_token").GetAwaiter().GetResult();
-        //client.SetBearerToken(token);
+        var context = provider.GetRequiredService<IHttpContextAccessor>().HttpContext;
+        var token = context?.User.FindFirst("Jwt")?.Value ?? string.Empty;
         client.BaseAddress = new Uri(builder.Configuration.GetValue<string>("Services:Gateway") + "/s/");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
     });
 builder.Services.AddHttpClient<IAuthenticationClient, AuthenticationClient>((client) =>
     {
@@ -56,8 +50,7 @@ var serviceVersion = "1.0.0";
 
 builder.Services.AddOpenTelemetry().WithTracing(tracerProviderBuilder =>
 {
-    tracerProviderBuilder
-    //.AddConsoleExporter()
+    tracerProviderBuilder   
     .AddSource(serviceName)
     .SetResourceBuilder(ResourceBuilder.CreateDefault()
         .AddService(serviceName: serviceName, serviceVersion: serviceVersion))

@@ -82,10 +82,7 @@ namespace WebUI.Clients
         }
 
         public async Task<IEnumerable<UserEventDto>> GetUserEvents(string sortBy, Guid userId)
-        {
-            var token = _contextAccessor.HttpContext?.User.FindFirst("Jwt")?.Value ?? string.Empty;
-            Console.WriteLine($"--> GetUserEvents, token: {token}");
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        {            
             var url = "Events";
 
             Dictionary<string, string?> queryDict;

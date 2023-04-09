@@ -3,6 +3,7 @@ using ApplicationCore.Models.Dtos;
 using ApplicationCore.Models.Entities;
 using ApplicationCore.Services.Contracts;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Quartz;
@@ -12,6 +13,7 @@ namespace WebAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class NotificationsController : ControllerBase
     {
         private readonly ISubscriptionService _subscriptionService;
