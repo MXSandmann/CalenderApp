@@ -112,6 +112,39 @@ namespace WebUI.Controllers
             };
         }
 
+        [HttpGet("[action]")]
+        [Authorize(Roles = "Admin, User")]
+        public async Task<IActionResult> MultipleDownload()
+        {
+            // Get events first
+            var userEvents = await _eventsClient.GetUserEvents();
+            var viewModel = new SelectDownloadViewModel
+            {
+                UserEventsToDownload = _mapper.Map<List<GetUserEventForDownloadViewModel>>(userEvents)
+            };
+            return View(viewModel);
+        }
+
+        [HttpPost("[action]")]
+        [Authorize(Roles = "Admin, User")]
+        public async Task<IActionResult> MultipleDownload(SelectDownloadViewModel viewModel)
+        {
+            // Get events first            
+            var selectedEventGuids = viewModel.UserEventsToDownload.Where(x => x.IsSelected).Select(x => x.Id);            
+            if (!selectedEventGuids.Any())
+                return RedirectToAction(nameof(Events));
+
+            var fileDto = await _eventsClient.MultipleDownloadEventAsFile(selectedEventGuids);
+
+            if (fileDto == null)
+                return BadRequest("Unable to generate the .ics files");
+
+            return new FileStreamResult(fileDto.ContentStream, fileDto.ContentType)
+            {
+                FileDownloadName = fileDto.FileName
+            };
+        }
+
         [HttpGet("[action]/{id:guid}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Assign()

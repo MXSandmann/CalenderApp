@@ -110,6 +110,25 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("[action]")]
+        public async Task<IActionResult> MultipleDownload([FromBody] IEnumerable<Guid> eventIds)
+        {
+            _logger.LogInformation("--> Received eventIds for multiple download: {value}", JsonConvert.SerializeObject(eventIds));
+            if (eventIds == null
+                || !eventIds.Any())
+                return BadRequest("Provided events ids are empty");
+
+            var icsFileString = await _service.DownloadICSFiles(eventIds);
+            var icsByteArray = Encoding.UTF8.GetBytes(icsFileString);
+
+            var memoryStream = new MemoryStream(icsByteArray);
+
+            return new FileStreamResult(memoryStream, "text/calendar")
+            {
+                FileDownloadName = "my-events.ics"
+            };
+        }
+
+        [HttpPost("[action]")]
         public async Task<IActionResult> AssignInstructor([FromBody] AssignInstructorDto dto)
         {
             var userEvent = await _service.AssignInstructorToEvent(dto.EventId, dto.InstructorId);

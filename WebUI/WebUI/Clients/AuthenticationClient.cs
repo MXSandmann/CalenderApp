@@ -11,16 +11,13 @@ namespace WebUI.Clients
     {
         private readonly HttpClient _httpClient;
         private readonly IJwtValidator _jwtValidator;
-        private readonly IPasswordHasher _passwordHasher;
-        private readonly ILogger<IAuthenticationClient> _logger;
+        private readonly IPasswordHasher _passwordHasher;      
 
-
-        public AuthenticationClient(HttpClient httpClient, IJwtValidator jwtValidator, IPasswordHasher passwordHasher, ILogger<IAuthenticationClient> logger)
+        public AuthenticationClient(HttpClient httpClient, IJwtValidator jwtValidator, IPasswordHasher passwordHasher)
         {
             _httpClient = httpClient;
             _jwtValidator = jwtValidator;
             _passwordHasher = passwordHasher;
-            _logger = logger;
         }
 
         public async Task<IEnumerable<GetInstructorDto>> GetAllInstructors()

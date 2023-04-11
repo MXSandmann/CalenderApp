@@ -14,6 +14,10 @@ namespace WebUI.Profiles
                 .ForMember(dest => dest.Recurrency, opt => opt
                 .MapFrom(src => GetUserEventViewModel.GetRecurrencyDescription(src.RecurrencyRule!)));
 
+            CreateMap<UserEventDto, GetUserEventForDownloadViewModel>()
+                .ForMember(dest => dest.Recurrency, opt => opt
+                .MapFrom(src => GetUserEventViewModel.GetRecurrencyDescription(src.RecurrencyRule!)));
+
             CreateMap<UserEventDto, CalendarEvent>()
                 .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.Start, opt => opt.MapFrom(src => src.Date))

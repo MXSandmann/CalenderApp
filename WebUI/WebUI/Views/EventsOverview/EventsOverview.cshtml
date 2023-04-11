@@ -17,8 +17,13 @@
 
 <h1>EventsOverview</h1>
 
-<div class="d-flex flex-row">
-    <a class="btn btn-success" asp-action="Create">Create event</a>
+<div class="d-flex justify-content-between">
+    <div>
+        <a class="btn btn-success" asp-action="Create">Create event</a>
+    </div>
+    <div>
+        <a class="btn btn-dark" asp-action="MultipleDownload">Download multiple events as .ics</a>
+    </div>
 </div>
 
 <table class="table">

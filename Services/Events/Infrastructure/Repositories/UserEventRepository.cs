@@ -102,5 +102,10 @@ namespace Infrastructure.Repositories
             await _context.SaveChangesAsync();
             return userEvent;
         }
+
+        public async Task<IEnumerable<UserEvent>> GetManyById(IEnumerable<Guid> ids)
+        {
+            return await _context.UserEvents.Where(x => ids.Contains(x.Id)).ToListAsync();
+        }
     }
 }

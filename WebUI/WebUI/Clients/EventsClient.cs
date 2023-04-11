@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.WebUtilities;
+﻿using Microsoft.AspNetCore.WebUtilities;
 using Newtonsoft.Json;
-using System.Net.Http.Headers;
 using WebUI.Clients.Contracts;
 using WebUI.Models;
 using WebUI.Models.Dtos;
@@ -12,14 +10,12 @@ namespace WebUI.Clients
     {
 
         private readonly HttpClient _httpClient;
-        private readonly ILogger<IEventsClient> _logger;
-        private readonly IHttpContextAccessor _contextAccessor;
+        private readonly ILogger<IEventsClient> _logger;        
 
-        public EventsClient(HttpClient httpClient, ILogger<IEventsClient> logger, IHttpContextAccessor contextAccessor)
+        public EventsClient(HttpClient httpClient, ILogger<IEventsClient> logger)
         {
             _httpClient = httpClient;
-            _logger = logger;
-            _contextAccessor = contextAccessor;
+            _logger = logger;            
         }
 
         public async Task<UserEventDto> AddNewUserEvent(UserEventDto userEventDto, RecurrencyRuleDto recurrencyRuleDto)
@@ -114,6 +110,11 @@ namespace WebUI.Clients
             return events.OrderBy(x => x.Date).ThenBy(x => x.StartTime);
         }
 
+        public async Task<IEnumerable<UserEventDto>> GetUserEvents()
+        {
+            return await GetUserEvents(string.Empty, Guid.Empty);
+        }
+
         public async Task RemoveUserEvent(Guid id)
         {
             var response = await _httpClient.DeleteAsync($"Events/Remove/{id}");
@@ -191,6 +192,26 @@ namespace WebUI.Clients
             };
         }
 
+        public async Task<FileDto?> MultipleDownloadEventAsFile(IEnumerable<Guid> eventIds)
+        {           
+            var response = await _httpClient.PostAsJsonAsync("Events/MultipleDownload", eventIds);
+            if (response == null)
+                return null;
+
+            var contentStream = await response.Content.ReadAsStreamAsync();
+            var contentType = response.Content.Headers.ContentType?.ToString();
+            ArgumentNullException.ThrowIfNull(contentType);
+            var fileName = response.Content.Headers.ContentDisposition?.FileName;
+            ArgumentNullException.ThrowIfNull(fileName);
+
+            return new FileDto
+            {
+                ContentStream = contentStream,
+                ContentType = contentType,
+                FileName = fileName
+            };
+        }
+
         public async Task<UserEventDto> AssignInstructorToEvent(Guid eventId, Guid instructorId)
         {
             var dto = new AssignInstructorDto
@@ -213,5 +234,7 @@ namespace WebUI.Clients
             ArgumentNullException.ThrowIfNull(userEvent);
             return userEvent;
         }
+
+        
     }
 }

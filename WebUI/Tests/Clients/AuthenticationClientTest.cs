@@ -1,8 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Logging;
-using Microsoft.Win32;
 using Moq;
 using Newtonsoft.Json;
 using RichardSzalay.MockHttp;
@@ -33,9 +29,8 @@ namespace Tests.Clients
                 BaseAddress = new Uri("http://random")
             };
             _mockJwtValidator = new();
-            _passwordHasher = new Sha512PasswordHasher();
-            var mockLogger = new Mock<ILogger<IAuthenticationClient>>();
-            _sut = new AuthenticationClient(mockClient, _mockJwtValidator.Object, _passwordHasher, mockLogger.Object);
+            _passwordHasher = new Sha512PasswordHasher();            
+            _sut = new AuthenticationClient(mockClient, _mockJwtValidator.Object, _passwordHasher);
         }
 
         [Fact]        

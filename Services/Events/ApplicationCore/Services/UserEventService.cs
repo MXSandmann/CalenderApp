@@ -7,6 +7,7 @@ using ApplicationCore.Models.Enums;
 using ApplicationCore.Repositories.Contracts;
 using ApplicationCore.Services.Contracts;
 using AutoMapper;
+using Newtonsoft.Json;
 
 namespace ApplicationCore.Services
 {
@@ -218,7 +219,21 @@ namespace ApplicationCore.Services
             var userEvent = await _userEventRepository.GetById(eventId);
             ArgumentNullException.ThrowIfNull(userEvent);
 
-            var icsFileString = _icsFileGenerator.Generate(userEvent);
+            var icsFileString = _icsFileGenerator.GenerateFromSingleEvent(userEvent);
+            return icsFileString;
+        }
+
+        public async Task<string> DownloadICSFiles(IEnumerable<Guid> eventIds)
+        {
+            var userEvents = await _userEventRepository.GetManyById(eventIds);
+
+            // Check all events was found and nothing lost
+            if (!userEvents.Any())
+                throw new InvalidOperationException($"No user events was found corresponding to provided events ids: {JsonConvert.SerializeObject(eventIds)}");
+            if (userEvents.Count() != eventIds.Count())
+                throw new InvalidOperationException($"Not all user events was found corresponding to provided events ids: {JsonConvert.SerializeObject(eventIds)}");
+
+            var icsFileString = _icsFileGenerator.GenerateFromManyEvents(userEvents);
             return icsFileString;
         }
 
@@ -231,5 +246,7 @@ namespace ApplicationCore.Services
         {
             return await _userEventRepository.MarkAsDone(id);
         }
+
+        
     }
 }

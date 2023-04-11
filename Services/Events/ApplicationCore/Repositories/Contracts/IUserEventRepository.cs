@@ -7,6 +7,7 @@ namespace ApplicationCore.Repositories.Contracts
         Task<IEnumerable<UserEvent>> GetAll();
         Task<IEnumerable<UserEvent>> GetAll(Guid userId);
         Task<UserEvent> GetById(Guid id);
+        Task<IEnumerable<UserEvent>> GetManyById(IEnumerable<Guid> ids);
         Task<Guid> Add(UserEvent userEvent);
         Task AddRange(IEnumerable<UserEvent> userEvents);
         Task SaveAsync();
