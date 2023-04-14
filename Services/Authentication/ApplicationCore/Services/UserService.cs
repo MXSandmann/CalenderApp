@@ -4,6 +4,7 @@ using ApplicationCore.Providers.Contracts;
 using ApplicationCore.Repositories.Contracts;
 using ApplicationCore.Services.Contracts;
 using System.Security.Claims;
+using WebUI.Services.Contracts;
 
 namespace ApplicationCore.Services
 {
@@ -11,11 +12,13 @@ namespace ApplicationCore.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IJwtProvider _jwtProvider;
+        private readonly IPasswordHasher _passwordHasher;
 
-        public UserService(IUserRepository userRepository, IJwtProvider jwtProvider)
+        public UserService(IUserRepository userRepository, IJwtProvider jwtProvider, IPasswordHasher passwordHasher)
         {
             _userRepository = userRepository;
             _jwtProvider = jwtProvider;
+            _passwordHasher = passwordHasher;
         }
 
         public async Task<User> CreateUser(string username, string password, string email, string role)
@@ -23,7 +26,7 @@ namespace ApplicationCore.Services
             var newUser = new User
             {
                 UserName = username,
-                Password = password,
+                Password = _passwordHasher.HashPassword(password),
                 Email = email,
                 Role = Enum.Parse<Role>(role)
             };
@@ -34,11 +37,12 @@ namespace ApplicationCore.Services
         public async Task<string> LoginUser(string username, string password)
         {
             var user = await _userRepository.GetUser(username);
+            var hashedPassword = _passwordHasher.HashPassword(password);
 
             // Check if such user exists
             // or password hashes match
             if (user == null
-                || (!user.Password.Equals(password)))
+                || (!user.Password.Equals(hashedPassword)))
                 return string.Empty;
 
             var claims = new List<Claim>

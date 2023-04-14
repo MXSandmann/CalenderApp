@@ -10,8 +10,6 @@ using WebUI.Clients.Contracts;
 using WebUI.Jwt;
 using WebUI.Jwt.Contracts;
 using WebUI.Models.ViewModels;
-using WebUI.Services;
-using WebUI.Services.Contracts;
 using WebUI.Validators;
 using AuthenticationOptions = WebUI.Options.AuthenticationOptions;
 
@@ -69,7 +67,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     .AddCookie();
 builder.Services.Configure<AuthenticationOptions>(builder.Configuration.GetSection("Authentication"));
 builder.Services.AddScoped<IJwtValidator, JwtValidator>();
-builder.Services.AddTransient<IPasswordHasher, Sha512PasswordHasher>();
 builder.Services.AddHttpContextAccessor();
 
 

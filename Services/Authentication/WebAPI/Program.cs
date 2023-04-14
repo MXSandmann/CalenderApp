@@ -13,6 +13,8 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using System.Diagnostics;
 using WebAPI.Extensions;
+using WebUI.Services;
+using WebUI.Services.Contracts;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -51,6 +53,7 @@ builder.Services.AddOpenTelemetry().WithTracing(tracerProviderBuilder =>
     });
 });
 builder.Services.AddSingleton(new ActivitySource(serviceName));
+builder.Services.AddTransient<IPasswordHasher, Sha512PasswordHasher>();
 
 var app = builder.Build();
 

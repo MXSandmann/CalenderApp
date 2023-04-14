@@ -6,6 +6,8 @@ using ApplicationCore.Services;
 using ApplicationCore.Services.Contracts;
 using Moq;
 using System.Security.Claims;
+using WebUI.Services;
+using WebUI.Services.Contracts;
 
 namespace Tests.Services
 {
@@ -13,13 +15,15 @@ namespace Tests.Services
     {
         private readonly Mock<IUserRepository> _userRepositoryMock;
         private readonly Mock<IJwtProvider> _jwtProviderMock;
+        private readonly IPasswordHasher _passwordHasher;
         private readonly IUserService _sut;
 
         public UserServiceTest()
         {
             _userRepositoryMock = new Mock<IUserRepository>();
             _jwtProviderMock = new Mock<IJwtProvider>();
-            _sut = new UserService(_userRepositoryMock.Object, _jwtProviderMock.Object);
+            _passwordHasher = new Sha512PasswordHasher();
+            _sut = new UserService(_userRepositoryMock.Object, _jwtProviderMock.Object, _passwordHasher);
         }
 
         [Fact]
@@ -53,12 +57,14 @@ namespace Tests.Services
         public async Task LoginUser_Should_Return_Token_When_Credentials_Are_Valid()
         {
             // Arrange
-            var user = new User { Id = Guid.NewGuid(), UserName = "valid_username", Password = "valid_password", Email = "valid@email.com", Role = Role.Instructor };
+            var password = "valid_password";
+            var hashedPassword = _passwordHasher.HashPassword(password);
+            var user = new User { Id = Guid.NewGuid(), UserName = "valid_username", Password = hashedPassword, Email = "valid@email.com", Role = Role.Instructor };
             _userRepositoryMock.Setup(x => x.GetUser(user.UserName)).ReturnsAsync(user);
             _jwtProviderMock.Setup(x => x.CreateToken(It.IsAny<IEnumerable<Claim>>())).Returns("valid_token");
             
             // Act
-            var result = await _sut.LoginUser(user.UserName, user.Password);
+            var result = await _sut.LoginUser(user.UserName, password);
 
             // Assert
             Assert.Equal("valid_token", result);

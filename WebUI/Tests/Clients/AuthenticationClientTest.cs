@@ -9,8 +9,6 @@ using WebUI.Clients;
 using WebUI.Clients.Contracts;
 using WebUI.Jwt.Contracts;
 using WebUI.Models.Dtos;
-using WebUI.Services;
-using WebUI.Services.Contracts;
 
 namespace Tests.Clients
 {
@@ -18,8 +16,7 @@ namespace Tests.Clients
     {
         private readonly IAuthenticationClient _sut;
         private readonly MockHttpMessageHandler _mockHttpHandler;
-        private readonly Mock<IJwtValidator> _mockJwtValidator;
-        private readonly IPasswordHasher _passwordHasher;
+        private readonly Mock<IJwtValidator> _mockJwtValidator;        
 
         public AuthenticationClientTest()
         {
@@ -28,9 +25,8 @@ namespace Tests.Clients
             {
                 BaseAddress = new Uri("http://random")
             };
-            _mockJwtValidator = new();
-            _passwordHasher = new Sha512PasswordHasher();            
-            _sut = new AuthenticationClient(mockClient, _mockJwtValidator.Object, _passwordHasher);
+            _mockJwtValidator = new();            
+            _sut = new AuthenticationClient(mockClient, _mockJwtValidator.Object);
         }
 
         [Fact]        
