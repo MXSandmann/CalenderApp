@@ -23,10 +23,12 @@ namespace ApplicationCore.Services
 
         public async Task<User> CreateUser(string username, string password, string email, string role)
         {
+            var (hashedPassword, salt) = _passwordHasher.HashPassword(password);
             var newUser = new User
             {
                 UserName = username,
-                Password = _passwordHasher.HashPassword(password),
+                Password = hashedPassword,
+                Salt = salt,
                 Email = email,
                 Role = Enum.Parse<Role>(role)
             };
@@ -36,13 +38,12 @@ namespace ApplicationCore.Services
 
         public async Task<string> LoginUser(string username, string password)
         {
-            var user = await _userRepository.GetUser(username);
-            var hashedPassword = _passwordHasher.HashPassword(password);
+            var user = await _userRepository.GetUser(username);                   
 
             // Check if such user exists
             // or password hashes match
             if (user == null
-                || (!user.Password.Equals(hashedPassword)))
+                || (!_passwordHasher.VerifyPassword(password, user.Password, user.Salt ?? string.Empty)))
                 return string.Empty;
 
             var claims = new List<Claim>

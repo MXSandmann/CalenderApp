@@ -58,8 +58,8 @@ namespace Tests.Services
         {
             // Arrange
             var password = "valid_password";
-            var hashedPassword = _passwordHasher.HashPassword(password);
-            var user = new User { Id = Guid.NewGuid(), UserName = "valid_username", Password = hashedPassword, Email = "valid@email.com", Role = Role.Instructor };
+            var (hashedPassword, salt) = _passwordHasher.HashPassword(password);
+            var user = new User { Id = Guid.NewGuid(), UserName = "valid_username", Password = hashedPassword, Email = "valid@email.com", Role = Role.Instructor, Salt = salt };
             _userRepositoryMock.Setup(x => x.GetUser(user.UserName)).ReturnsAsync(user);
             _jwtProviderMock.Setup(x => x.CreateToken(It.IsAny<IEnumerable<Claim>>())).Returns("valid_token");
             
