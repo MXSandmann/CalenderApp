@@ -129,6 +129,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("[action]")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AssignInstructor([FromBody] AssignInstructorDto dto)
         {
             var userEvent = await _service.AssignInstructorToEvent(dto.EventId, dto.InstructorId);
@@ -136,6 +137,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost("[action]/{eventId:guid}")]
+        [Authorize(Roles = "Instructor")]
         public async Task<IActionResult> MarkAsDone([FromRoute] Guid eventId)
         {
             var userEvent = await _service.MarkAsDone(eventId);
