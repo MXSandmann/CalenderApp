@@ -1,4 +1,5 @@
 ﻿using ApplicationCore.Services.Contracts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -6,6 +7,7 @@ namespace WebAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class ActivitiesController : ControllerBase
     {
         public readonly IUserActivityService _userActivityService;

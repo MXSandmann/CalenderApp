@@ -1,23 +1,33 @@
 ﻿using AutoMapper;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 using WebUI.Clients.Contracts;
-using WebUI.Models;
+using WebUI.Extensions;
 using WebUI.Models.Dtos;
+using WebUI.Models.ViewModels;
 
 namespace WebUI.Controllers
 {
+    [Route("[controller]")]
+    [Authorize]
     public class EventsOverviewController : Controller
     {
         private readonly IEventsClient _eventsClient;
+        private readonly IAuthenticationClient _authenticationClient;
         private readonly IValidator<CreateUpdateUserEventViewModel> _validator;
         private readonly IMapper _mapper;
+        private readonly ILogger<EventsOverviewController> _logger;
 
-        public EventsOverviewController(IValidator<CreateUpdateUserEventViewModel> validator, IMapper mapper, IEventsClient eventsClient)
+        public EventsOverviewController(IValidator<CreateUpdateUserEventViewModel> validator, IMapper mapper, IEventsClient eventsClient, IAuthenticationClient authenticationClient, ILogger<EventsOverviewController> logger)
         {
             _validator = validator;
             _mapper = mapper;
             _eventsClient = eventsClient;
+            _authenticationClient = authenticationClient;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -27,18 +37,23 @@ namespace WebUI.Controllers
             ViewBag.SortTimeParameter = string.IsNullOrWhiteSpace(sortBy) ? "Time" : "";
             ViewBag.SortCategoryParameter = "Category";
             ViewBag.SortPlaceParameter = "Place";
-            var userEvents = await _eventsClient.GetUserEvents(sortBy);
+
+            var userId = User.GetInstructorIdFromClaims();
+
+            var userEvents = await _eventsClient.GetUserEvents(sortBy, userId);
             var userEventViewModels = _mapper.Map<IEnumerable<GetUserEventViewModel>>(userEvents);
             return View("EventsOverview", userEventViewModels);
         }
 
-        [HttpGet]
+        [HttpGet("[action]")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
         }
 
-        [HttpPost]
+        [HttpPost("[action]")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(CreateUpdateUserEventViewModel newModel)
         {
             var validationResult = _validator.Validate(newModel);
@@ -52,6 +67,7 @@ namespace WebUI.Controllers
         }
 
         [HttpGet("[action]/{id:guid}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(Guid id)
         {
             var eventToUpdate = await _eventsClient.GetUserEventById(id);
@@ -59,6 +75,7 @@ namespace WebUI.Controllers
         }
 
         [HttpPost("[action]/{id:guid?}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(CreateUpdateUserEventViewModel model)
         {
             var validationResult = _validator.Validate(model);
@@ -74,9 +91,105 @@ namespace WebUI.Controllers
         }
 
         [HttpGet("[action]/{id:guid}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(Guid id)
         {
             await _eventsClient.RemoveUserEvent(id);
+            return RedirectToAction(nameof(Events));
+        }
+
+        [HttpGet("[action]/{id:guid}")]
+        [Authorize(Roles = "Admin, User")]
+        public async Task<IActionResult> Download(Guid id)
+        {
+            var fileDto = await _eventsClient.DownloadEventAsFile(id);
+            if (fileDto == null)
+                return BadRequest("Unable to generate the .ics file");
+
+            return new FileStreamResult(fileDto.ContentStream, fileDto.ContentType)
+            {
+                FileDownloadName = fileDto.FileName
+            };
+        }
+
+        [HttpGet("[action]")]
+        [Authorize(Roles = "Admin, User")]
+        public async Task<IActionResult> MultipleDownload()
+        {
+            // Get events first
+            var userEvents = await _eventsClient.GetUserEvents();
+            var viewModel = new SelectDownloadViewModel
+            {
+                UserEventsToDownload = _mapper.Map<List<GetUserEventForDownloadViewModel>>(userEvents)
+            };
+            return View(viewModel);
+        }
+
+        [HttpPost("[action]")]
+        [Authorize(Roles = "Admin, User")]
+        public async Task<IActionResult> MultipleDownload(SelectDownloadViewModel viewModel)
+        {
+            // Get events first            
+            var selectedEventGuids = viewModel.UserEventsToDownload.Where(x => x.IsSelected).Select(x => x.Id);            
+            if (!selectedEventGuids.Any())
+                return RedirectToAction(nameof(Events));
+
+            var fileDto = await _eventsClient.MultipleDownloadEventAsFile(selectedEventGuids);
+
+            if (fileDto == null)
+                return BadRequest("Unable to generate the .ics files");
+
+            return new FileStreamResult(fileDto.ContentStream, fileDto.ContentType)
+            {
+                FileDownloadName = fileDto.FileName
+            };
+        }
+
+        [HttpGet("[action]/{id:guid}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Assign()
+        {
+            var instructors = await _authenticationClient.GetAllInstructors();
+            _logger.LogInformation("--> Received instructors: {value}", JsonConvert.SerializeObject(instructors));
+            var viewModel = new AssignInstructorViewModel
+            {
+                Instructors = new SelectList(instructors, "Id", "Name")
+            };
+            return View(viewModel);
+        }
+
+        [HttpPost("[action]/{eventId:guid}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Assign(AssignInstructorViewModel viewModel, Guid eventId)
+        {
+            _logger.LogInformation("--> view model: {value}", JsonConvert.SerializeObject(viewModel));
+            ModelState.Remove(nameof(viewModel.Instructors));
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            try
+            {
+                var userEvent = await _eventsClient.AssignInstructorToEvent(eventId, viewModel.InstructorId);
+                if (userEvent.InstructorId == null
+                    || userEvent.InstructorId.Value == Guid.Empty)
+                    throw new ArgumentException(nameof(userEvent));
+            }
+            catch
+            {
+                ViewData["Message"] = "Error during assigning instructor to event";
+                return View("AssignResult");
+            }
+            ViewData["Message"] = $"Instructor with id: {viewModel.InstructorId} has been successfuly assigned to event";
+            return View("AssignResult");
+        }
+
+        [HttpGet("[action]/{eventId:guid}")]
+        [Authorize(Roles = "Instructor")]
+        public async Task<IActionResult> Done(Guid eventId)
+        {
+            var userEvent = await _eventsClient.MarkAsDone(eventId);
+            if (!userEvent.Done)
+                return BadRequest("Event couldn't be marked as done");
             return RedirectToAction(nameof(Events));
         }
     }

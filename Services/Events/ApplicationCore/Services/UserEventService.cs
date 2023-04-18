@@ -1,4 +1,5 @@
 ﻿using ApplicationCore.Extensions;
+using ApplicationCore.FileGenerators.Contracts;
 using ApplicationCore.Models;
 using ApplicationCore.Models.Dtos;
 using ApplicationCore.Models.Entities;
@@ -6,6 +7,7 @@ using ApplicationCore.Models.Enums;
 using ApplicationCore.Repositories.Contracts;
 using ApplicationCore.Services.Contracts;
 using AutoMapper;
+using Newtonsoft.Json;
 
 namespace ApplicationCore.Services
 {
@@ -14,12 +16,14 @@ namespace ApplicationCore.Services
         private readonly IUserEventRepository _userEventRepository;
         private readonly IRecurrencyRuleRepository _recurrencyRuleRepository;
         private readonly IMapper _mapper;
+        private readonly IIcsFileGenerator _icsFileGenerator;
 
-        public UserEventService(IUserEventRepository repository, IRecurrencyRuleRepository recurrencyRuleRepository, IMapper mapper)
+        public UserEventService(IUserEventRepository repository, IRecurrencyRuleRepository recurrencyRuleRepository, IMapper mapper, IIcsFileGenerator icsFileGenerator)
         {
             _userEventRepository = repository;
             _recurrencyRuleRepository = recurrencyRuleRepository;
             _mapper = mapper;
+            _icsFileGenerator = icsFileGenerator;
         }
 
         public async Task<UserEvent> AddNewUserEvent(UserEvent userEvent, RecurrencyRule recurrencyRule)
@@ -42,9 +46,9 @@ namespace ApplicationCore.Services
             return await _userEventRepository.GetById(id);
         }
 
-        public async Task<IEnumerable<UserEvent>> GetUserEvents()
+        public async Task<IEnumerable<UserEvent>> GetUserEvents(Guid userId)
         {
-            return await _userEventRepository.GetAll();
+            return await _userEventRepository.GetAll(userId);
         }
 
         public async Task RemoveUserEvent(Guid id)
@@ -75,9 +79,9 @@ namespace ApplicationCore.Services
             return userEvent;
         }
 
-        public async Task<IEnumerable<CalendarEvent>> GetCalendarEvents()
+        public async Task<IEnumerable<CalendarEvent>> GetCalendarEvents(Guid userId)
         {
-            var userEvents = await _userEventRepository.GetAll();
+            var userEvents = await _userEventRepository.GetAll(userId);
 
             if (!userEvents.Any()) return Enumerable.Empty<CalendarEvent>();
 
@@ -208,5 +212,41 @@ namespace ApplicationCore.Services
             var resultDtos = _mapper.Map<IEnumerable<UserEventDto>>(results);
             return new PaginationResponse<UserEventDto>(resultDtos, count);
         }
+
+        public async Task<string> DownloadICSFile(Guid eventId)
+        {
+            // Get the event first
+            var userEvent = await _userEventRepository.GetById(eventId);
+            ArgumentNullException.ThrowIfNull(userEvent);
+
+            var icsFileString = _icsFileGenerator.GenerateFromSingleEvent(userEvent);
+            return icsFileString;
+        }
+
+        public async Task<string> DownloadICSFiles(IEnumerable<Guid> eventIds)
+        {
+            var userEvents = await _userEventRepository.GetManyById(eventIds);
+
+            // Check all events was found and nothing lost
+            if (!userEvents.Any())
+                throw new InvalidOperationException($"No user events was found corresponding to provided events ids: {JsonConvert.SerializeObject(eventIds)}");
+            if (userEvents.Count() != eventIds.Count())
+                throw new InvalidOperationException($"Not all user events was found corresponding to provided events ids: {JsonConvert.SerializeObject(eventIds)}");
+
+            var icsFileString = _icsFileGenerator.GenerateFromManyEvents(userEvents);
+            return icsFileString;
+        }
+
+        public async Task<UserEvent> AssignInstructorToEvent(Guid eventId, Guid instructorId)
+        {
+            return await _userEventRepository.AssignInstructor(eventId, instructorId);
+        }
+
+        public async Task<UserEvent> MarkAsDone(Guid id)
+        {
+            return await _userEventRepository.MarkAsDone(id);
+        }
+
+        
     }
 }

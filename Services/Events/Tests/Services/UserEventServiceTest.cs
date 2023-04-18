@@ -1,4 +1,5 @@
-﻿using ApplicationCore.Models.Entities;
+﻿using ApplicationCore.FileGenerators.Contracts;
+using ApplicationCore.Models.Entities;
 using ApplicationCore.Models.Enums;
 using ApplicationCore.Profiles;
 using ApplicationCore.Repositories.Contracts;
@@ -12,31 +13,33 @@ namespace Tests.Services
 {
     public class UserEventServiceTest
     {
-        private readonly Mock<IUserEventRepository> _userEventRepoMock;
-        private readonly Mock<IRecurrencyRuleRepository> _recRuleRepoMock;
+        private readonly Mock<IUserEventRepository> _mockUserEventRepo;
+        private readonly Mock<IRecurrencyRuleRepository> _mockRecRuleRepo;
+        private readonly Mock<IIcsFileGenerator> _mockIcsFileGenerator;
 
         // System under test
         private readonly IUserEventService _sut;
 
         public UserEventServiceTest()
         {
-            _userEventRepoMock = new Mock<IUserEventRepository>();
-            _recRuleRepoMock = new Mock<IRecurrencyRuleRepository>();
+            _mockUserEventRepo = new();
+            _mockRecRuleRepo = new();
             var profile = new AutomapperProfile();
             var config = new MapperConfiguration(cfg => cfg.AddProfile(profile));
             var mapper = new Mapper(config);
-            _sut = new UserEventService(_userEventRepoMock.Object, _recRuleRepoMock.Object, mapper);
+            _mockIcsFileGenerator = new();
+            _sut = new UserEventService(_mockUserEventRepo.Object, _mockRecRuleRepo.Object, mapper, _mockIcsFileGenerator.Object);
         }
 
         [Fact]
         public async Task GetAll_ShouldReturnNull_WhenNoEvents()
         {
             // Arrange
-            _userEventRepoMock.Setup(x => x.GetAll())
+            _mockUserEventRepo.Setup(x => x.GetAll(It.IsAny<Guid>()))
                 .ReturnsAsync(() => null!);
 
             // Act
-            var results = await _sut.GetUserEvents();
+            var results = await _sut.GetUserEvents(It.IsAny<Guid>());
 
             // Assert
             results.ShouldBeNull();
@@ -46,11 +49,11 @@ namespace Tests.Services
         public async Task GetAll_ShouldReturnEvents_WhenExists()
         {
             // Arrange
-            _userEventRepoMock.Setup(x => x.GetAll())
+            _mockUserEventRepo.Setup(x => x.GetAll(It.IsAny<Guid>()))
                 .ReturnsAsync(TestData.GetUserEvents());
 
             // Act
-            var results = await _sut.GetUserEvents();
+            var results = await _sut.GetUserEvents(It.IsAny<Guid>());
 
             // Assert
             results.ShouldNotBeNull();
@@ -64,9 +67,9 @@ namespace Tests.Services
             // Arrange
             var testGuid1 = Guid.NewGuid();
             var testGuid2 = Guid.NewGuid();
-            _userEventRepoMock.Setup(x => x.GetById(testGuid1))
+            _mockUserEventRepo.Setup(x => x.GetById(testGuid1))
                 .ReturnsAsync(TestData.GetUserEvents().ToList()[0]);
-            _userEventRepoMock.Setup(x => x.GetById(testGuid2))
+            _mockUserEventRepo.Setup(x => x.GetById(testGuid2))
                 .ReturnsAsync(TestData.GetUserEvents().ToList()[1]);
 
             // Act            
@@ -83,11 +86,11 @@ namespace Tests.Services
         public async Task GetCalendarEvents_ShouldReturnManyEvents_WhenIsRecurring(UserEvent userEvent, int createdEventsCount)
         {
             // Arrange
-            _userEventRepoMock.Setup(x => x.GetAll())
+            _mockUserEventRepo.Setup(x => x.GetAll(It.IsAny<Guid>()))
                 .ReturnsAsync(new List<UserEvent> { userEvent });
 
             // Act
-            var results = await _sut.GetCalendarEvents();
+            var results = await _sut.GetCalendarEvents(It.IsAny<Guid>());
 
             // Assert
             results.Count().ShouldBe(createdEventsCount);

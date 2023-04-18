@@ -4,8 +4,9 @@ using Newtonsoft.Json;
 using OpenTelemetry;
 using System.Diagnostics;
 using WebUI.Clients.Contracts;
-using WebUI.Models;
+using WebUI.Extensions;
 using WebUI.Models.Dtos;
+using WebUI.Models.ViewModels;
 
 namespace WebUI.Controllers;
 
@@ -31,18 +32,16 @@ public class HomeController : Controller
             activity?.SetTag("Action_Name", nameof(Index));
             activity?.AddEvent(new ActivityEvent("Start pulling all user events"));
         }
-        var events = await _eventsClient.GetCalendarEvents();
+
+        var userId = User.GetInstructorIdFromClaims();
+
+        var events = await _eventsClient.GetCalendarEvents(userId);
 
         using (var activity = _activitySource.StartActivity("Received Activity"))
         {
             var items = activity?.GetBaggageItem("calendar_events");
             var items2 = Activity.Current?.GetBaggageItem("calendar_events");
             var _items = Baggage.GetBaggage("calendar_events");
-
-
-
-
-            Console.WriteLine($"--> items: {items}, {_items}, {items2}");
             activity?.SetTag("calendar_events", items);
         }
         _logger.LogInformation("Received events: {events}", JsonConvert.SerializeObject(events));

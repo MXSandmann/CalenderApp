@@ -18,6 +18,13 @@ namespace Infrastructure.Repositories
             return await _context.UserEvents.Include(x => x.RecurrencyRule).ToListAsync();
         }
 
+        public async Task<IEnumerable<UserEvent>> GetAll(Guid userId)
+        {
+            if (userId == Guid.Empty)
+                return await GetAll();
+            return await _context.UserEvents.Where(x => x.InstructorId == userId).Include(x => x.RecurrencyRule).ToListAsync();
+        }
+
         public async Task<UserEvent> GetById(Guid id)
         {
             var userEvent = await _context.UserEvents.Include(x => x.RecurrencyRule).FirstOrDefaultAsync(x => x.Id == id);
@@ -76,6 +83,29 @@ namespace Infrastructure.Repositories
                 .ToListAsync();
 
             return (results, count);
+        }
+
+        public async Task<UserEvent> AssignInstructor(Guid eventId, Guid instructorId)
+        {
+            var userEvent = await _context.UserEvents.SingleOrDefaultAsync(x => x.Id == eventId);
+            ArgumentNullException.ThrowIfNull(userEvent);
+            userEvent.InstructorId = instructorId;
+            await _context.SaveChangesAsync();
+            return userEvent;
+        }
+
+        public async Task<UserEvent> MarkAsDone(Guid id)
+        {
+            var userEvent = await _context.UserEvents.SingleOrDefaultAsync(x => x.Id == id);
+            ArgumentNullException.ThrowIfNull(userEvent);
+            userEvent.Done = true;
+            await _context.SaveChangesAsync();
+            return userEvent;
+        }
+
+        public async Task<IEnumerable<UserEvent>> GetManyById(IEnumerable<Guid> ids)
+        {
+            return await _context.UserEvents.Where(x => ids.Contains(x.Id)).ToListAsync();
         }
     }
 }

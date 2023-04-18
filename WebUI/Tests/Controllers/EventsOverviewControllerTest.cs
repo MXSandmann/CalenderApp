@@ -1,13 +1,14 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Newtonsoft.Json;
 using Shouldly;
 using WebUI.Clients.Contracts;
 using WebUI.Controllers;
-using WebUI.Models;
 using WebUI.Models.Dtos;
+using WebUI.Models.ViewModels;
 using WebUI.Profiles;
 using WebUI.Validators;
 
@@ -15,28 +16,32 @@ namespace Tests.Controllers
 {
     public class EventsOverviewControllerTest
     {
-        private readonly Mock<IEventsClient> _mockClient;
+        private readonly Mock<IEventsClient> _mockEventsClient;
+        private readonly Mock<IAuthenticationClient> _mockAuthenticationClient;
 
         // System under test
         private readonly EventsOverviewController _sut;
         private readonly IValidator<CreateUpdateUserEventViewModel> _validator;
         private readonly IMapper _mapper;
+        private readonly Mock<ILogger<EventsOverviewController>> _mockLogger;
 
         public EventsOverviewControllerTest()
         {
-            _mockClient = new Mock<IEventsClient>();
+            _mockEventsClient = new();
+            _mockAuthenticationClient = new();
             _validator = new DateValidator();
             var profile = new AutomapperProfile();
             var config = new MapperConfiguration(cfg => cfg.AddProfile(profile));
             _mapper = new Mapper(config);
-            _sut = new EventsOverviewController(_validator, _mapper, _mockClient.Object);
+            _mockLogger = new();
+            _sut = new EventsOverviewController(_validator, _mapper, _mockEventsClient.Object, _mockAuthenticationClient.Object, _mockLogger.Object);
         }
 
         [Fact]
         public async Task IndexGet_ShouldReturnViewResult_WhenOk()
         {
             // Arrange
-            _mockClient.Setup(x => x.GetUserEvents(It.IsAny<string>()))
+            _mockEventsClient.Setup(x => x.GetUserEvents(It.IsAny<string>(), It.IsAny<Guid>()))
                 .ReturnsAsync(TestData.GetUserEventDtos());
 
             // Act
@@ -52,7 +57,7 @@ namespace Tests.Controllers
         public async Task CreatePost_ShouldReturnBadRequest_WhenModelStateIsInvalid()
         {
             // Arrange
-            _mockClient.Setup(x => x.AddNewUserEvent(It.IsAny<UserEventDto>(), It.IsAny<RecurrencyRuleDto>()))
+            _mockEventsClient.Setup(x => x.AddNewUserEvent(It.IsAny<UserEventDto>(), It.IsAny<RecurrencyRuleDto>()))
                 .Verifiable();
             _sut.ModelState.AddModelError("Name", "Required");
             var newModel = TestData.GetUserEventViewModel();
@@ -69,7 +74,7 @@ namespace Tests.Controllers
         public async Task CreatePost_ShouldReturnBadRequest_WhenValidationIsUnsuccessful()
         {
             // Arrange
-            _mockClient.Setup(x => x.AddNewUserEvent(It.IsAny<UserEventDto>(), It.IsAny<RecurrencyRuleDto>()))
+            _mockEventsClient.Setup(x => x.AddNewUserEvent(It.IsAny<UserEventDto>(), It.IsAny<RecurrencyRuleDto>()))
                 .Verifiable();
             var newModel = TestData.GetInvalidUserEventViewModel();
 
@@ -87,7 +92,7 @@ namespace Tests.Controllers
         public async Task CreatePost_ShouldRedirect_WhenModelStateIsValid()
         {
             // Arrange            
-            _mockClient.Setup(x => x.GetUserEvents(It.IsAny<string>()))
+            _mockEventsClient.Setup(x => x.GetUserEvents(It.IsAny<string>(), It.IsAny<Guid>()))
                 .ReturnsAsync(TestData.GetUserEventDtos());
             var newModel = TestData.GetUserEventViewModel();
 
@@ -104,7 +109,7 @@ namespace Tests.Controllers
         {
             // Arrange
             var userEvent = TestData.GetUserEventDtos().First();
-            _mockClient.Setup(x => x.GetUserEventById(It.IsAny<Guid>()))
+            _mockEventsClient.Setup(x => x.GetUserEventById(It.IsAny<Guid>()))
                 .ReturnsAsync(userEvent);
 
             // Act

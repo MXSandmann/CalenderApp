@@ -7,8 +7,8 @@ using Newtonsoft.Json;
 using Shouldly;
 using WebUI.Clients.Contracts;
 using WebUI.Controllers;
-using WebUI.Models;
 using WebUI.Models.Dtos;
+using WebUI.Models.ViewModels;
 using WebUI.Profiles;
 using WebUI.Validators;
 

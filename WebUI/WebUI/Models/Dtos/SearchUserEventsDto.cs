@@ -1,4 +1,6 @@
-﻿namespace WebUI.Models.Dtos
+﻿using WebUI.Models.ViewModels;
+
+namespace WebUI.Models.Dtos
 {
     public class SearchUserEventsDto
     {

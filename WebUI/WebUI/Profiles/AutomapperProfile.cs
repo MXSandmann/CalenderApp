@@ -2,6 +2,7 @@
 using WebUI.Models;
 using WebUI.Models.Dtos;
 using WebUI.Models.Enums;
+using WebUI.Models.ViewModels;
 
 namespace WebUI.Profiles
 {
@@ -10,6 +11,10 @@ namespace WebUI.Profiles
         public AutomapperProfile()
         {
             CreateMap<UserEventDto, GetUserEventViewModel>()
+                .ForMember(dest => dest.Recurrency, opt => opt
+                .MapFrom(src => GetUserEventViewModel.GetRecurrencyDescription(src.RecurrencyRule!)));
+
+            CreateMap<UserEventDto, GetUserEventForDownloadViewModel>()
                 .ForMember(dest => dest.Recurrency, opt => opt
                 .MapFrom(src => GetUserEventViewModel.GetRecurrencyDescription(src.RecurrencyRule!)));
 
@@ -59,6 +64,10 @@ namespace WebUI.Profiles
             CreateMap<SmartSearchViewModel, SearchUserEventsDto>().ReverseMap();
 
             CreateMap<UserActivityRecordDto, ActivitiesOverviewViewModel>();
+
+            CreateMap<UserDto, LoginViewModel>().ReverseMap();
+
+            CreateMap<RegisterViewModel, UserRegistrationDto>();
         }
 
         private static CertainDays ComputeCertainDays(CreateUpdateUserEventViewModel model)

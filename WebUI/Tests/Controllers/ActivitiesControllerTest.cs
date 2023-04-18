@@ -4,23 +4,23 @@ using Moq;
 using Shouldly;
 using WebUI.Clients.Contracts;
 using WebUI.Controllers;
-using WebUI.Models;
+using WebUI.Models.ViewModels;
 using WebUI.Profiles;
 
 namespace Tests.Controllers
 {
     public class ActivitiesControllerTest
     {
-        private readonly Mock<IEventsClient> _mockEventsClient;        
+        private readonly Mock<IEventsClient> _mockEventsClient;
         private readonly ActivitiesController _sut;
 
         public ActivitiesControllerTest()
         {
-            _mockEventsClient = new Mock<IEventsClient>();            
+            _mockEventsClient = new Mock<IEventsClient>();
             var profile = new AutomapperProfile();
             var config = new MapperConfiguration(cfg => cfg.AddProfile(profile));
             var mapper = new Mapper(config);
-            
+
             _sut = new(_mockEventsClient.Object, mapper);
         }
 
@@ -29,7 +29,7 @@ namespace Tests.Controllers
         {
             // Arrange
             _mockEventsClient.Setup(x => x.GetAllActivities())
-                .ReturnsAsync(TestData.GetUserActivityRecords(5));            
+                .ReturnsAsync(TestData.GetUserActivityRecords(5));
 
             // Act
             var result = await _sut.Activities();

@@ -1,14 +1,16 @@
 ﻿using AutoMapper;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using WebUI.Clients.Contracts;
-using WebUI.Models;
 using WebUI.Models.Dtos;
+using WebUI.Models.ViewModels;
 
 namespace WebUI.Controllers
 {
     [Route("[controller]")]
+    [Authorize]
     public class SubscriptionsController : Controller
     {
         private readonly IMapper _mapper;
@@ -40,6 +42,7 @@ namespace WebUI.Controllers
         }
 
         [HttpGet("[action]/{eventId:guid}")]
+        [Authorize(Roles = "User, Admin")]
         public IActionResult Create(Guid eventId)
         {
             var viewModel = new CreateSubscriptionViewModel { EventId = eventId };
@@ -47,6 +50,7 @@ namespace WebUI.Controllers
         }
 
         [HttpPost("[action]/{eventId:guid}")]
+        [Authorize(Roles = "User, Admin")]
         public async Task<IActionResult> Create(CreateSubscriptionViewModel createSubscriptionViewModel, [FromRoute] Guid eventId)
         {
             var validationResult = _validator.Validate(createSubscriptionViewModel);
@@ -62,6 +66,7 @@ namespace WebUI.Controllers
         }
 
         [HttpGet("[action]/{subscriptionId:guid}")]
+        [Authorize(Roles = "User, Admin")]
         public IActionResult CreateNotification(Guid subscriptionId)
         {
             var viewModel = new CreateNotificationViewModel { SubscriptionId = subscriptionId };
@@ -69,6 +74,7 @@ namespace WebUI.Controllers
         }
 
         [HttpPost("[action]/{subscriptionId:guid}")]
+        [Authorize(Roles = "User, Admin")]
         public async Task<IActionResult> CreateNotification(CreateNotificationViewModel notificationViewModel)
         {
             // Request some data
@@ -92,6 +98,7 @@ namespace WebUI.Controllers
         }
 
         [HttpGet("[action]/{id:guid}")]
+        [Authorize(Roles = "User, Admin")]
         public async Task<IActionResult> Delete(Guid id)
         {
             await _subscriptionsClient.RemoveSubscription(id);
@@ -99,6 +106,7 @@ namespace WebUI.Controllers
         }
 
         [HttpGet("[action]/{id:guid}")]
+        [Authorize(Roles = "User, Admin")]
         public async Task<IActionResult> Edit(Guid id)
         {
             var subscriptionToUpdate = await _subscriptionsClient.GetSubscriptionById(id);
@@ -106,6 +114,7 @@ namespace WebUI.Controllers
         }
 
         [HttpPost("[action]/{id:guid}")]
+        [Authorize(Roles = "User, Admin")]
         public async Task<IActionResult> Edit(CreateSubscriptionViewModel model, [FromRoute] Guid id)
         {
             var validationResult = _validator.Validate(model);

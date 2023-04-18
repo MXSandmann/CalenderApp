@@ -2,14 +2,33 @@
 using WebUI.Models;
 using WebUI.Models.Dtos;
 using WebUI.Models.Enums;
+using WebUI.Models.ViewModels;
 
 namespace Tests
 {
     internal static class TestData
     {
+        internal static T GetAutofakedClass<T>()
+        {
+            var faker = AutoFaker.Create();
+            return faker.Generate<T>();
+        }
+
+        internal static IEnumerable<GetInstructorDto> GetInstructorDtos(int count)
+        {
+            var results = new List<GetInstructorDto>(count);
+            var faker = AutoFaker.Create();
+            for (int i = 0; i < count; i++)
+            {
+                var instructor = faker.Generate<GetInstructorDto>();
+                results.Add(instructor);
+            }
+            return results;
+        }
+
         internal static IEnumerable<UserActivityRecordDto> GetUserActivityRecords(int count)
         {
-            var records = new List<UserActivityRecordDto>();
+            var records = new List<UserActivityRecordDto>(count);
             var faker = AutoFaker.Create();
             for (int i = 0; i < count; i++)
             {

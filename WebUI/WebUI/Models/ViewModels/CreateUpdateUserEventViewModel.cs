@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using WebUI.Models.Enums;
 
-namespace WebUI.Models
+namespace WebUI.Models.ViewModels
 {
 
     public class CreateUpdateUserEventViewModel

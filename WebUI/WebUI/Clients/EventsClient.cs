@@ -10,18 +10,18 @@ namespace WebUI.Clients
     {
 
         private readonly HttpClient _httpClient;
-        private readonly ILogger<IEventsClient> _logger;
+        private readonly ILogger<IEventsClient> _logger;        
 
         public EventsClient(HttpClient httpClient, ILogger<IEventsClient> logger)
         {
             _httpClient = httpClient;
-            _logger = logger;
+            _logger = logger;            
         }
 
         public async Task<UserEventDto> AddNewUserEvent(UserEventDto userEventDto, RecurrencyRuleDto recurrencyRuleDto)
         {
             if (userEventDto.HasRecurrency)
-                userEventDto.RecurrencyRule = recurrencyRuleDto;
+                userEventDto.RecurrencyRule = recurrencyRuleDto;     
 
             var responseMessage = await _httpClient.PostAsJsonAsync("Events/Create", userEventDto);
             if (!responseMessage.IsSuccessStatusCode)
@@ -36,9 +36,14 @@ namespace WebUI.Clients
             return newUserEvent;
         }
 
-        public async Task<IEnumerable<CalendarEvent>> GetCalendarEvents()
+        public async Task<IEnumerable<CalendarEvent>> GetCalendarEvents(Guid userId)
         {
-            var calendarEvents = await _httpClient.GetFromJsonAsync<IEnumerable<CalendarEvent>>("Home");
+            var url = "Home";
+            if (userId != Guid.Empty)
+                url += $"/{userId}";
+
+            var calendarEvents = await _httpClient.GetFromJsonAsync<IEnumerable<CalendarEvent>>(url);
+
             if (calendarEvents == null
                 || !calendarEvents.Any())
                 return Enumerable.Empty<CalendarEvent>();
@@ -72,9 +77,24 @@ namespace WebUI.Clients
             }
         }
 
-        public async Task<IEnumerable<UserEventDto>> GetUserEvents(string sortBy)
-        {
-            var events = await _httpClient.GetFromJsonAsync<IEnumerable<UserEventDto>>("Events");
+        public async Task<IEnumerable<UserEventDto>> GetUserEvents(string sortBy, Guid userId)
+        {            
+            var url = "Events";
+
+            Dictionary<string, string?> queryDict;
+
+            if (userId != Guid.Empty)
+            {
+                queryDict = new()
+                {
+                    { "instructor", userId.ToString() }
+                };
+                url = QueryHelpers.AddQueryString(url, queryDict);
+            }
+
+            _logger.LogInformation("--> requesting user events: {value}", url);            
+
+            var events = await _httpClient.GetFromJsonAsync<IEnumerable<UserEventDto>>(url);
             if (events == null || !events.Any())
                 return Enumerable.Empty<UserEventDto>();
 
@@ -88,6 +108,11 @@ namespace WebUI.Clients
                 && sortBy.Equals("Category"))
                 return events.OrderBy(x => x.Category);
             return events.OrderBy(x => x.Date).ThenBy(x => x.StartTime);
+        }
+
+        public async Task<IEnumerable<UserEventDto>> GetUserEvents()
+        {
+            return await GetUserEvents(string.Empty, Guid.Empty);
         }
 
         public async Task RemoveUserEvent(Guid id)
@@ -146,5 +171,70 @@ namespace WebUI.Clients
                 return Enumerable.Empty<UserActivityRecordDto>();
             return results;
         }
+
+        public async Task<FileDto?> DownloadEventAsFile(Guid eventId)
+        {
+            var response = await _httpClient.GetAsync($"Events/Download/{eventId}");
+            if (!response.IsSuccessStatusCode)
+                return null;
+
+            var contentStream = await response.Content.ReadAsStreamAsync();
+            var contentType = response.Content.Headers.ContentType?.ToString();
+            ArgumentNullException.ThrowIfNull(contentType);
+            var fileName = response.Content.Headers.ContentDisposition?.FileName;
+            ArgumentNullException.ThrowIfNull(fileName);
+
+            return new FileDto
+            {
+                ContentStream = contentStream,
+                ContentType = contentType,
+                FileName = fileName
+            };
+        }
+
+        public async Task<FileDto?> MultipleDownloadEventAsFile(IEnumerable<Guid> eventIds)
+        {           
+            var response = await _httpClient.PostAsJsonAsync("Events/MultipleDownload", eventIds);
+            if (response == null)
+                return null;
+
+            var contentStream = await response.Content.ReadAsStreamAsync();
+            var contentType = response.Content.Headers.ContentType?.ToString();
+            ArgumentNullException.ThrowIfNull(contentType);
+            var fileName = response.Content.Headers.ContentDisposition?.FileName;
+            ArgumentNullException.ThrowIfNull(fileName);
+
+            return new FileDto
+            {
+                ContentStream = contentStream,
+                ContentType = contentType,
+                FileName = fileName
+            };
+        }
+
+        public async Task<UserEventDto> AssignInstructorToEvent(Guid eventId, Guid instructorId)
+        {
+            var dto = new AssignInstructorDto
+            {
+                EventId = eventId,
+                InstructorId = instructorId
+            };
+            var response = await _httpClient.PostAsJsonAsync("Events/AssignInstructor", dto);
+            var content = await response.Content.ReadAsStringAsync();
+            var userEvent = JsonConvert.DeserializeObject<UserEventDto>(content);
+            ArgumentNullException.ThrowIfNull(userEvent);
+            return userEvent;
+        }
+
+        public async Task<UserEventDto> MarkAsDone(Guid eventId)
+        {
+            var response = await _httpClient.PostAsync($"Events/MarkAsDone/{eventId}", null);
+            var content = await response.Content.ReadAsStringAsync();
+            var userEvent = JsonConvert.DeserializeObject<UserEventDto>(content);
+            ArgumentNullException.ThrowIfNull(userEvent);
+            return userEvent;
+        }
+
+        
     }
 }

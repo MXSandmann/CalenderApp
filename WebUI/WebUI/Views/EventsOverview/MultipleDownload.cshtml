@@ -1,0 +1,113 @@
+﻿@model SelectDownloadViewModel
+
+<form method="post">
+    <table class="table">
+        <tr>
+            <th>
+                Download
+            </th>
+            <th>
+                Id
+            </th>
+            <th>
+                Name
+            </th>
+            <th>
+                Category
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                Place
+            </th>
+            <th>
+                Start Time
+            </th>
+            <th>
+                End Time
+            </th>
+            <th>
+                Date
+            </th>
+            <th>
+                Last Date
+            </th>
+            <th>
+                AdditionalInfo
+            </th>
+            <th>
+                ImageUrl
+            </th>
+            <th>
+                Recurrency
+            </th>
+            <th>
+                Done
+            </th>
+        </tr>
+        @for (var i = 0; i < Model.UserEventsToDownload.Count(); i++)
+        {
+            <tr>
+                <td>
+                    <input asp-for="@Model.UserEventsToDownload[i].IsSelected" type="checkbox" />
+                </td>
+                <td>
+                    <input asp-for="@Model.UserEventsToDownload[i].Id" type="hidden" />
+                    @Model.UserEventsToDownload[i].Id
+                </td>
+                <td>
+                    <input asp-for="@Model.UserEventsToDownload[i].Name" type="hidden" />
+                    @Model.UserEventsToDownload[i].Name
+                </td>
+                <td>
+                    <input asp-for="@Model.UserEventsToDownload[i].Category" type="hidden" />
+                    @Model.UserEventsToDownload[i].Category
+                </td>
+                <td>
+                    <input asp-for="@Model.UserEventsToDownload[i].Description" type="hidden" />
+                    @Model.UserEventsToDownload[i].Description
+                </td>
+                <td>
+                    <input asp-for="@Model.UserEventsToDownload[i].Place" type="hidden" />
+                    @Model.UserEventsToDownload[i].Place
+                </td>
+                <td>
+                    <input asp-for="@Model.UserEventsToDownload[i].StartTime" type="hidden" />
+                    @Model.UserEventsToDownload[i].StartTime.ToShortTimeString()
+                </td>
+                <td>
+                    <input asp-for="@Model.UserEventsToDownload[i].EndTime" type="hidden" />
+                    @Model.UserEventsToDownload[i].EndTime.ToShortTimeString()
+                </td>
+                <td>
+                    <input asp-for="@Model.UserEventsToDownload[i].Date" type="hidden" />
+                    @Model.UserEventsToDownload[i].Date.ToShortDateString()
+                </td>
+                <td>
+                    <input asp-for="@Model.UserEventsToDownload[i].LastDate" type="hidden" />
+                    @Model.UserEventsToDownload[i].LastDate?.ToShortDateString()
+                </td>
+                <td>
+                    <input asp-for="@Model.UserEventsToDownload[i].AdditionalInfo" type="hidden" />
+                    @Model.UserEventsToDownload[i].AdditionalInfo
+                </td>
+                <td>
+                    <input asp-for="@Model.UserEventsToDownload[i].ImageUrl" type="hidden" />
+                    @Model.UserEventsToDownload[i].ImageUrl
+                </td>
+                <td>
+                    <input asp-for="@Model.UserEventsToDownload[i].Recurrency" type="hidden" />
+                    @Model.UserEventsToDownload[i].Recurrency
+                </td>
+                <td>
+                    <input asp-for="@Model.UserEventsToDownload[i].Done" type="hidden" />
+                    @Model.UserEventsToDownload[i].Done
+                </td>            
+            </tr>            
+        }
+    </table>
+    <div>
+        <button class="btn btn-primary" type="submit">Download</button>
+    </div>
+</form>

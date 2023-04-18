@@ -1,0 +1,19 @@
+﻿@model AssignInstructorViewModel
+
+<div class="container">
+    <div class="row justify-content-center align-items-center">
+        <div class="col-sm-12 col-md-12 col-lg4">
+            <h1 class="mb-3">Assign Instructor</h1>
+            <form method="post">
+                <div class="mb-3">
+                    <select asp-for="InstructorId" asp-items="Model.Instructors">
+                        <option value="">Select an instructor</option>
+                    </select>                    
+                </div>                
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary">Assign</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

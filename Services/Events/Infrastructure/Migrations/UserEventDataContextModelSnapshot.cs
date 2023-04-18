@@ -74,6 +74,9 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<bool>("Done")
+                        .HasColumnType("boolean");
+
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("timestamp with time zone");
 
@@ -83,6 +86,9 @@ namespace Infrastructure.Migrations
                     b.Property<string>("ImageUrl")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<Guid?>("InstructorId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("LastDate")
                         .HasColumnType("timestamp with time zone");
@@ -105,18 +111,19 @@ namespace Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("4414c8ef-31c0-4163-9ecc-ab2d2bc4832d"),
+                            Id = new Guid("4d342bd5-99d9-42c3-b214-649872d6554c"),
                             AdditionalInfo = "test additionalInfo from seed",
                             Category = "test category from seed",
-                            Date = new DateTime(2023, 3, 1, 23, 44, 36, 271, DateTimeKind.Utc).AddTicks(8885),
+                            Date = new DateTime(2023, 4, 4, 21, 17, 28, 368, DateTimeKind.Utc).AddTicks(4188),
                             Description = "test description from seed",
-                            EndTime = new DateTime(2023, 3, 2, 1, 44, 36, 271, DateTimeKind.Utc).AddTicks(8861),
+                            Done = false,
+                            EndTime = new DateTime(2023, 4, 4, 23, 17, 28, 368, DateTimeKind.Utc).AddTicks(4162),
                             HasRecurrency = true,
                             ImageUrl = "test image url from seed",
-                            LastDate = new DateTime(2023, 3, 1, 23, 44, 36, 271, DateTimeKind.Utc).AddTicks(8886),
+                            LastDate = new DateTime(2023, 4, 4, 21, 17, 28, 368, DateTimeKind.Utc).AddTicks(4188),
                             Name = "Test name from seed",
                             Place = "test place from seed",
-                            StartTime = new DateTime(2023, 3, 1, 23, 44, 36, 271, DateTimeKind.Utc).AddTicks(8859)
+                            StartTime = new DateTime(2023, 4, 4, 21, 17, 28, 368, DateTimeKind.Utc).AddTicks(4160)
                         });
                 });
 
