@@ -1,12 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace ApplicationCore.Models.Entities
+﻿namespace WebUI.Models.Dtos
 {
-    public class Invitation
+    public class InvitationDto
     {
-        [Key]
         public Guid Id { get; set; }
         public Guid EventId { get; set; }
+        public string EventName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty;
     }

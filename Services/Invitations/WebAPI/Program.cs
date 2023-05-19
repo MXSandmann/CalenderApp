@@ -1,4 +1,10 @@
+using ApplicationCore.Profiles;
+using ApplicationCore.Repositories;
+using ApplicationCore.Services;
+using ApplicationCore.Services.Contracts;
 using Infrastructure.DataContext;
+using Infrastructure.Repositories;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -18,6 +24,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<InvitationDataContext>(opt => opt.UseNpgsql(builder.Configuration.GetConnectionString("Postgresql")));
+builder.Services.AddScoped<IInvitationService, InvitationService>();
+builder.Services.AddScoped<IInvitationRepository, InvitationRepository>();
 
 var serviceName = "Events Service";
 var serviceVersion = "1.0.0";
@@ -60,6 +68,10 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.GetValue<string>("SecretKey")!))
     };
 });
+
+builder.Services.RegisterMessageBus(builder.Configuration);
+builder.Services.AddAutoMapper(typeof(AutomapperProfile).Assembly);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

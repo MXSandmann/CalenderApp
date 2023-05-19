@@ -79,6 +79,14 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.RegisterMessageBus(builder.Configuration);
+
+var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+foreach (var item in assemblies)
+{
+    Console.WriteLine($"--> {item.FullName}");
+}
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
