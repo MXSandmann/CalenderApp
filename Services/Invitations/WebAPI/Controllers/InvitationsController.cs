@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebAPI.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class InvitationsController : ControllerBase
 {    
     private readonly IInvitationService _invitationService;
@@ -19,8 +19,8 @@ public class InvitationsController : ControllerBase
         _mapper = mapper;
     }
 
-    [HttpPost]
-    public async Task<IActionResult> CreateInvitation([FromBody] InvitationDto dto)
+    [HttpPost("[action]")]
+    public async Task<IActionResult> Create([FromBody] InvitationDto dto)
     {
         var newInvitation = await _invitationService.AddInvitation(_mapper.Map<Invitation>(dto));
         return Ok(_mapper.Map<InvitationDto>(newInvitation));

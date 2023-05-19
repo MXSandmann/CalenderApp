@@ -9,11 +9,11 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Npgsql;
-using OcelotGateway.Middleware;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using System.Text;
 using WebAPI.Extensions;
+using WebAPI.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,7 +27,7 @@ builder.Services.AddDbContext<InvitationDataContext>(opt => opt.UseNpgsql(builde
 builder.Services.AddScoped<IInvitationService, InvitationService>();
 builder.Services.AddScoped<IInvitationRepository, InvitationRepository>();
 
-var serviceName = "Events Service";
+var serviceName = "Invitations Service";
 var serviceVersion = "1.0.0";
 
 builder.Services.AddOpenTelemetry().WithTracing(tracerProviderBuilder =>

@@ -12,8 +12,8 @@ USER appuser
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["Services/Events/WebAPI/WebAPI.csproj", "Services/Events/WebAPI/"]
-COPY ["BuildingBlocks/Packages/MessagingContracts/MessagingContracts.1.0.0.nupkg", "BuildingBlocks/Packages/"]
-RUN dotnet nuget add source ["BuildingBlocks/Packages/"] --name local
+COPY ["BuildingBlocks/Packages/MessagingContracts/MessagingContracts.1.0.0.nupkg", "/src/local-packages/"]
+RUN dotnet nuget add source /src/local-packages/ --name local
 RUN dotnet restore "Services/Events/WebAPI/WebAPI.csproj"
 COPY . .
 WORKDIR "/src/Services/Events/WebAPI"

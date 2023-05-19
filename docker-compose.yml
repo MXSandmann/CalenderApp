@@ -59,8 +59,7 @@ services:
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/appuser/.microsoft/usersecrets:ro      
       - ${APPDATA}/ASP.NET/Https:/home/appuser/.aspnet/https:ro
-    
-
+  
   subscriptions:    
     container_name: SubscriptionsService
     image: subscriptionsservice
@@ -85,7 +84,9 @@ services:
     image: invitationsservice
     build:
       context: .
-      dockerfile: Services/Invitations/WebAPI/Dockerfile    
+      dockerfile: Services/Invitations/WebAPI/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development 
     ports:
       - 5040:5040
     depends_on:

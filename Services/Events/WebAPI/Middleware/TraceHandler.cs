@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace OcelotGateway.Middleware
+namespace WebAPI.Middleware
 {
     public class TraceHandler
     {

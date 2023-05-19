@@ -10,12 +10,12 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Npgsql;
-using OcelotGateway.Middleware;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using System.Diagnostics;
 using System.Text;
 using WebAPI.Extensions;
+using WebAPI.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -80,12 +80,6 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.Services.RegisterMessageBus(builder.Configuration);
-
-var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-foreach (var item in assemblies)
-{
-    Console.WriteLine($"--> {item.FullName}");
-}
 
 var app = builder.Build();
 
