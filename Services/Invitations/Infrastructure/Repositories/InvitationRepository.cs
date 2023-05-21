@@ -1,6 +1,7 @@
 ﻿using ApplicationCore.Models.Entities;
 using ApplicationCore.Repositories;
 using Infrastructure.DataContext;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
@@ -18,6 +19,11 @@ namespace Infrastructure.Repositories
             await _context.Invitations.AddAsync(invitation);
             await _context.SaveChangesAsync();
             return invitation.Id;
+        }
+
+        public async Task<IEnumerable<Invitation>> GetAll()
+        {
+            return await _context.Invitations.ToListAsync();
         }
 
         public async Task<Invitation> GetById(Guid id)

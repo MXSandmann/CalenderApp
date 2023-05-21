@@ -16,7 +16,7 @@ namespace ApplicationCore.MessageBusConsumers.Invitations
 
         public Task Consume(ConsumeContext<InvitationCreated> context)
         {
-            _logger.LogInformation("Received message: {value}", JsonConvert.SerializeObject(context));
+            _logger.LogInformation("Received message: {value}", JsonConvert.SerializeObject(context.Message));
             return Task.CompletedTask;
         }
     }

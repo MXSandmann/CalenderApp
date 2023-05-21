@@ -25,4 +25,12 @@ public class InvitationsController : ControllerBase
         var newInvitation = await _invitationService.AddInvitation(_mapper.Map<Invitation>(dto));
         return Ok(_mapper.Map<InvitationDto>(newInvitation));
     }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+    {
+        var invitations = await _invitationService.GetAllInvitations();
+        var dtos = _mapper.Map<IEnumerable<InvitationDto>>(invitations);
+        return Ok(dtos);
+    }
 }

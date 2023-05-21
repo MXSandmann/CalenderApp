@@ -6,5 +6,6 @@ namespace ApplicationCore.Repositories
     {
         Task<Guid> Add(Invitation invitation);
         Task<Invitation> GetById(Guid id);
+        Task<IEnumerable<Invitation>> GetAll();
     }
 }

@@ -1,4 +1,5 @@
 ﻿using MassTransit;
+using MassTransit.Initializers.PropertyConverters;
 
 namespace WebAPI.Extensions
 {
@@ -14,7 +15,16 @@ namespace WebAPI.Extensions
             services.AddMassTransit(c =>
             {
                 c.SetKebabCaseEndpointNameFormatter();
-                c.AddConsumers(AppDomain.CurrentDomain.GetAssemblies());
+                c.SetInMemorySagaRepositoryProvider();
+
+                var assembly = AppDomain.CurrentDomain.GetAssemblies().SingleOrDefault(x => x.FullName?.Contains("ApplicationCore") == true);
+
+                ArgumentNullException.ThrowIfNull(assembly);
+
+                c.AddConsumers(assembly);
+                c.AddSagaStateMachines(assembly);
+                c.AddSagas(assembly);
+                c.AddActivities(assembly);
                 c.UsingRabbitMq((context, cfg) =>
                 {
                     cfg.Host(host, "/", h =>

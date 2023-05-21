@@ -24,5 +24,10 @@ namespace ApplicationCore.Services
             await _bus.Publish(new InvitationCreated(newInvitation.Id, newInvitation.EventId, newInvitation.Email, newInvitation.Role));
             return newInvitation;
         }
+
+        public async Task<IEnumerable<Invitation>> GetAllInvitations()
+        {
+            return await _invitationRepository.GetAll();
+        }
     }
 }
