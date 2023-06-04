@@ -20,7 +20,7 @@ namespace ApplicationCore.MessageBusConsumers.Invitations
         public async Task Consume(ConsumeContext<InvitationCreated> context)
         {
             _logger.LogInformation("--> Received message from service bus: {value}", JsonConvert.SerializeObject(context.Message));
-            await _userEventService.AddInvitationToUserEvent(context.Message.EventId, context.Message.InvitationId);
+            await _userEventService.AddInvitationToUserEvent(context.Message.EventId, context.Message.InvitationId, context.Message.UserName);
         }
     }
 }

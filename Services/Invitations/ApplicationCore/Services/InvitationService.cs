@@ -21,13 +21,13 @@ namespace ApplicationCore.Services
             _logger = logger;
         }
 
-        public async Task<Invitation> AddInvitation(Invitation invitation)
+        public async Task<Invitation> AddInvitation(Invitation invitation, string userName)
         {
             var newInvitationId = await _invitationRepository.Add(invitation);
             var newInvitation = await _invitationRepository.GetById(newInvitationId);
 
             _logger.LogInformation("--> Publishing created invitation: {value}", JsonConvert.SerializeObject(newInvitation));
-            await _bus.Publish(new InvitationCreated(newInvitation.Id, newInvitation.EventId, newInvitation.Email, newInvitation.Role));
+            await _bus.Publish(new InvitationCreated(newInvitation.Id, newInvitation.EventId, newInvitation.Email, newInvitation.Role, userName));
             return newInvitation;
         }
 

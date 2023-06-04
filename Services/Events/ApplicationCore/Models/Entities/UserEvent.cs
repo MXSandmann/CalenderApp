@@ -27,6 +27,6 @@ namespace ApplicationCore.Models.Entities
         /// <summary>
         /// Collections of invitations to this events, stored in other service
         /// </summary>
-        public ICollection<string> InvitationIds { get; set; } = null!;
+        public IEnumerable<string>? InvitationIds { get; set; } = null!;
     }
 }

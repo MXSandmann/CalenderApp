@@ -15,10 +15,10 @@ namespace Infrastructure.Configurations
             builder.Property(x => x.StartTime).HasConversion(x => DateTime.SpecifyKind(x, DateTimeKind.Utc), x => x);
             builder.Property(x => x.EndTime).HasConversion(x => DateTime.SpecifyKind(x, DateTimeKind.Utc), x => x);
             builder.Property(x => x.Date).HasConversion(x => DateTime.SpecifyKind(x, DateTimeKind.Utc), x => x);
-            builder.Property(x => x.LastDate).HasConversion(x => DateTime.SpecifyKind(x, DateTimeKind.Utc), x => x);
-            builder.Property(x => x.InvitationIds).HasConversion(new ValueConverter<ICollection<string>, string>(
-                v => JsonConvert.SerializeObject(v),
-                v => ConvertToInvitationIds(v)));
+            builder.Property(x => x.LastDate).HasConversion(x => DateTime.SpecifyKind(x, DateTimeKind.Utc), x => x);            
+            builder.Property(x => x.InvitationIds).HasConversion(new ValueConverter<IEnumerable<string>?, string>(
+                v => JsonConvert.SerializeObject(v), // app -> db
+                v => ConvertToInvitationIds(v))); // db -> app
             builder.HasOne(x => x.RecurrencyRule).WithOne(x => x.UserEvent);
             builder.HasData(new UserEvent
             {
@@ -38,10 +38,10 @@ namespace Infrastructure.Configurations
             });
         }
 
-        private static ICollection<string> ConvertToInvitationIds(string input)
+        private static IEnumerable<string>? ConvertToInvitationIds(string input)
         {
             if (string.IsNullOrWhiteSpace(input))
-                return Array.Empty<string>();
+                return Enumerable.Empty<string>();
             return JsonConvert.DeserializeObject<List<string>>(input)!;
         }
     }

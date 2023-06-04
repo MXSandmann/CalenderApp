@@ -26,7 +26,7 @@ public class InvitationsController : ControllerBase
     public async Task<IActionResult> Create([FromBody] InvitationDto dto)
     {
         _logger.LogInformation("--> Received a Invitation dto to create: {value}", JsonConvert.SerializeObject(dto));
-        var newInvitation = await _invitationService.AddInvitation(_mapper.Map<Invitation>(dto));
+        var newInvitation = await _invitationService.AddInvitation(_mapper.Map<Invitation>(dto), dto.UserName);
         return Ok(_mapper.Map<InvitationDto>(newInvitation));
     }
 

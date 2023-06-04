@@ -1,6 +1,8 @@
 using ApplicationCore.FileGenerators;
 using ApplicationCore.FileGenerators.Contracts;
 using ApplicationCore.Profiles;
+using ApplicationCore.Providers;
+using ApplicationCore.Providers.Contracts;
 using ApplicationCore.Repositories.Contracts;
 using ApplicationCore.Services;
 using ApplicationCore.Services.Contracts;
@@ -29,6 +31,7 @@ builder.Services.AddDbContext<UserEventDataContext>(opt => opt.UseNpgsql(builder
 builder.Services.AddScoped<IUserEventRepository, UserEventRepository>();
 builder.Services.AddScoped<IRecurrencyRuleRepository, RecurrencyRuleRepository>();
 builder.Services.AddScoped<IUserEventService, UserEventService>();
+builder.Services.AddScoped<IUserNameProvider, UserNameProvider>();
 builder.Services.AddAutoMapper(typeof(AutomapperProfile).Assembly);
 builder.Services.AddHttpContextAccessor();
 

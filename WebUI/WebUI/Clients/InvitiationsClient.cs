@@ -27,11 +27,6 @@ namespace WebUI.Clients
             var newInvitation = JsonConvert.DeserializeObject<InvitationDto>(content);
             ArgumentNullException.ThrowIfNull(newInvitation);
             return newInvitation;
-        }
-
-        public Task<IEnumerable<InvitationDto>> GetAllInvitations()
-        {
-            throw new NotImplementedException();
-        }
+        }        
     }
 }

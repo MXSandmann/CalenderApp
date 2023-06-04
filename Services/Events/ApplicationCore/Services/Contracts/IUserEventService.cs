@@ -18,6 +18,6 @@ namespace ApplicationCore.Services.Contracts
         Task<string> DownloadICSFiles(IEnumerable<Guid> eventIds);
         Task<UserEvent> AssignInstructorToEvent(Guid eventId, Guid instructorId);
         Task<UserEvent> MarkAsDone(Guid id);
-        Task AddInvitationToUserEvent(Guid eventId, Guid invitationId);
+        Task AddInvitationToUserEvent(Guid eventId, Guid invitationId, string userName);
     }
 }

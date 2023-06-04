@@ -1,8 +1,8 @@
 ﻿using ApplicationCore.Models.Entities;
 using ApplicationCore.Models.Enums;
 using ApplicationCore.Models.Notifications;
+using ApplicationCore.Providers.Contracts;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.DataContext
@@ -10,11 +10,11 @@ namespace Infrastructure.DataContext
     public class UserEventDataContext : DbContext
     {
         private readonly IMediator _mediator;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        public UserEventDataContext(DbContextOptions<UserEventDataContext> options, IMediator mediator, IHttpContextAccessor httpContextAccessor) : base(options)
+        private readonly IUserNameProvider _userNameProvider;
+        public UserEventDataContext(DbContextOptions<UserEventDataContext> options, IMediator mediator, IUserNameProvider userNameProvider) : base(options)
         {
             _mediator = mediator;
-            _httpContextAccessor = httpContextAccessor;
+            _userNameProvider = userNameProvider;
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -26,8 +26,8 @@ namespace Infrastructure.DataContext
         public DbSet<RecurrencyRule> RecurrencyRules { get; set; } = null!;
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-        {
-            var user = _httpContextAccessor.HttpContext.User.Identities.First().Claims.FirstOrDefault(x => x.Type.Equals("UserName"))?.Value ?? "User";            
+        {            
+            var user = _userNameProvider.GetUserName();
             var entries = ChangeTracker.Entries<UserEvent>();
             foreach (var entry in entries)
             {

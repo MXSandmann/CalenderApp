@@ -13,19 +13,14 @@ namespace WebUI.Controllers
     {
         private readonly IInvitationsClient _invitationsClient;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public InvitationsController(IInvitationsClient invitationsClient, IMapper mapper)
+        public InvitationsController(IInvitationsClient invitationsClient, IMapper mapper, IHttpContextAccessor httpContextAccessor)
         {
             _invitationsClient = invitationsClient;
             _mapper = mapper;
-        }
-
-        [HttpGet("[action]")]
-        public async Task<IActionResult> InvitationsOverview()
-        {
-            var invitations = await _invitationsClient.GetAllInvitations();
-            return View(invitations);
-        }
+            _httpContextAccessor = httpContextAccessor;
+        }        
 
         [HttpGet("[action]/{eventId:guid}")]
         public IActionResult Create()
@@ -36,8 +31,10 @@ namespace WebUI.Controllers
         [HttpPost("[action]/{eventId:guid}")]
         public async Task<IActionResult> Create(CreateInvitationViewModel createInvitationViewModel, [FromRoute] Guid eventId)
         {
+            var user = _httpContextAccessor.HttpContext?.User.Identities.First().Claims.FirstOrDefault(x => x.Type.Equals("UserName"))?.Value ?? "User";
             createInvitationViewModel.EventId = eventId;
             var dto = _mapper.Map<InvitationDto>(createInvitationViewModel);
+            dto.UserName = user;
             await _invitationsClient.CreateInvitation(dto);
             return RedirectToAction("Index", "Home");
         }
