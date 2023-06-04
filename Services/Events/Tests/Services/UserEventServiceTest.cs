@@ -2,10 +2,12 @@
 using ApplicationCore.Models.Entities;
 using ApplicationCore.Models.Enums;
 using ApplicationCore.Profiles;
+using ApplicationCore.Providers.Contracts;
 using ApplicationCore.Repositories.Contracts;
 using ApplicationCore.Services;
 using ApplicationCore.Services.Contracts;
 using AutoMapper;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Shouldly;
 
@@ -16,6 +18,7 @@ namespace Tests.Services
         private readonly Mock<IUserEventRepository> _mockUserEventRepo;
         private readonly Mock<IRecurrencyRuleRepository> _mockRecRuleRepo;
         private readonly Mock<IIcsFileGenerator> _mockIcsFileGenerator;
+        private readonly Mock<IUserNameProvider> _mockUserNameProvider;
 
         // System under test
         private readonly IUserEventService _sut;
@@ -28,7 +31,9 @@ namespace Tests.Services
             var config = new MapperConfiguration(cfg => cfg.AddProfile(profile));
             var mapper = new Mapper(config);
             _mockIcsFileGenerator = new();
-            _sut = new UserEventService(_mockUserEventRepo.Object, _mockRecRuleRepo.Object, mapper, _mockIcsFileGenerator.Object);
+            var mockLogger = new Mock<ILogger<IUserEventService>>();
+            _mockUserNameProvider = new();
+            _sut = new UserEventService(_mockUserEventRepo.Object, _mockRecRuleRepo.Object, mapper, _mockIcsFileGenerator.Object, mockLogger.Object, _mockUserNameProvider.Object);
         }
 
         [Fact]
@@ -79,6 +84,33 @@ namespace Tests.Services
             // Assert
             result.ShouldNotBeNull();
             result.ShouldBeOfType<UserEvent>();
+        }              
+
+        [Fact]
+        public async Task AddInvitation_WhenAllOk_ShouldSaveInvitation()
+        {
+            // Arrange
+            Guid eventId = Guid.NewGuid();
+            Guid invitationId = Guid.NewGuid();
+            string userName = "testuser";
+
+            var userEvent = new UserEvent
+            {
+                Id = eventId,
+                InvitationIds = new List<string>()
+            };
+
+            _mockUserEventRepo.Setup(x => x.GetById(eventId)).ReturnsAsync(userEvent);
+            _mockUserEventRepo.Setup(x => x.SaveAsync()).Returns(Task.CompletedTask);
+
+            // Act
+            await _sut.AddInvitationToUserEvent(eventId, invitationId, userName);
+
+            // Assert
+            _mockUserEventRepo.Verify(x => x.GetById(eventId), Times.Once);
+            _mockUserEventRepo.Verify(x => x.SaveAsync(), Times.Once);
+            _mockUserNameProvider.Verify(x => x.SetUserName(userName), Times.Once);
+            Assert.Contains(invitationId.ToString(), userEvent.InvitationIds);
         }
 
         [Theory]
