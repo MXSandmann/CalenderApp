@@ -10,7 +10,7 @@ namespace WebUI.Clients
     {
 
         private readonly HttpClient _httpClient;
-        private readonly ILogger<IEventsClient> _logger;        
+        private readonly ILogger<IEventsClient> _logger;
 
         public EventsClient(HttpClient httpClient, ILogger<IEventsClient> logger)
         {

@@ -2,6 +2,7 @@
 using ApplicationCore.Models.Enums;
 using ApplicationCore.Models.Notifications;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.DataContext
@@ -9,9 +10,11 @@ namespace Infrastructure.DataContext
     public class UserEventDataContext : DbContext
     {
         private readonly IMediator _mediator;
-        public UserEventDataContext(DbContextOptions<UserEventDataContext> options, IMediator mediator) : base(options)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public UserEventDataContext(DbContextOptions<UserEventDataContext> options, IMediator mediator, IHttpContextAccessor httpContextAccessor) : base(options)
         {
             _mediator = mediator;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -24,7 +27,7 @@ namespace Infrastructure.DataContext
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            var user = "User";
+            var user = _httpContextAccessor.HttpContext.User.Identities.First().Claims.FirstOrDefault(x => x.Type.Equals("UserName"))?.Value ?? "User";            
             var entries = ChangeTracker.Entries<UserEvent>();
             foreach (var entry in entries)
             {

@@ -7,6 +7,7 @@ using ApplicationCore.Models.Enums;
 using ApplicationCore.Repositories.Contracts;
 using ApplicationCore.Services.Contracts;
 using AutoMapper;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace ApplicationCore.Services
@@ -17,13 +18,15 @@ namespace ApplicationCore.Services
         private readonly IRecurrencyRuleRepository _recurrencyRuleRepository;
         private readonly IMapper _mapper;
         private readonly IIcsFileGenerator _icsFileGenerator;
+        private readonly ILogger<IUserEventService> _logger;
 
-        public UserEventService(IUserEventRepository repository, IRecurrencyRuleRepository recurrencyRuleRepository, IMapper mapper, IIcsFileGenerator icsFileGenerator)
+        public UserEventService(IUserEventRepository repository, IRecurrencyRuleRepository recurrencyRuleRepository, IMapper mapper, IIcsFileGenerator icsFileGenerator, ILogger<IUserEventService> logger)
         {
             _userEventRepository = repository;
             _recurrencyRuleRepository = recurrencyRuleRepository;
             _mapper = mapper;
             _icsFileGenerator = icsFileGenerator;
+            _logger = logger;
         }
 
         public async Task<UserEvent> AddNewUserEvent(UserEvent userEvent, RecurrencyRule recurrencyRule)
@@ -247,6 +250,15 @@ namespace ApplicationCore.Services
             return await _userEventRepository.MarkAsDone(id);
         }
 
-        
+        public async Task AddInvitationToUserEvent(Guid eventId, Guid invitationId)
+        {
+            _logger.LogInformation("--> AddInvitationToUserEvent called");
+            var userEvent = await _userEventRepository.GetById(eventId);
+            _logger.LogInformation("--> userEvent found: {value}", JsonConvert.SerializeObject(userEvent));
+            userEvent.InvitationIds ??= new List<string>();
+            userEvent.InvitationIds.Add(invitationId.ToString());
+            _logger.LogInformation("--> userEvent with new invitation added: {value}, trying to save in DB", JsonConvert.SerializeObject(userEvent));
+            await _userEventRepository.SaveAsync();
+        }
     }
 }

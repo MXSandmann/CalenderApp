@@ -12,7 +12,7 @@ USER appuser
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["Services/Invitations/WebAPI/WebAPI.csproj", "Services/Invitations/WebAPI/"]
-COPY ["BuildingBlocks/Packages/MessagingContracts/MessagingContracts.1.0.0.nupkg", "/src/local-packages/"]
+COPY ["BuildingBlocks/Packages/MessagingContracts/", "/src/local-packages/"]
 RUN dotnet nuget add source /src/local-packages/ --name local
 RUN dotnet restore "Services/Invitations/WebAPI/WebAPI.csproj"
 COPY . .

@@ -30,6 +30,7 @@ builder.Services.AddScoped<IUserEventRepository, UserEventRepository>();
 builder.Services.AddScoped<IRecurrencyRuleRepository, RecurrencyRuleRepository>();
 builder.Services.AddScoped<IUserEventService, UserEventService>();
 builder.Services.AddAutoMapper(typeof(AutomapperProfile).Assembly);
+builder.Services.AddHttpContextAccessor();
 
 var serviceName = "Events Service";
 var serviceVersion = "1.0.0";
