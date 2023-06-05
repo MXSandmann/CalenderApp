@@ -10,7 +10,7 @@ namespace WebAPI.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 public class InvitationsController : ControllerBase
-{    
+{
     private readonly IInvitationService _invitationService;
     private readonly IMapper _mapper;
     private readonly ILogger<InvitationsController> _logger;

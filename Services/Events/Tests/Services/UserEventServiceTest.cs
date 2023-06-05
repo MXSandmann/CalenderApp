@@ -87,7 +87,7 @@ namespace Tests.Services
         }              
 
         [Fact]
-        public async Task AddInvitation_WhenAllOk_ShouldSaveInvitation()
+        public async Task AddInvitation_ShouldSaveInvitation_WhenAllOk()
         {
             // Arrange
             Guid eventId = Guid.NewGuid();
