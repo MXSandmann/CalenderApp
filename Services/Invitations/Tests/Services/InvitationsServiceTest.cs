@@ -62,7 +62,7 @@ namespace Tests.Controllers
 
         private static InvitationCreated GetTestMessage(Invitation invitation, string userName)
         {
-            return new(invitation.EventId, invitation.EventId, invitation.Email, invitation.Role, userName);
+            return new(invitation.Id, invitation.EventId!.Value, invitation.Email, invitation.Role, userName);
         }
 
 

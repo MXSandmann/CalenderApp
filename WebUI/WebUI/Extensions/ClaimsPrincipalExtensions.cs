@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Security.Claims;
 using WebUI.Models.Enums;
 
 namespace WebUI.Extensions
@@ -22,6 +23,10 @@ namespace WebUI.Extensions
             if (Guid.TryParse(userIdString, out var userId))
                 return userId;
             return Guid.Empty;
+        }
+        public static string GetUserNameFromClaims(this ClaimsPrincipal claimsPrincipal)
+        {
+            return claimsPrincipal.Identities.First().Claims.FirstOrDefault(x => x.Type.Equals("UserName"))?.Value ?? "UnidentifiedUser";
         }
     }
 }

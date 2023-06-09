@@ -27,7 +27,12 @@ namespace ApplicationCore.Services
             var newInvitation = await _invitationRepository.GetById(newInvitationId);
 
             _logger.LogInformation("--> Publishing created invitation: {value}", JsonConvert.SerializeObject(newInvitation));
-            await _bus.Publish(new InvitationCreated(newInvitation.Id, newInvitation.EventId, newInvitation.Email, newInvitation.Role, userName));
+
+            // If an invitation has created to an event, send a message to message broker
+            if(newInvitation.EventId is not null
+                || newInvitation.EventId != Guid.Empty)
+                await _bus.Publish(new InvitationCreated(newInvitation.Id, newInvitation.EventId!.Value, newInvitation.Email, newInvitation.Role, userName));
+
             return newInvitation;
         }
 

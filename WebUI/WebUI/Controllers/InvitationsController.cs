@@ -3,7 +3,9 @@ using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebUI.Clients.Contracts;
+using WebUI.Extensions;
 using WebUI.Models.Dtos;
+using WebUI.Models.Enums;
 using WebUI.Models.ViewModels;
 
 namespace WebUI.Controllers
@@ -25,14 +27,22 @@ namespace WebUI.Controllers
             _validator = validator;
         }
 
-        [HttpGet("[action]/{eventId:guid}")]
-        public IActionResult Create()
+        /// <summary>
+        /// Create an invitations for user to a particular evets
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("[action]/{eventId:guid}")]        
+        public IActionResult CreateToEvent()
         {
             return View();
         }
 
+        /// <summary>
+        /// Create an invitations for user to a particular evets
+        /// </summary>
+        /// <returns></returns>
         [HttpPost("[action]/{eventId:guid}")]
-        public async Task<IActionResult> Create(CreateInvitationViewModel createInvitationViewModel, [FromRoute] Guid eventId)
+        public async Task<IActionResult> CreateToEvent(CreateInvitationViewModel createInvitationViewModel, [FromRoute] Guid eventId)
         {
             var validationResult = _validator.Validate(createInvitationViewModel);
             if (!ModelState.IsValid)
@@ -40,8 +50,31 @@ namespace WebUI.Controllers
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
 
-            var user = _httpContextAccessor.HttpContext?.User.Identities.First().Claims.FirstOrDefault(x => x.Type.Equals("UserName"))?.Value ?? "User";
+            var user = _httpContextAccessor.HttpContext!.User.GetUserNameFromClaims();
             createInvitationViewModel.EventId = eventId;
+            createInvitationViewModel.Role = RoleToInvite.User;
+            var dto = _mapper.Map<InvitationDto>(createInvitationViewModel);
+            dto.UserName = user;
+            await _invitationsClient.CreateInvitation(dto);
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet("[action]")]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Create(CreateInvitationViewModel createInvitationViewModel)
+        {
+            var validationResult = _validator.Validate(createInvitationViewModel);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
+
+            var user = _httpContextAccessor.HttpContext!.User.GetUserNameFromClaims();
             var dto = _mapper.Map<InvitationDto>(createInvitationViewModel);
             dto.UserName = user;
             await _invitationsClient.CreateInvitation(dto);
