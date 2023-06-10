@@ -1,5 +1,4 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using WebUI.Models.Enums;
 
 namespace WebUI.Extensions

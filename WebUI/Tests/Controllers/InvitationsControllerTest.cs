@@ -3,6 +3,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using System.Security.Claims;
 using WebUI.Clients.Contracts;
 using WebUI.Controllers;
 using WebUI.Models.Dtos;
@@ -33,37 +34,86 @@ namespace Tests.Controllers
         }
 
         [Fact]
-        public async Task CreatePost_WhenInvalidModelState_ShouldReturnsBadRequest()
+        public async Task CreateToEvent_WhenInvalidModelState_ShouldReturnsBadRequest()
         {
             // Arrange
             _sut.ModelState.AddModelError("Test", "Test");
             var viewModel = new CreateInvitationViewModel();
 
             // Act
-            var result = await _sut.Create(viewModel, Guid.NewGuid());
+            var result = await _sut.CreateToEvent(viewModel, Guid.NewGuid());
 
             // Assert
             Assert.IsType<BadRequestObjectResult>(result);
         }
 
         [Fact]
-        public async Task CreatePost_ValidRequest_ReturnsRedirectToActionResult()
+        public async Task CreateToEvent_ValidRequest_ReturnsRedirectToActionResult()
         {
             // Arrange
             var viewModel = new CreateInvitationViewModel()
             {
                 Email = "Test@gmail.com",
                 Role = RoleToInvite.User
-            };            
+            };
             _mockInvitationsClient.Setup(x => x.CreateInvitation(It.IsAny<InvitationDto>())).ReturnsAsync(new InvitationDto());
+            SetupUserClaims();
 
             // Act
-            var result = await _sut.Create(viewModel, Guid.NewGuid());
+            var result = await _sut.CreateToEvent(viewModel, Guid.NewGuid());
 
             // Assert
-            var redirectResult = Assert.IsType<RedirectToActionResult>(result);            
+            var redirectResult = Assert.IsType<RedirectToActionResult>(result);
             Assert.Equal("Home", redirectResult?.ControllerName);
-            Assert.Equal("Index", redirectResult?.ActionName);            
+            Assert.Equal("Index", redirectResult?.ActionName);
+        }
+
+        private void SetupUserClaims()
+        {
+            var userName = "TestUser";
+            var claims = new List<Claim>
+            {
+                new Claim("UserName", userName)
+            };
+            var identity = new ClaimsIdentity(claims);
+            var principal = new ClaimsPrincipal(identity);
+            var httpContext = new DefaultHttpContext { User = principal };
+            _mockHttpContextAccessor.Setup(h => h.HttpContext).Returns(httpContext);
+        }
+
+        [Fact]
+        public async Task Create_WhenInvalidModelState_ShouldReturnsBadRequest()
+        {
+            // Arrange
+            _sut.ModelState.AddModelError("Test", "Test");
+            var viewModel = new CreateInvitationViewModel();
+
+            // Act
+            var result = await _sut.Create(viewModel);
+
+            // Assert
+            Assert.IsType<BadRequestObjectResult>(result);
+        }
+
+        [Fact]
+        public async Task Create_ValidRequest_ReturnsRedirectToActionResult()
+        {
+            // Arrange
+            var viewModel = new CreateInvitationViewModel()
+            {
+                Email = "Test@gmail.com",
+                Role = RoleToInvite.Instructor
+            };
+            _mockInvitationsClient.Setup(x => x.CreateInvitation(It.IsAny<InvitationDto>())).ReturnsAsync(new InvitationDto());
+            SetupUserClaims();
+
+            // Act
+            var result = await _sut.Create(viewModel);
+
+            // Assert
+            var redirectResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal("Home", redirectResult?.ControllerName);
+            Assert.Equal("Index", redirectResult?.ActionName);
         }
     }
 }

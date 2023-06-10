@@ -13,12 +13,14 @@ namespace ApplicationCore.Services
         private readonly IInvitationRepository _invitationRepository;
         private readonly IPublishEndpoint _bus;
         private readonly ILogger<IInvitationService> _logger;
+        private readonly IEmailService _emailService;
 
-        public InvitationService(IInvitationRepository invitationRepository, IPublishEndpoint bus, ILogger<IInvitationService> logger)
+        public InvitationService(IInvitationRepository invitationRepository, IPublishEndpoint bus, ILogger<IInvitationService> logger, IEmailService emailService)
         {
             _invitationRepository = invitationRepository;
             _bus = bus;
             _logger = logger;
+            _emailService = emailService;
         }
 
         public async Task<Invitation> AddInvitation(Invitation invitation, string userName)
@@ -27,6 +29,9 @@ namespace ApplicationCore.Services
             var newInvitation = await _invitationRepository.GetById(newInvitationId);
 
             _logger.LogInformation("--> Publishing created invitation: {value}", JsonConvert.SerializeObject(newInvitation));
+
+            // Send an email to invited user
+            await _emailService.SendEmail(invitation.Email);
 
             // If an invitation has created to an event, send a message to message broker
             if(newInvitation.EventId is not null

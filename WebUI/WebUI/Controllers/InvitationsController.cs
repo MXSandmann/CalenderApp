@@ -31,7 +31,7 @@ namespace WebUI.Controllers
         /// Create an invitations for user to a particular evets
         /// </summary>
         /// <returns></returns>
-        [HttpGet("[action]/{eventId:guid}")]        
+        [HttpGet("[action]/{eventId:guid}")]
         public IActionResult CreateToEvent()
         {
             return View();

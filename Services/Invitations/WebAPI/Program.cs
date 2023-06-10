@@ -26,6 +26,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<InvitationDataContext>(opt => opt.UseNpgsql(builder.Configuration.GetConnectionString("Postgresql")));
 builder.Services.AddScoped<IInvitationService, InvitationService>();
 builder.Services.AddScoped<IInvitationRepository, InvitationRepository>();
+builder.Services.AddTransient<IEmailService, EmailService>();
 
 var serviceName = "Invitations Service";
 var serviceVersion = "1.0.0";

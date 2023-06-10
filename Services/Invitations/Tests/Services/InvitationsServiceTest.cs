@@ -15,13 +15,15 @@ namespace Tests.Controllers
         private readonly Mock<IPublishEndpoint> _mockBus;
         private readonly Mock<ILogger<IInvitationService>> _mockLogger;
         private readonly IInvitationService _sut;
+        private readonly Mock<IEmailService> _mockMailService;
 
         public InvitationsServiceTest()
         {
             _mockInvitationRepository = new();
             _mockBus = new();
             _mockLogger = new();
-            _sut = new InvitationService(_mockInvitationRepository.Object, _mockBus.Object, _mockLogger.Object);
+            _mockMailService = new();
+            _sut = new InvitationService(_mockInvitationRepository.Object, _mockBus.Object, _mockLogger.Object, _mockMailService.Object);
         }
 
         [Fact]
@@ -39,6 +41,9 @@ namespace Tests.Controllers
                 .ReturnsAsync(newInvitation);
             _mockBus.Setup(x => x.Publish(It.Is<InvitationCreated>(x => x == message), CancellationToken.None))
                 .Verifiable();
+            _mockMailService.Setup(x => x.SendEmail(It.Is<string>(x => x.Equals(newInvitation.Email))))
+                .Verifiable();
+
 
             // Act
             var result = await _sut.AddInvitation(newInvitation, userName);
@@ -49,6 +54,7 @@ namespace Tests.Controllers
             Assert.Equal(eventId, result.EventId);
             _mockBus.Verify(x => x.Publish(It.IsAny<InvitationCreated>(), CancellationToken.None), Times.Once());
             _mockBus.VerifyNoOtherCalls();
+            _mockMailService.Verify(x => x.SendEmail(It.IsAny<string>()), Times.Once());
         }
 
         private static Invitation GetTestInvitation(Guid newInvitationId, Guid eventId) =>
