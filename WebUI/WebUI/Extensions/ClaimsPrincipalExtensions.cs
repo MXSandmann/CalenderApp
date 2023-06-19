@@ -23,5 +23,9 @@ namespace WebUI.Extensions
                 return userId;
             return Guid.Empty;
         }
+        public static string GetUserNameFromClaims(this ClaimsPrincipal claimsPrincipal)
+        {
+            return claimsPrincipal.Identities.First().Claims.FirstOrDefault(x => x.Type.Equals("UserName"))?.Value ?? "UnidentifiedUser";
+        }
     }
 }

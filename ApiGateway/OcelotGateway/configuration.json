@@ -171,6 +171,18 @@
       ],
       "UpstreamPathTemplate": "/au/instructors",
       "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Invitations/Create",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "invitations",
+          "Port": 5040
+        }
+      ],
+      "UpstreamPathTemplate": "/i/invitations",
+      "UpstreamHttpMethod": [ "POST" ]
     }
   ]
 }

@@ -90,6 +90,9 @@ namespace Infrastructure.Migrations
                     b.Property<Guid?>("InstructorId")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("InvitationIds")
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("LastDate")
                         .HasColumnType("timestamp with time zone");
 
@@ -111,19 +114,20 @@ namespace Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("4d342bd5-99d9-42c3-b214-649872d6554c"),
+                            Id = new Guid("8d9c033c-9035-46fa-bfb1-9892e98ea9c6"),
                             AdditionalInfo = "test additionalInfo from seed",
                             Category = "test category from seed",
-                            Date = new DateTime(2023, 4, 4, 21, 17, 28, 368, DateTimeKind.Utc).AddTicks(4188),
+                            Date = new DateTime(2023, 6, 4, 21, 3, 35, 140, DateTimeKind.Utc).AddTicks(8775),
                             Description = "test description from seed",
                             Done = false,
-                            EndTime = new DateTime(2023, 4, 4, 23, 17, 28, 368, DateTimeKind.Utc).AddTicks(4162),
+                            EndTime = new DateTime(2023, 6, 4, 23, 3, 35, 140, DateTimeKind.Utc).AddTicks(8746),
                             HasRecurrency = true,
                             ImageUrl = "test image url from seed",
-                            LastDate = new DateTime(2023, 4, 4, 21, 17, 28, 368, DateTimeKind.Utc).AddTicks(4188),
+                            InvitationIds = "[]",
+                            LastDate = new DateTime(2023, 6, 4, 21, 3, 35, 140, DateTimeKind.Utc).AddTicks(8775),
                             Name = "Test name from seed",
                             Place = "test place from seed",
-                            StartTime = new DateTime(2023, 4, 4, 21, 17, 28, 368, DateTimeKind.Utc).AddTicks(4160)
+                            StartTime = new DateTime(2023, 6, 4, 21, 3, 35, 140, DateTimeKind.Utc).AddTicks(8743)
                         });
                 });
 

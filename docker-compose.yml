@@ -54,13 +54,13 @@ services:
       - 5020:5020
     depends_on:
       - postgresql
+      - rabbitmq
     networks:
       - dev
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/appuser/.microsoft/usersecrets:ro      
       - ${APPDATA}/ASP.NET/Https:/home/appuser/.aspnet/https:ro
-    
-
+  
   subscriptions:    
     container_name: SubscriptionsService
     image: subscriptionsservice
@@ -80,6 +80,25 @@ services:
       - ${APPDATA}/Microsoft/UserSecrets:/home/appuser/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/appuser/.aspnet/https:ro
   
+  invitations:    
+    container_name: InvitationsService
+    image: invitationsservice
+    build:
+      context: .
+      dockerfile: Services/Invitations/WebAPI/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development 
+    ports:
+      - 5040:5040
+    depends_on:
+      - postgresql
+      - rabbitmq
+    networks:
+      - dev
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/appuser/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/appuser/.aspnet/https:ro
+
   authentication:    
     container_name: AuthenticationService
     image: authenticationservice
@@ -124,7 +143,22 @@ services:
     networks:
       - dev
 
+  rabbitmq:
+    container_name: RabbitMQ
+    image: rabbitmq:3-management
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+    ports:
+      - 5672:5672 # For AMQP protocol
+      - 15672:15672 # For management UI
+    networks:
+      - dev
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+
 
 volumes:
   db-data:
   mongodb-data:
+  rabbitmq-data:

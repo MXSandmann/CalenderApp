@@ -130,7 +130,7 @@ namespace WebUI.Controllers
         public async Task<IActionResult> MultipleDownload(SelectDownloadViewModel viewModel)
         {
             // Get events first            
-            var selectedEventGuids = viewModel.UserEventsToDownload.Where(x => x.IsSelected).Select(x => x.Id);            
+            var selectedEventGuids = viewModel.UserEventsToDownload.Where(x => x.IsSelected).Select(x => x.Id);
             if (!selectedEventGuids.Any())
                 return RedirectToAction(nameof(Events));
 

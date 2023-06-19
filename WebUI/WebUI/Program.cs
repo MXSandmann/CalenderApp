@@ -19,13 +19,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IValidator<CreateUpdateUserEventViewModel>, DateValidator>();
 builder.Services.AddScoped<IValidator<CreateSubscriptionViewModel>, SubscriptionValidator>();
+builder.Services.AddScoped<IValidator<CreateInvitationViewModel>, InvitationValidator>();
 builder.Services.AddScoped<IValidator<RegisterViewModel>, RegisterValidator>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddHttpClient<IEventsClient, EventsClient>((provider, client) =>
     {
         var context = provider.GetRequiredService<IHttpContextAccessor>().HttpContext;
         var token = context?.User.FindFirst("Jwt")?.Value ?? string.Empty;
-                
+
         client.BaseAddress = new Uri(builder.Configuration.GetValue<string>("Services:Gateway") + "/e/");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         //client.BaseAddress = new Uri("http://localhost:5154/api/");
@@ -42,13 +43,20 @@ builder.Services.AddHttpClient<IAuthenticationClient, AuthenticationClient>((cli
         client.BaseAddress = new Uri(builder.Configuration.GetValue<string>("Services:Gateway") + "/au/");
         //client.BaseAddress = new Uri("http://localhost:5193/api/account/");
     });
+builder.Services.AddHttpClient<IInvitationsClient, InvitiationsClient>((provider, client) =>
+{
+    var context = provider.GetRequiredService<IHttpContextAccessor>().HttpContext;
+    var token = context?.User.FindFirst("Jwt")?.Value ?? string.Empty;
+    client.BaseAddress = new Uri(builder.Configuration.GetValue<string>("Services:Gateway") + "/i/");
+    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+});
 
 var serviceName = "EventingWebsite";
 var serviceVersion = "1.0.0";
 
 builder.Services.AddOpenTelemetry().WithTracing(tracerProviderBuilder =>
 {
-    tracerProviderBuilder   
+    tracerProviderBuilder
     .AddSource(serviceName)
     .SetResourceBuilder(ResourceBuilder.CreateDefault()
         .AddService(serviceName: serviceName, serviceVersion: serviceVersion))

@@ -16,7 +16,7 @@ namespace Tests.Clients
     {
         private readonly IAuthenticationClient _sut;
         private readonly MockHttpMessageHandler _mockHttpHandler;
-        private readonly Mock<IJwtValidator> _mockJwtValidator;        
+        private readonly Mock<IJwtValidator> _mockJwtValidator;
 
         public AuthenticationClientTest()
         {
@@ -25,11 +25,11 @@ namespace Tests.Clients
             {
                 BaseAddress = new Uri("http://random")
             };
-            _mockJwtValidator = new();            
+            _mockJwtValidator = new();
             _sut = new AuthenticationClient(mockClient, _mockJwtValidator.Object);
         }
 
-        [Fact]        
+        [Fact]
         public async Task GetAllInstructors_ShouldReturnInstructors_WhenAllOk()
         {
             // Arrange
@@ -41,7 +41,7 @@ namespace Tests.Clients
             var results = await _sut.GetAllInstructors();
 
             // Assert
-            var requestResult = Assert.IsAssignableFrom<IEnumerable<GetInstructorDto>>(results);            
+            var requestResult = Assert.IsAssignableFrom<IEnumerable<GetInstructorDto>>(results);
             requestResult.Count().ShouldBe(count);
         }
 
@@ -58,7 +58,7 @@ namespace Tests.Clients
 
             // Assert
             var requestResult = Assert.IsAssignableFrom<IEnumerable<GetInstructorDto>>(results);
-            requestResult.ShouldBeEmpty();            
+            requestResult.ShouldBeEmpty();
         }
 
         [Fact]
@@ -87,7 +87,7 @@ namespace Tests.Clients
             var userDto = TestData.GetAutofakedClass<UserDto>();
 
             _mockHttpHandler.When(HttpMethod.Get, "/Login")
-                .Respond(HttpStatusCode.BadRequest, new StringContent("random"));            
+                .Respond(HttpStatusCode.BadRequest, new StringContent("random"));
 
             // Act
             var func = async () => await _sut.LoginUser(userDto);

@@ -9,12 +9,12 @@ namespace WebUI.Clients
     public class AuthenticationClient : IAuthenticationClient
     {
         private readonly HttpClient _httpClient;
-        private readonly IJwtValidator _jwtValidator;        
+        private readonly IJwtValidator _jwtValidator;
 
         public AuthenticationClient(HttpClient httpClient, IJwtValidator jwtValidator)
         {
             _httpClient = httpClient;
-            _jwtValidator = jwtValidator;            
+            _jwtValidator = jwtValidator;
         }
 
         public async Task<IEnumerable<GetInstructorDto>> GetAllInstructors()
@@ -27,7 +27,7 @@ namespace WebUI.Clients
         }
 
         public async Task<ClaimsPrincipal> LoginUser(UserDto userDto)
-        {            
+        {
             var queryParams = new Dictionary<string, string?>
             {
                 { "username", userDto.UserName },
@@ -45,7 +45,7 @@ namespace WebUI.Clients
         }
 
         public async Task RegisterNewUser(UserRegistrationDto userRegistrationDto)
-        {            
+        {
             var responseMessage = await _httpClient.PostAsJsonAsync("Register", userRegistrationDto);
             if (!responseMessage.IsSuccessStatusCode)
                 throw new BadHttpRequestException($"Unable to register user {userRegistrationDto.UserName}");

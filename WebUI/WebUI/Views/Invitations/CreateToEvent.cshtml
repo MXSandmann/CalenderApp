@@ -1,0 +1,24 @@
+﻿@using WebUI.Models.Enums;
+@using WebUI.Models.ViewModels;
+@model CreateInvitationViewModel
+
+<form method="post">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm">
+                <h3>Create an Invitation</h3>                
+                <div>
+                    <label class="form-label">Email</label>
+                    <input class="form-control"
+                           data-val="true"
+                           data-val-required="The Email is required"
+                           asp-for="Email" />
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div>
+        <button class="btn btn-primary" type="submit">Submit</button>
+    </div>
+</form>

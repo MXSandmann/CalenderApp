@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -11,11 +10,11 @@ namespace WebUI.Jwt
 {
     public class JwtValidator : IJwtValidator
     {
-        private readonly AuthenticationOptions _authenticationOptions;        
+        private readonly AuthenticationOptions _authenticationOptions;
 
         public JwtValidator(IOptions<AuthenticationOptions> authenticationOptions)
         {
-            _authenticationOptions = authenticationOptions.Value;            
+            _authenticationOptions = authenticationOptions.Value;
         }
 
         public ClaimsPrincipal ValidateToken(string token)
@@ -41,12 +40,12 @@ namespace WebUI.Jwt
                 ValidateIssuerSigningKey = true
             };
 
-            var claimsPrincipal = handler.ValidateToken(token, parameter, out _);            
+            var claimsPrincipal = handler.ValidateToken(token, parameter, out _);
             ArgumentNullException.ThrowIfNull(claimsPrincipal, nameof(claimsPrincipal));
 
             var updatedClaims = claimsPrincipal.Claims.Append(new Claim("Jwt", token));
             var updatedIdentity = new ClaimsIdentity(updatedClaims, claimsPrincipal.Identity!.AuthenticationType);
-            var updatedClaimsPrincipal = new ClaimsPrincipal(updatedIdentity);                      
+            var updatedClaimsPrincipal = new ClaimsPrincipal(updatedIdentity);
             return updatedClaimsPrincipal;
         }
     }

@@ -1,6 +1,7 @@
 ﻿using ApplicationCore.Models.Entities;
 using ApplicationCore.Models.Enums;
 using ApplicationCore.Models.Notifications;
+using ApplicationCore.Providers.Contracts;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,9 +10,11 @@ namespace Infrastructure.DataContext
     public class UserEventDataContext : DbContext
     {
         private readonly IMediator _mediator;
-        public UserEventDataContext(DbContextOptions<UserEventDataContext> options, IMediator mediator) : base(options)
+        private readonly IUserNameProvider _userNameProvider;
+        public UserEventDataContext(DbContextOptions<UserEventDataContext> options, IMediator mediator, IUserNameProvider userNameProvider) : base(options)
         {
             _mediator = mediator;
+            _userNameProvider = userNameProvider;
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -23,8 +26,8 @@ namespace Infrastructure.DataContext
         public DbSet<RecurrencyRule> RecurrencyRules { get; set; } = null!;
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-        {
-            var user = "User";
+        {            
+            var user = _userNameProvider.GetUserName();
             var entries = ChangeTracker.Entries<UserEvent>();
             foreach (var entry in entries)
             {

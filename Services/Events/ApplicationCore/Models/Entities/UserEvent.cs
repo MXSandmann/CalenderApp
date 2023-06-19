@@ -24,5 +24,9 @@ namespace ApplicationCore.Models.Entities
         public RecurrencyRule? RecurrencyRule { get; set; }
         public Guid? InstructorId { get; set; }
         public bool Done { get; set; }
+        /// <summary>
+        /// Collections of invitations to this events, stored in other service
+        /// </summary>
+        public IEnumerable<string>? InvitationIds { get; set; } = null!;
     }
 }

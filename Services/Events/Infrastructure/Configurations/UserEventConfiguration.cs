@@ -1,6 +1,8 @@
 ﻿using ApplicationCore.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Newtonsoft.Json;
 
 namespace Infrastructure.Configurations
 {
@@ -13,7 +15,10 @@ namespace Infrastructure.Configurations
             builder.Property(x => x.StartTime).HasConversion(x => DateTime.SpecifyKind(x, DateTimeKind.Utc), x => x);
             builder.Property(x => x.EndTime).HasConversion(x => DateTime.SpecifyKind(x, DateTimeKind.Utc), x => x);
             builder.Property(x => x.Date).HasConversion(x => DateTime.SpecifyKind(x, DateTimeKind.Utc), x => x);
-            builder.Property(x => x.LastDate).HasConversion(x => DateTime.SpecifyKind(x, DateTimeKind.Utc), x => x);
+            builder.Property(x => x.LastDate).HasConversion(x => DateTime.SpecifyKind(x, DateTimeKind.Utc), x => x);            
+            builder.Property(x => x.InvitationIds).HasConversion(new ValueConverter<IEnumerable<string>?, string>(
+                v => JsonConvert.SerializeObject(v), // app -> db
+                v => ConvertToInvitationIds(v))); // db -> app
             builder.HasOne(x => x.RecurrencyRule).WithOne(x => x.UserEvent);
             builder.HasData(new UserEvent
             {
@@ -28,8 +33,16 @@ namespace Infrastructure.Configurations
                 Description = "test description from seed",
                 AdditionalInfo = "test additionalInfo from seed",
                 ImageUrl = "test image url from seed",
-                HasRecurrency = true
+                HasRecurrency = true,
+                InvitationIds = new List<string>()
             });
+        }
+
+        private static IEnumerable<string>? ConvertToInvitationIds(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return Enumerable.Empty<string>();
+            return JsonConvert.DeserializeObject<List<string>>(input)!;
         }
     }
 }

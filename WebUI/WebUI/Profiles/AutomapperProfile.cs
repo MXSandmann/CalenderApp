@@ -68,6 +68,8 @@ namespace WebUI.Profiles
             CreateMap<UserDto, LoginViewModel>().ReverseMap();
 
             CreateMap<RegisterViewModel, UserRegistrationDto>();
+
+            CreateMap<CreateInvitationViewModel, InvitationDto>();
         }
 
         private static CertainDays ComputeCertainDays(CreateUpdateUserEventViewModel model)

@@ -1,6 +1,8 @@
 using ApplicationCore.FileGenerators;
 using ApplicationCore.FileGenerators.Contracts;
 using ApplicationCore.Profiles;
+using ApplicationCore.Providers;
+using ApplicationCore.Providers.Contracts;
 using ApplicationCore.Repositories.Contracts;
 using ApplicationCore.Services;
 using ApplicationCore.Services.Contracts;
@@ -10,12 +12,12 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Npgsql;
-using OcelotGateway.Middleware;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using System.Diagnostics;
 using System.Text;
 using WebAPI.Extensions;
+using WebAPI.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,7 +31,9 @@ builder.Services.AddDbContext<UserEventDataContext>(opt => opt.UseNpgsql(builder
 builder.Services.AddScoped<IUserEventRepository, UserEventRepository>();
 builder.Services.AddScoped<IRecurrencyRuleRepository, RecurrencyRuleRepository>();
 builder.Services.AddScoped<IUserEventService, UserEventService>();
+builder.Services.AddScoped<IUserNameProvider, UserNameProvider>();
 builder.Services.AddAutoMapper(typeof(AutomapperProfile).Assembly);
+builder.Services.AddHttpContextAccessor();
 
 var serviceName = "Events Service";
 var serviceVersion = "1.0.0";
@@ -78,6 +82,8 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.GetValue<string>("SecretKey")!))
     };
 });
+
+builder.Services.RegisterMessageBus(builder.Configuration);
 
 var app = builder.Build();
 

@@ -10,18 +10,18 @@ namespace WebUI.Clients
     {
 
         private readonly HttpClient _httpClient;
-        private readonly ILogger<IEventsClient> _logger;        
+        private readonly ILogger<IEventsClient> _logger;
 
         public EventsClient(HttpClient httpClient, ILogger<IEventsClient> logger)
         {
             _httpClient = httpClient;
-            _logger = logger;            
+            _logger = logger;
         }
 
         public async Task<UserEventDto> AddNewUserEvent(UserEventDto userEventDto, RecurrencyRuleDto recurrencyRuleDto)
         {
             if (userEventDto.HasRecurrency)
-                userEventDto.RecurrencyRule = recurrencyRuleDto;     
+                userEventDto.RecurrencyRule = recurrencyRuleDto;
 
             var responseMessage = await _httpClient.PostAsJsonAsync("Events/Create", userEventDto);
             if (!responseMessage.IsSuccessStatusCode)
@@ -78,7 +78,7 @@ namespace WebUI.Clients
         }
 
         public async Task<IEnumerable<UserEventDto>> GetUserEvents(string sortBy, Guid userId)
-        {            
+        {
             var url = "Events";
 
             Dictionary<string, string?> queryDict;
@@ -92,7 +92,7 @@ namespace WebUI.Clients
                 url = QueryHelpers.AddQueryString(url, queryDict);
             }
 
-            _logger.LogInformation("--> requesting user events: {value}", url);            
+            _logger.LogInformation("--> requesting user events: {value}", url);
 
             var events = await _httpClient.GetFromJsonAsync<IEnumerable<UserEventDto>>(url);
             if (events == null || !events.Any())
@@ -193,7 +193,7 @@ namespace WebUI.Clients
         }
 
         public async Task<FileDto?> MultipleDownloadEventAsFile(IEnumerable<Guid> eventIds)
-        {           
+        {
             var response = await _httpClient.PostAsJsonAsync("Events/MultipleDownload", eventIds);
             if (response == null)
                 return null;
@@ -235,6 +235,6 @@ namespace WebUI.Clients
             return userEvent;
         }
 
-        
+
     }
 }
