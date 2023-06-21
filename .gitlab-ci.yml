@@ -1,0 +1,51 @@
+stages:          # List of stages for jobs, and their order of execution
+  - build
+  - test
+  - deploy
+
+variables:
+  DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 'true'
+
+before_script:
+  - 'dotnet --version'
+
+build-net6-job:       # This job runs in the build stage for .net6 projects, which runs first.
+  stage: build
+  image: mcr.microsoft.com/dotnet/sdk:6.0
+  script:
+    - echo "Building the .net6 apps..."
+    - dotnet restore .\WebUI\EventingWebsite.sln
+    - dotnet build .\WebUI\EventingWebsite.sln -c Release --no-restore
+    - echo "Build .net6 complete."
+
+build-net7-job:       # This job runs in the build stage for .net7 projects, which runs first.
+  stage: build
+  image: mcr.microsoft.com/dotnet/sdk:7.0
+  script:
+    - echo "Building the .net7 code..."
+    - dotnet test .\WebUI\EventingWebsite.sln -c Release --no-build --no-build
+    - echo "Build .net7 complete."
+
+test-net6-job:   # This job runs in the test stage.
+  stage: test    # It only starts when the job in the build stage completes successfully.
+  image: mcr.microsoft.com/dotnet/sdk:6.0
+  script:
+    - echo "Running unit tests... This will take about 60 seconds."
+    - sleep 2
+    - echo "Code coverage is 90%"
+
+test-net7-job:   # This job runs in the test stage.
+  stage: test    # It only starts when the job in the build stage completes successfully.
+  image: mcr.microsoft.com/dotnet/sdk:7.0
+  script:
+    - echo "Running unit tests... This will take about 60 seconds."
+    - sleep 2
+    - echo "Code coverage is 90%"
+
+deploy-job:      # This job runs in the deploy stage.
+  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
+  environment: production
+  script:
+    - echo "Deploying application..."
+    - echo "Application successfully deployed."
