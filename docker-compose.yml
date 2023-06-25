@@ -24,8 +24,8 @@ services:
       - postgresql
     networks:
       - dev
-    volumes:      
-      - ${APPDATA}/ASP.NET/Https:/home/appuser/.aspnet/https:ro
+    # volumes:      
+    #   - ${APPDATA}/ASP.NET/Https:/home/appuser/.aspnet/https:ro
 
   apigetaway:    
     container_name: ApiGetaway
@@ -42,8 +42,8 @@ services:
       - postgresql
     networks:
       - dev
-    volumes:      
-      - ${APPDATA}/ASP.NET/Https:/home/appuser/.aspnet/https:ro
+    # volumes:      
+    #   - ${APPDATA}/ASP.NET/Https:/home/appuser/.aspnet/https:ro
 
   events:    
     container_name: EventsService
@@ -72,8 +72,8 @@ services:
       - rabbitmq
     networks:
       - dev
-    volumes:      
-      - ${APPDATA}/ASP.NET/Https:/home/appuser/.aspnet/https:ro
+    # volumes:      
+    #   - ${APPDATA}/ASP.NET/Https:/home/appuser/.aspnet/https:ro
   
   subscriptions:    
     container_name: SubscriptionsService
@@ -97,8 +97,8 @@ services:
       - postgresql
     networks:
       - dev
-    volumes:      
-      - ${APPDATA}/ASP.NET/Https:/home/appuser/.aspnet/https:ro
+    # volumes:      
+    #   - ${APPDATA}/ASP.NET/Https:/home/appuser/.aspnet/https:ro
   
   invitations:    
     container_name: InvitationsService
@@ -126,12 +126,12 @@ services:
       - rabbitmq
     networks:
       - dev
-    volumes:      
-      - ${APPDATA}/ASP.NET/Https:/home/appuser/.aspnet/https:ro
+    # volumes:      
+    #   - ${APPDATA}/ASP.NET/Https:/home/appuser/.aspnet/https:ro
 
   authentication:    
     container_name: AuthenticationService
-    image: foxmindedcontainers.azurecr.io/authenticationservice
+    image: foxmindedcontainers.azurecr.io/authenticationservice:latest
     build:
       context: .
       dockerfile: Services/Authentication/WebAPI/Dockerfile
@@ -150,8 +150,8 @@ services:
       - postgresql
     networks:
       - dev
-    volumes:      
-      - ${APPDATA}/ASP.NET/Https:/home/appuser/.aspnet/https:ro
+    # volumes:      
+    #   - ${APPDATA}/ASP.NET/Https:/home/appuser/.aspnet/https:ro
 
   postgresql:
     container_name: PostgreSQL
@@ -160,9 +160,9 @@ services:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
     ports:
-      - "5433:5432"
-    volumes:
-      - db-data:/var/lib/postgresql/data
+      - "5432:5432"
+    # volumes:
+    #   - db-data:/var/lib/postgresql/data
     networks:
       - dev
 
@@ -174,8 +174,8 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_ROOT_PASSWORD}
     ports:
       - 27017:27017
-    volumes:
-      - mongodb-data:/data/db
+    # volumes:
+    #   - mongodb-data:/data/db
     networks:
       - dev
 
@@ -190,10 +190,10 @@ services:
       - 15672:15672 # For management UI
     networks:
       - dev
-    volumes:
-      - rabbitmq-data:/var/lib/rabbitmq
+    # volumes:
+    #   - rabbitmq-data:/var/lib/rabbitmq
 
-volumes:
-  db-data:
-  mongodb-data:
-  rabbitmq-data:
+# volumes:
+#   db-data:
+#   mongodb-data:
+#   rabbitmq-data:
