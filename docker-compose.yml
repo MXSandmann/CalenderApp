@@ -7,49 +7,64 @@ networks:
 services:
   eventingwebsite:
     container_name: EventingWebsite
-    image: eventingwebsite
+    image: foxmindedcontainers.azurecr.io/eventingwebsite
     build:
       context: .
       dockerfile: WebUI/WebUI/Dockerfile
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development      
+      - ASPNETCORE_ENVIRONMENT=Development
+      - Honeycomb__ApiKey=${HONEYCOMB_APIKEY}
+      - Authentication__SecretKey=${AUTH_KEY}
+      - Authentication__KeyId=${AUTH_KEYID}
+      - Authentication__Audience=${AUTH_AUDIENCE_WEBAPP}
+      - Authentication__Issuer=${AUTH_ISSUER}
     ports:
       - 5000:5000      
     depends_on:
       - postgresql
     networks:
       - dev
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/appuser/.microsoft/usersecrets:ro      
+    volumes:      
       - ${APPDATA}/ASP.NET/Https:/home/appuser/.aspnet/https:ro
 
   apigetaway:    
     container_name: ApiGetaway
-    image: ocelotgateway
+    image: foxmindedcontainers.azurecr.io/ocelotgateway
     build:
       context: .
       dockerfile: ApiGateway/OcelotGateway/Dockerfile
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development      
+      - ASPNETCORE_ENVIRONMENT=Development
+      - Honeycomb__ApiKey=${HONEYCOMB_APIKEY}  
     ports:
       - 5010:5010
     depends_on:
       - postgresql
     networks:
       - dev
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/appuser/.microsoft/usersecrets:ro
+    volumes:      
       - ${APPDATA}/ASP.NET/Https:/home/appuser/.aspnet/https:ro
 
   events:    
     container_name: EventsService
-    image: eventsservice
+    image: foxmindedcontainers.azurecr.io/eventsservice
     build:
       context: .
       dockerfile: Services/Events/WebAPI/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - MongoDB__ConnectionString=${CONNECTION_STRING_MONGODB}
+      - ConnectionStrings__Postgresql=${CONNECTION_STRING_EVENTS}
+      - Kestrel__Certificates__Development__Password=${KESTREL_CERT_DEVELOPMENT_PASSWORD}
+      - Honeycomb__ApiKey=${HONEYCOMB_APIKEY}
+      - Authentication__SecretKey=${AUTH_KEY}
+      - Authentication__KeyId=${AUTH_KEYID}
+      - Authentication__Audience=${AUTH_AUDIENCE_EVENTS}
+      - Authentication__Issuer=${AUTH_ISSUER}
+      - MessageBus__Host=rabbitmq
+      - MessageBus__User=${RABBITMQ_DEFAULT_USER}
+      - MessageBus__Password=${RABBITMQ_DEFAULT_PASS}
+      - MessageBus__Port=5672
     ports:
       - 5020:5020
     depends_on:
@@ -57,37 +72,53 @@ services:
       - rabbitmq
     networks:
       - dev
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/appuser/.microsoft/usersecrets:ro      
+    volumes:      
       - ${APPDATA}/ASP.NET/Https:/home/appuser/.aspnet/https:ro
   
   subscriptions:    
     container_name: SubscriptionsService
-    image: subscriptionsservice
+    image: foxmindedcontainers.azurecr.io/subscriptionsservice
     build:
       context: .
       dockerfile: Services/Subscriptions/WebAPI/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - MongoDB__ConnectionString=${CONNECTION_STRING_MONGODB}
+      - ConnectionStrings__Postgresql=${CONNECTION_STRING_SUBSCRIPTIONS}
+      - Email__Password=${EMAIL_PASSWORD}
+      - Honeycomb__ApiKey=${HONEYCOMB_APIKEY}
+      - Authentication__SecretKey=${AUTH_KEY}
+      - Authentication__KeyId=${AUTH_KEYID}
+      - Authentication__Audience=${AUTH_AUDIENCE_SUBSCRIPTIONS}
+      - Authentication__Issuer=${AUTH_ISSUER}
     ports:
       - 5030:5030
     depends_on:
       - postgresql
     networks:
       - dev
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/appuser/.microsoft/usersecrets:ro
+    volumes:      
       - ${APPDATA}/ASP.NET/Https:/home/appuser/.aspnet/https:ro
   
   invitations:    
     container_name: InvitationsService
-    image: invitationsservice
+    image: foxmindedcontainers.azurecr.io/invitationsservice
     build:
       context: .
       dockerfile: Services/Invitations/WebAPI/Dockerfile
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development 
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__Postgresql=${CONNECTION_STRING_INVITATIONS}
+      - Honeycomb__ApiKey=${HONEYCOMB_APIKEY}
+      - Authentication__SecretKey=${AUTH_KEY}
+      - Authentication__KeyId=${AUTH_KEYID}
+      - Authentication__Audience=${AUTH_AUDIENCE_INVITATIONS}
+      - Authentication__Issuer=${AUTH_ISSUER}
+      - MessageBus__Host=rabbitmq
+      - MessageBus__User=${RABBITMQ_DEFAULT_USER}
+      - MessageBus__Password=${RABBITMQ_DEFAULT_PASS}
+      - MessageBus__Port=5672
+      - Email__Password=${EMAIL_PASSWORD}
     ports:
       - 5040:5040
     depends_on:
@@ -95,26 +126,31 @@ services:
       - rabbitmq
     networks:
       - dev
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/appuser/.microsoft/usersecrets:ro
+    volumes:      
       - ${APPDATA}/ASP.NET/Https:/home/appuser/.aspnet/https:ro
 
   authentication:    
     container_name: AuthenticationService
-    image: authenticationservice
+    image: foxmindedcontainers.azurecr.io/authenticationservice
     build:
       context: .
       dockerfile: Services/Authentication/WebAPI/Dockerfile
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development      
+      - ASPNETCORE_ENVIRONMENT=Development
+      - Authentication__SecretKey=${AUTH_KEY}
+      - Authentication__KeyId=${AUTH_KEYID}
+      - Authentication__Audience=${AUTH_AUDIENCE_SET}
+      - Authentication__Issuer=${AUTH_ISSUER}
+      - ConnectionStrings__Postgresql=${CONNECTION_STRING_AUTHENTICATION}
+      - Users__Admin__Password=${ADMIN_PASSWORD}
+      - Honeycomb__ApiKey=${HONEYCOMB_APIKEY}
     ports:
       - 5050:5050
     depends_on:
       - postgresql
     networks:
       - dev
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/appuser/.microsoft/usersecrets:ro
+    volumes:      
       - ${APPDATA}/ASP.NET/Https:/home/appuser/.aspnet/https:ro
 
   postgresql:
@@ -156,7 +192,6 @@ services:
       - dev
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
-
 
 volumes:
   db-data:

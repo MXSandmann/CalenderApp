@@ -40,7 +40,7 @@ namespace ApplicationCore.Providers
 
             _logger.LogInformation("--> Audience: {value}", JsonConvert.SerializeObject(_authenticationOptions.Audience));
 
-            token.Payload["aud"] = _authenticationOptions.Audience;
+            token.Payload["aud"] = _authenticationOptions.Audience.Split(',');
             return handler.WriteToken(token);
         }
     }
