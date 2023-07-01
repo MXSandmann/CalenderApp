@@ -88,6 +88,8 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+Console.WriteLine($"--> Current enviroment: {app.Environment.EnvironmentName}");
+
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();

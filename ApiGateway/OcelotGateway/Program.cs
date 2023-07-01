@@ -5,7 +5,8 @@ using OpenTelemetry.Trace;
 using OcelotGateway.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Configuration.AddJsonFile("configuration.json", optional: false, reloadOnChange: true);
+var env = builder.Environment.EnvironmentName;
+builder.Configuration.AddJsonFile($"configuration.{env}.json", optional: false, reloadOnChange: true);
 builder.Services.AddOcelot(builder.Configuration);
 
 var serviceName = "Ocelot API Gateway";
